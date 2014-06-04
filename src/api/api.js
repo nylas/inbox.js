@@ -14,7 +14,7 @@ function InboxAPI(optionsOrAPIUrl, optionalPromiseConstructor) {
     };
   }
 
-  if (typeof options.url == null) {
+  if (options.url == null) {
     throw new TypeError("Unable to construct 'InboxAPI': missing option `url`");
   } else if (typeof options.url !== 'string') {
     throw new TypeError("Unable to construct 'InboxAPI': option `url` must be a string");
