@@ -5,7 +5,7 @@ function NativePromiseWrapper(resolve, reject) {
 function InboxAPI(optionsOrAPIUrl, optionalPromiseConstructor) {
   var options;
 
-  if (typeof optionsOrAPIUrl === 'object') {
+  if (optionsOrAPIUrl && typeof optionsOrAPIUrl === 'object') {
     options = optionsOrAPIUrl;
   } else {
     options = {
