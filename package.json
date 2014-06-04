@@ -7,7 +7,7 @@
     "test": "gulp test"
   },
   "author": "",
-  "license": "MIT",
+  "license": "TBD",
   "devDependencies": {
     "gulp": "^3.7.0"
   }
