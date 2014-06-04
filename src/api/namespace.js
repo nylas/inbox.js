@@ -1,5 +1,5 @@
 // TODO: support caching.
-InboxAPI.prototype.namespace(namespaceId) {
+InboxAPI.prototype.namespace = function(namespaceId) {
   var self = this;
   var _ = self._;
 
