@@ -1,0 +1,14 @@
+{
+  "name": "inboxjs",
+  "version": "0.0.0",
+  "description": "Client support SDK for http://inboxapp.co/",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.7.0"
+  }
+}
