@@ -9,6 +9,7 @@
   "author": "",
   "license": "TBD",
   "devDependencies": {
-    "gulp": "^3.7.0"
+    "gulp": "^3.7.0",
+    "gulp-concat": "^2.2.0"
   }
 }
