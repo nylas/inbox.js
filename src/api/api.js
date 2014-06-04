@@ -10,7 +10,7 @@ function InboxAPI(optionsOrAPIUrl, optionalPromiseConstructor) {
   } else {
     options = {
       url: optionsOrAPIUrl,
-      promise: optionsOrPromiseConstructor || window.Promise
+      promise: optionalPromiseConstructor || window.Promise
     };
   }
 
