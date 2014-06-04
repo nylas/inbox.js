@@ -9,3 +9,13 @@ function XHRForMethod(method) {
   }
   return null;
 }
+
+function XHRMaybeJSON(xhr) {
+  try {
+    xhr.responseType = 'json';
+  } catch {
+    // Safari 7 does not support the 'json' responseType, but supports the
+    // responseType property, which will throw if passed an unsupported
+    // DOMString value.
+  }
+}
