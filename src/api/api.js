@@ -39,12 +39,5 @@ function InboxAPI(optionsOrAPIUrl, optionalPromiseConstructor) {
   options._cache = {};
 
   this._ = options;
-
-  if (Object.defineProperty) {
-    Object.defineProperty(this, '_', {
-      enumerable: false,
-      writable: false,
-      configurable: false
-    });
-  }
+  DefineProperty(this, '_', INVISIBLE);
 }
