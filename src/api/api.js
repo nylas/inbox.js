@@ -14,18 +14,18 @@ function InboxAPI(optionsOrAPIUrl, optionalPromiseConstructor) {
     };
   }
 
+  if (typeof options.url == null) {
+    throw new TypeError("Unable to construct 'InboxAPI': missing option `url`");
+  } else if (typeof options.url !== 'string') {
+    throw new TypeError("Unable to construct 'InboxAPI': option `url` must be a string");
+  }
+
   if (options.promise == null) {
     throw new TypeError("Unable to construct 'InboxAPI': missing option `promise`, " +
                         "or no native Promise available");    
   } else if (typeof options.promise !== 'function') {
     throw new TypeError("Unable to construct 'InboxAPI': option `promise` must be a " +
                         "function which returns an ECMAScript6-compatible Promise");
-  }
-
-  if (typeof options.url == null) {
-    throw new TypeError("Unable to construct 'InboxAPI': missing option `url`");
-  } else if (typeof options.url !== 'string') {
-    throw new TypeError("Unable to construct 'InboxAPI': option `url` must be a string");
   }
 
   if (options.promise === window.Promise) {
