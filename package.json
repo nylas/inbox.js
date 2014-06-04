@@ -10,6 +10,8 @@
   "license": "TBD",
   "devDependencies": {
     "gulp": "^3.7.0",
-    "gulp-concat": "^2.2.0"
+    "gulp-concat": "^2.2.0",
+    "karma": "^0.12.16",
+    "karma-jasmine": "^0.1.5"
   }
 }
