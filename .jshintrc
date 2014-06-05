@@ -1,0 +1,29 @@
+{
+  "indent": 2,
+  "node": true,
+  "undef": true,
+  "expr": true,
+  "browser": true,
+  "eqnull": true,
+  "strict": false,
+  "globals": {
+    "InboxAPI": true,
+    "InboxNamespace": true,
+
+    "AddListener": true,
+    "AddListeners": true,
+    "DefineProperty": true,
+    "Merge": true,
+    "ParseJSON": true,
+    "RejectXHR": true,
+    "RemoveListener": true,
+    "URLAddPaths": true,
+    "XHRData": true,
+    "XHRForMethod": true,
+    "XHRMaybeJSON": true,
+
+    "INVISIBLE": true,
+    "CONFIGURABLE": true,
+    "WRITABLE": true
+  }
+}
