@@ -1,4 +1,4 @@
 // TODO: AMD/CJS exports here
-global.InboxAPI = InboxAPI;
+window.InboxAPI = InboxAPI;
 
 })(this);
