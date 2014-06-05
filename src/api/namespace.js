@@ -46,7 +46,7 @@ function InboxNamespace(inbox, data) {
   }
 
   if (!(this instanceof InboxNamespace)) {
-    return new InboxNamespace(inbox, data);    
+    return new InboxNamespace(inbox, data);
   }
 
   this._ = {

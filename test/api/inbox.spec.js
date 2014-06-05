@@ -40,7 +40,7 @@ describe('InboxAPI', function() {
       expect(new InboxAPI({
         url: 'api.inboxapp.co',
         promise: function() {}
-      }) instanceof InboxAPI).toBe(true);      
+      }) instanceof InboxAPI).toBe(true);
     });
 
 
@@ -48,7 +48,7 @@ describe('InboxAPI', function() {
       expect(InboxAPI({
         url: 'api.inboxapp.co',
         promise: function() {}
-      }) instanceof InboxAPI).toBe(true);      
+      }) instanceof InboxAPI).toBe(true);
     });
 
 
@@ -95,7 +95,7 @@ describe('InboxAPI', function() {
 
       it('should be thrown when options.url is not string', function() {
         expect(function() {
-          new InboxAPI({url: 57});
+          new InboxAPI({ url: 57 });
         }).toThrow("Unable to construct 'InboxAPI': option `url` must be a string");
       });
 

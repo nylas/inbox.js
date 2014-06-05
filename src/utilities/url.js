@@ -1,5 +1,6 @@
 function URLAddPaths(url, paths) {
-  var i, ii;
+  var i;
+  var ii;
   paths = Array.prototype.slice.call(arguments, 1);
 
   for (i = 0, ii = paths.length; i < ii; ++i) {

@@ -9,7 +9,7 @@ var AddListener = (function() {
     };
   } else {
     return function addListenerUnavailable(object, event) {
-      throw new TypeError("Unable to add event listener '" + event + "' to object " + object + 
+      throw new TypeError("Unable to add event listener '" + event + "' to object " + object +
                           ": addEventListener and attachEvent are unavailable");
     };
   }
@@ -26,7 +26,7 @@ var RemoveListener = (function() {
     };
   } else {
     return function removeListenerUnavailable(object, event) {
-      throw new TypeError("Unable to add event listener '" + event + "' to object " + object + 
+      throw new TypeError("Unable to add event listener '" + event + "' to object " + object +
                           ": removeEventListener and detachEvent are unavailable");
     };
   }
