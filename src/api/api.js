@@ -21,9 +21,14 @@ function InboxAPI(optionsOrAPIUrl, optionalPromiseConstructor) {
   }
 
   if (options.promise == null) {
+    options.promise = window.Promise;
+  }
+
+  if (options.promise == null) {
     throw new TypeError("Unable to construct 'InboxAPI': missing option `promise`, " +
-                        "or no native Promise available");    
-  } else if (typeof options.promise !== 'function') {
+                        "or no native Promise available");
+  }
+  if (typeof options.promise !== 'function') {
     throw new TypeError("Unable to construct 'InboxAPI': option `promise` must be a " +
                         "function which returns an ECMAScript6-compatible Promise");
   }
@@ -32,8 +37,8 @@ function InboxAPI(optionsOrAPIUrl, optionalPromiseConstructor) {
     options.promise = NativePromiseWrapper;
   }
 
-  if (!(this instanceof Inbox)) {
-    return new Inbox(options);
+  if (!(this instanceof InboxAPI)) {
+    return new InboxAPI(options);
   }
 
   options._cache = {};
