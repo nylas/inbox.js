@@ -38,7 +38,7 @@ InboxAPI.prototype.namespace = function(namespaceId) {
     xhr.open('get', url);
     xhr.send(null);
   });
-}
+};
 
 function InboxNamespace(inbox, data) {
   if (!(inbox instanceof InboxAPI)) {

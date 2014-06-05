@@ -11,6 +11,6 @@ var ParseJSON = (function() {
     return function(maybeJSON) {
       throw new TypeError("Cannot perform 'ParseJSON' on " + maybeJSON + ": JSON.stringify not " +
                           "available.");
-    }
+    };
   }
 })();

@@ -1,5 +1,6 @@
 describe('InboxAPI', function() {
   var haveNativePromise = false;
+  var haveOwnNativePromise;
   var originalPromise = null;
   var MockPromise = null;
 

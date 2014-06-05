@@ -1,7 +1,7 @@
 var IE8_METHODS = /^(get|post|head|put|delete|options)$/i;
 
 function XHRForMethod(method) {
-  if (document.documentMode <= 8 && (method.match(IE8_METHODS) || !XHR)) {
+  if (document.documentMode <= 8 && (method.match(IE8_METHODS) || !window.XMLHttpRequest)) {
     return new window.ActiveXObject("Microsoft.XMLHTTP");
   } else if (window.XMLHttpRequest) {
     return new window.XMLHttpRequest();

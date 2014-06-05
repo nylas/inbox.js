@@ -19,7 +19,6 @@ describe('InboxNamespace', function() {
 
   beforeEach(function() {
     window.Promise = mockPromises.getMockPromise(window.Promise);
-    xhrs = [];
     server = sinon.fakeServer.create();
     inbox = new InboxAPI({
       url: 'http://api.inboxapp.co/n/'
