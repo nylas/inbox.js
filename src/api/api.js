@@ -2,22 +2,22 @@ function NativePromiseWrapper(resolve, reject) {
   return new window.Promise(resolve, reject);
 }
 
-function InboxAPI(optionsOrAPIUrl, optionalPromiseConstructor) {
+function InboxAPI(optionsOrBaseUrl, optionalPromiseConstructor) {
   var options;
 
-  if (optionsOrAPIUrl && typeof optionsOrAPIUrl === 'object') {
-    options = optionsOrAPIUrl;
+  if (optionsOrBaseUrl && typeof optionsOrBaseUrl === 'object') {
+    options = optionsOrBaseUrl;
   } else {
     options = {
-      url: optionsOrAPIUrl,
+      baseUrl: optionsOrBaseUrl,
       promise: optionalPromiseConstructor || window.Promise
     };
   }
 
-  if (options.url == null) {
-    throw new TypeError("Unable to construct 'InboxAPI': missing option `url`");
-  } else if (typeof options.url !== 'string') {
-    throw new TypeError("Unable to construct 'InboxAPI': option `url` must be a string");
+  if (options.baseUrl == null) {
+    throw new TypeError("Unable to construct 'InboxAPI': missing option `baseUrl`");
+  } else if (typeof options.baseUrl !== 'string') {
+    throw new TypeError("Unable to construct 'InboxAPI': option `baseUrl` must be a string");
   }
 
   if (options.promise == null) {
