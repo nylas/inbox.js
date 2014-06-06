@@ -61,7 +61,7 @@ function InboxNamespace(inbox, data) {
   this._ = {
     inbox: inbox,
     namespaceId: data.id || data.namespace,
-    namespaceUrl: URLAddPaths(inbox._.baseUrl, data.id || data.namespace)
+    namespaceUrl: URLFormat('%@/%@', inbox._.baseUrl, data.id || data.namespace)
   };
 
   if (data && typeof data === 'object') {
