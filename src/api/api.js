@@ -15,9 +15,11 @@ function InboxAPI(optionsOrBaseUrl, optionalPromiseConstructor) {
   }
 
   if (options.baseUrl == null) {
-    throw new TypeError("Unable to construct 'InboxAPI': missing option `baseUrl`");
-  } else if (typeof options.baseUrl !== 'string') {
-    throw new TypeError("Unable to construct 'InboxAPI': option `baseUrl` must be a string");
+    options.baseUrl = 'http://api.inboxapp.com/';
+  }
+
+  if (typeof options.baseUrl !== 'string') {
+    throw new TypeError("Unable to construct 'InboxAPI': option `baseUrl` must be a string.");
   }
 
   if (options.promise == null) {
