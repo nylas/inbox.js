@@ -12,7 +12,7 @@ InboxAPI.prototype.namespace = function(namespaceId) {
                         "namespaceId must be a string");
   }
 
-  url = URLAddPaths(_.url, namespaceId);
+  url = URLAddPaths(_.baseUrl, namespaceId);
 
   return _.promise(function(resolve, reject) {
     var xhr = XHRForMethod('get');
@@ -45,13 +45,23 @@ function InboxNamespace(inbox, data) {
     throw new TypeError("Cannot construct 'InboxNamespace': `inbox` parameter must be InboxAPI");
   }
 
+  if (!data || typeof data !== "object") {
+    throw new TypeError("Cannot construct 'InboxNamespace': `data` does is not an object.");
+  }
+
+  if (!data.id && !data.namespace) {
+    throw new TypeError("Cannot construct 'InboxNamespace': `data` does not contain `id` or " +
+                        "`namespace` keys");
+  }
+
   if (!(this instanceof InboxNamespace)) {
     return new InboxNamespace(inbox, data);
   }
 
   this._ = {
     inbox: inbox,
-    url: URLAddPaths(inbox._.url, data.id || data.namespace)
+    namespaceId: data.id || data.namespace,
+    namespaceUrl: URLAddPaths(inbox._.baseUrl, data.id || data.namespace)
   };
 
   if (data && typeof data === 'object') {
