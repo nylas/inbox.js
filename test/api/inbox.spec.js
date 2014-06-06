@@ -64,18 +64,22 @@ describe('InboxAPI', function() {
     });
 
 
+    it('should use default baseUrl if first parameter is not supplied', function() {
+      mockPromise();
+      expect(InboxAPI(null)._.baseUrl).toBe('http://api.inboxapp.com/');
+    });
+
+
+    it('should use default baseUrl if options.baseUrl is not present', function() {
+      expect(InboxAPI({})._.baseUrl).toBe('http://api.inboxapp.com/');
+    });
+
+
     describe('errors', function() {
-      it('should be thrown when first parameter is not present', function() {
-        expect(function() {
-          new InboxAPI();
-        }).toThrow("Unable to construct 'InboxAPI': missing option `baseUrl`");
-      });
-
-
       it('should be thrown when first parameter is not a string', function() {
         expect(function() {
           new InboxAPI(35);
-        }).toThrow("Unable to construct 'InboxAPI': option `baseUrl` must be a string");
+        }).toThrow("Unable to construct 'InboxAPI': option `baseUrl` must be a string.");
       });
 
 
@@ -87,17 +91,10 @@ describe('InboxAPI', function() {
       });
 
 
-      it('should be thrown when options.baseUrl is not present', function() {
-        expect(function() {
-          new InboxAPI({});
-        }).toThrow("Unable to construct 'InboxAPI': missing option `baseUrl`");
-      });
-
-
       it('should be thrown when options.baseUrl is not string', function() {
         expect(function() {
           new InboxAPI({ baseUrl: 57 });
-        }).toThrow("Unable to construct 'InboxAPI': option `baseUrl` must be a string");
+        }).toThrow("Unable to construct 'InboxAPI': option `baseUrl` must be a string.");
       });
 
 
