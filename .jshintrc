@@ -19,6 +19,8 @@
     "RejectXHR": false,
     "RemoveListener": true,
     "StringFormat": false,
+    "ToUnixTimestamp": false,
+    "URLAddFilters": false,
     "URLAddPaths": false,
     "URLFormat": false,
     "XHR": false,
