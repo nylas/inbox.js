@@ -21,6 +21,7 @@ describe('InboxNamespace', function() {
     window.Promise = mockPromises.getMockPromise(window.Promise);
     server = sinon.fakeServer.create();
     inbox = new InboxAPI({
+      appId: '',
       baseUrl: 'http://api.inboxapp.co/n/'
     });
   });
