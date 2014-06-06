@@ -69,12 +69,12 @@ describe('InboxAPI', function() {
 
     it('should use default baseUrl if baseUrl parameter is not supplied', function() {
       mockPromise();
-      expect(InboxAPI('', null)._.baseUrl).toBe('http://api.inboxapp.com/');
+      expect(InboxAPI('', null)._.baseUrl).toBe('http://api.inboxapp.co/');
     });
 
 
     it('should use default baseUrl if options.baseUrl is not present', function() {
-      expect(InboxAPI({ appId: '' })._.baseUrl).toBe('http://api.inboxapp.com/');
+      expect(InboxAPI({ appId: '' })._.baseUrl).toBe('http://api.inboxapp.co/');
     });
 
 
