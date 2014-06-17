@@ -9,6 +9,7 @@
   "globals": {
     "InboxAPI": true,
     "InboxNamespace": true,
+    "InboxThread": true,
 
     "AddListener": true,
     "AddListeners": true,
@@ -17,7 +18,10 @@
     "ParseJSON": true,
     "RejectXHR": true,
     "RemoveListener": true,
+    "StringFormat": true,
     "URLAddPaths": true,
+    "URLFormat": true,
+    "XHR": true,
     "XHRData": true,
     "XHRForMethod": true,
     "XHRMaybeJSON": true,
