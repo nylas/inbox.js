@@ -6,41 +6,20 @@ InboxNamespace.prototype.threads = function() {
 
   url = URLFormat("%@/threads", _.namespaceUrl);
 
-  return _.inbox._.promise(function(resolve, reject) {
-    var xhr = XHRForMethod('get');
-
-    AddListeners(xhr, {
-      'load': function(event) {
-        var response = ParseJSON('response' in xhr ? xhr.response : xhr.responseText);
-        if (xhr.status >= 200 && xhr.status < 300) {
-          // :::json
-          // [
-          //   <thread_object>,
-          //   <thread_object>,
-          //   <thread_object>,
-          //   ...
-          // ]
-          var threads = new Array(response.length);
-          var i, n = response.length;
-          for (i = 0; i < n; ++i) {
-            threads[i] = new InboxThread(self, response[i]);
-          }
-          resolve(threads);
-        } else {
-          reject(XHRData(xhr, response));
-        }
-      },
-      // TODO: retry count depending on status?
-      'error': RejectXHR(reject, xhr, 'json'),
-
-      'abort': RejectXHR(reject, xhr, 'json')
-      // TODO: timeout/progress events are useful.
-    });
-
-    // TODO: headers / withCredentials
-    XHRMaybeJSON(xhr);
-    xhr.open('get', url);
-    xhr.send(null);
+  return XHR(_.inbox, 'get', url, function(response) {
+    // :::json
+    // [
+    //   <thread_object>,
+    //   <thread_object>,
+    //   <thread_object>,
+    //   ...
+    // ]
+    var threads = new Array(response.length);
+    var i, n = response.length;
+    for (i = 0; i < n; ++i) {
+      threads[i] = new InboxThread(self, response[i]);
+    }
+    return threads;
   });
 };
 
@@ -59,29 +38,8 @@ InboxNamespace.prototype.thread = function(threadId) {
 
   url = URLFormat("%@/%@", _.namespaceUrl, threadId);
 
-  return _.inbox._.promise(function(resolve, reject) {
-    var xhr = XHRForMethod('get');
-
-    AddListeners(xhr, {
-      'load': function(event) {
-        var response = ParseJSON('response' in xhr ? xhr.response : xhr.responseText);
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(new InboxThread(self, response));
-        } else {
-          reject(XHRData(xhr, response));
-        }
-      },
-      // TODO: retry count depending on status?
-      'error': RejectXHR(reject, xhr, 'json'),
-
-      'abort': RejectXHR(reject, xhr, 'json')
-      // TODO: timeout/progress events are useful.
-    });
-
-    // TODO: headers / withCredentials
-    XHRMaybeJSON(xhr);
-    xhr.open('get', url);
-    xhr.send(null);
+  return XHR(_.inbox, 'get', url, function(response) {
+    return new InboxThread(self, response);
   });
 };
 
