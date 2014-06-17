@@ -11,3 +11,19 @@ function URLAddPaths(url, paths) {
   }
   return url;
 }
+
+function URLFormat(template, args) {
+  var i = 0;
+  var ii;
+  args = Array.prototype.slice.call(arguments, 1);
+  ii = args.length;
+
+  return template.replace(/\%\@/g, function() {
+    if (i < ii) {
+      return ('' + args[i++]).
+        replace(/^\/+/, '').
+        replace(/\/+$/, '');
+    }
+    return '';
+  });
+}

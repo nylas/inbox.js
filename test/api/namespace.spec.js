@@ -21,7 +21,8 @@ describe('InboxNamespace', function() {
     window.Promise = mockPromises.getMockPromise(window.Promise);
     server = sinon.fakeServer.create();
     inbox = new InboxAPI({
-      url: 'http://api.inboxapp.co/n/'
+      appId: '',
+      baseUrl: 'http://api.inboxapp.co/'
     });
   });
 
@@ -51,6 +52,17 @@ describe('InboxNamespace', function() {
     it('should copy properties from JSON response object into new InboxNamespace', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(namespace) {
         expect(namespace).toContainObject(mockNamespace);
+      });
+      var promise = inbox.namespace('fake_namespace_id').then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockNamespace)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
+
+
+    it('should include namespaceUrl in InboxNamespace private properties', function() {
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(namespace) {
+        expect(namespace._.namespaceUrl).toBe('http://api.inboxapp.co/n/fake_namespace_id');
       });
       var promise = inbox.namespace('fake_namespace_id').then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockNamespace)]);
