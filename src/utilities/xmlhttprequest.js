@@ -58,3 +58,37 @@ function ParseResponseHeaders(xhr) {
   }
   return headers;
 }
+
+function XHR(inbox, method, url, data, onload) {
+  if (typeof data === 'function') {
+    onload = data;
+    data = null;
+  } else if (typeof data !== 'string') {
+    data = null;
+  }
+
+  return inbox._.promise(function(resolve, reject) {
+    var xhr = XHRForMethod(method);
+
+    AddListeners(xhr, {
+      'load': function(event) {
+        var response = ParseJSON('response' in xhr ? xhr.response : xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(onload(response));
+        } else {
+          reject(XHRData(xhr, response));
+        }
+      },
+      // TODO: retry count depending on status?
+      'error': RejectXHR(reject, xhr, 'json'),
+
+      'abort': RejectXHR(reject, xhr, 'json')
+      // TODO: timeout/progress events are useful.
+    });
+
+    // TODO: headers / withCredentials
+    XHRMaybeJSON(xhr);
+    xhr.open('get', url);
+    xhr.send(data);
+  });
+}
