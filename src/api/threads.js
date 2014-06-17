@@ -19,7 +19,7 @@ InboxNamespace.prototype.threads = function() {
           //   <thread_object>,
           //   <thread_object>,
           //   ...
-          // ]   
+          // ]
           var threads = new Array(response.length);
           var i, n = response.length;
           for (i = 0; i < n; ++i) {
@@ -113,5 +113,5 @@ function InboxThread(namespace, data) {
     Merge(this, data);
   }
 
-  DefineProperty(this, '_', INVISIBLE);  
+  DefineProperty(this, '_', INVISIBLE);
 }

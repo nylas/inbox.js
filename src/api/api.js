@@ -22,7 +22,7 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
   }
 
   if (options.appId == null) {
-    throw new TypeError("Unable to construct 'InboxAPI': missing `appId`."); 
+    throw new TypeError("Unable to construct 'InboxAPI': missing `appId`.");
   } else if (typeof options.appId !== 'string') {
     throw new TypeError("Unable to construct 'InboxAPI': option `appId` must be a string.");
   }
