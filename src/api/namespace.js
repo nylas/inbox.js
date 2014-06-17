@@ -12,7 +12,7 @@ InboxAPI.prototype.namespace = function(namespaceId) {
                         "namespaceId must be a string");
   }
 
-  url = URLAddPaths(_.baseUrl, namespaceId);
+  url = URLFormat("%@/n/%@", _.baseUrl, namespaceId);
 
   return _.promise(function(resolve, reject) {
     var xhr = XHRForMethod('get');
@@ -61,7 +61,7 @@ function InboxNamespace(inbox, data) {
   this._ = {
     inbox: inbox,
     namespaceId: data.id || data.namespace,
-    namespaceUrl: URLFormat('%@/%@', inbox._.baseUrl, data.id || data.namespace)
+    namespaceUrl: URLFormat('%@/n/%@', inbox._.baseUrl, data.id || data.namespace)
   };
 
   if (data && typeof data === 'object') {
