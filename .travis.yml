@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - 0.1
+
+addons:
+  firefox: "28.0"
+
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - npm install karma-firefox-launcher
+  - npm install -g gulp karma-cli
+
+script:
+  - ./scripts/travis/test.sh
+
