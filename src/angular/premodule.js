@@ -1,0 +1,1 @@
+function setup(window, angular) {
