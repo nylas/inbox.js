@@ -1,15 +1,15 @@
 {
   "extends": "../.jshintrc",
   "globals": {
-    "jasmine": true,
-    "it": true,
-    "iit": true,
-    "describe": true,
-    "ddescribe": true,
-    "beforeEach": true,
-    "afterEach": true,
-    "expect": true,
-    "mockPromises": true,
-    "sinon": true
+    "jasmine": false,
+    "it": false,
+    "iit": false,
+    "describe": false,
+    "ddescribe": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "expect": false,
+    "mockPromises": false,
+    "sinon": false
   }
 }
