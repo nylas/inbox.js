@@ -5,8 +5,8 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     
     files: [
+      'src/core/**/*.js',
       'test/helpers/**/*.js',
-      'src/*/**/*.js',
       'test/**/*.js'
     ],
 
