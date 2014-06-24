@@ -46,7 +46,7 @@ gulp.task('build:vanilla', function() {
 });
 
 gulp.task('build:angular', function() {
-  gulp.src(makeSrc('angular', 'src/angular/module.js')).
+  gulp.src(makeSrc('angular', ['src/angular/premodule.js', 'src/angular/module.js'])).
     pipe(concat('angular-inbox.js')).
     pipe(gulp.dest('build/'));
 });

@@ -1,4 +1,3 @@
-
 }
 
 if (typeof angular === 'object' && angular && typeof angular.module === 'function') {
