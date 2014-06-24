@@ -7,6 +7,7 @@ module.exports = function(config) {
     files: [
       'src/core/**/*.js',
       'test/helpers/**/*.js',
+      'src/angular/module.js',
       'test/**/*.js'
     ],
 
