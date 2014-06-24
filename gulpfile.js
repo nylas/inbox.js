@@ -5,8 +5,11 @@ var jshint = require('gulp-jshint');
 
 var LINT_SRC = [
   'src/**/*.js',
-  '!src/prefix.js',
-  '!src/suffix.js',
+  '!src/vanilla/prefix.js',
+  '!src/vanilla/suffix.js',
+  '!src/angular/premodule.js',
+  '!src/angular/prefix.js',
+  '!src/angular/suffix.js',
   'test/**/*.js',
   '!test/helpers/**/*.js'
 ];
