@@ -1,3 +1,4 @@
+  return module;
 }
 
 if (typeof angular === 'object' && angular && typeof angular.module === 'function') {
@@ -7,12 +8,13 @@ if (typeof angular === 'object' && angular && typeof angular.module === 'functio
   // RequireJS
   // TODO: don't assume AngularJS module is named 'angular'
   define(['angular'], function(angular) {
-    setup(window, angular);
+    return setup(window, angular);
   });
-} else if (typeof module === 'object') {
+} else if (typeof module === 'object' && typeof require === 'function') {
   // CommonJS/Browserify
   // TODO: don't assume AngularJS module is named 'angular'
-  setup(window, require('angular'));
+  var angular = require('angular');
+  module.exports = setup(window, angular);
 }
 
 })(this);
