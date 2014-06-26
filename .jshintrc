@@ -14,6 +14,7 @@
     "AddListener": true,
     "AddListeners": false,
     "DefineProperty": false,
+    "IsArray": true,
     "Merge": false,
     "ParseJSON": true,
     "RejectXHR": false,
