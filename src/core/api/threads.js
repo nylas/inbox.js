@@ -1,10 +1,9 @@
-// TODO: Support filtering threads
-InboxNamespace.prototype.threads = function() {
+InboxNamespace.prototype.threads = function(filters) {
   var self = this;
   var _ = self._;
   var url;
 
-  url = URLFormat("%@/threads", _.namespaceUrl);
+  url = URLFormat("%@/threads%@", _.namespaceUrl, InboxURLFilters(filters));
 
   return XHR(_.inbox, 'get', url, function(response) {
     // :::json
