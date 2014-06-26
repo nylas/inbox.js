@@ -10,6 +10,7 @@
     "InboxAPI": false,
     "InboxNamespace": false,
     "InboxThread": false,
+    "InboxURLFilters": false,
 
     "AddListener": true,
     "AddListeners": false,
@@ -21,7 +22,6 @@
     "RemoveListener": true,
     "StringFormat": false,
     "ToUnixTimestamp": false,
-    "URLAddFilters": false,
     "URLAddPaths": false,
     "URLFormat": false,
     "XHR": false,

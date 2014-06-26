@@ -1,5 +1,6 @@
 {
   "extends": "../.jshintrc",
+  "loopfunc": true,
   "globals": {
     "jasmine": false,
     "it": false,
@@ -10,6 +11,8 @@
     "afterEach": false,
     "expect": false,
     "mockPromises": false,
-    "sinon": false
+    "sinon": false,
+
+    "FILTER_NAMES_OPTS": false
   }
 }
