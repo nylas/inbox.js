@@ -13,8 +13,8 @@ if (typeof angular === 'object' && angular && typeof angular.module === 'functio
 } else if (typeof module === 'object' && typeof require === 'function') {
   // CommonJS/Browserify
   // TODO: don't assume AngularJS module is named 'angular'
-  var angular = require('angular');
-  module.exports = setup(window, angular);
+  var commonjsAngular = require('angular');
+  module.exports = setup(window, commonjsAngular);
 }
 
 })(this);
