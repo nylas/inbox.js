@@ -2,6 +2,9 @@ var gulp = require('gulp');
 var concat = require('gulp-concat');
 var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
+var connect = require('gulp-connect');
+var corser = require('corser');
+var args = require('yargs').argv;
 
 var LINT_SRC = [
   'src/**/*.js',
@@ -55,3 +58,44 @@ gulp.task('build:angular', function() {
 });
 
 gulp.task('build', ['build:vanilla', 'build:angular']);
+
+gulp.task('serve', ['build'], function() {
+  var port = process.env.PORT;
+  if (port === undefined) port = args.port;
+  if (port === undefined) port = 8000;
+  var livereload = process.env.LIVERELOAD;
+  if (livereload === undefined) livereload = args.livereload;
+  if (livereload === undefined) livereload = false;
+
+  function reload(src) {
+    return function() {
+      gulp.src(src).pipe(connect.reload());
+    };
+  }
+  var APP_JS = ['build/*.js', 'examples/**/*.js'];
+  var APP_CSS = ['examples/**/*.css'];
+  var APP_HTML = ['examples/**/*.html'];
+  if (livereload) {
+    gulp.watch('src/**/*.js', ['build'], reload(APP_JS));  
+    gulp.watch('examples/**/*.js', reload(APP_JS));
+    gulp.watch('examples/**/*.css', reload(APP_CSS));
+    gulp.watch('examples/**/*.html', reload(APP_HTML));
+  }
+  console.log(livereload);
+  connect.server({
+    root: [__dirname + '/examples', __dirname + '/build'],
+    port: 8000,
+    livereload: livereload,
+    middleware: function(connect, opt) {
+      return [
+        corser.create({
+          origins: [
+            'https://gunks.inboxapp.com'
+          ],
+          // TODO(@caitp): responseHeaders, requestHeaders
+        })
+      ];
+    }
+  });
+});
+
