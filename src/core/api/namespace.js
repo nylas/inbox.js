@@ -1,8 +1,15 @@
 // TODO: support caching.
-InboxAPI.prototype.namespaces = function() {
+InboxAPI.prototype.namespaces = function(optionalNamespaces) {
   var self = this;
   var _ = self._;
   var url;
+  var updateNamespaces = null;
+
+  if (optionalNamespaces) {
+    if (IsArray(optionalNamespaces)) {
+      updateNamespaces = optionalNamespaces;
+    }
+  }
 
   url = URLFormat("%@/n", _.baseUrl);
 
@@ -14,12 +21,18 @@ InboxAPI.prototype.namespaces = function() {
     //   <namespace_object>,
     //   ...
     // ]
-    var namespaces = new Array(response.length);
-    var i, n = response.length;
-    for (i = 0; i < n; ++i) {
-      namespaces[i] = new InboxNamespace(self, response[i]);
+    if (updateNamespaces) {
+      return MergeArray(updateNamespaces, response, 'id', function(data) {
+        return new InboxNamespace(self, data);
+      });
+    } else {
+      var namespaces = new Array(response.length);
+      var i, n = response.length;
+      for (i = 0; i < n; ++i) {
+        namespaces[i] = new InboxNamespace(self, response[i]);
+      }
+      return namespaces;
     }
-    return namespaces;
   });
 };
 
