@@ -1,6 +1,6 @@
 if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
   // RequireJS
-  define(function(angular) {
+  define(function() {
     return InboxAPI;
   });
 } else if (typeof module === 'object' && typeof require === 'function') {
