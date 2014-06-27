@@ -157,6 +157,22 @@ describe('InboxThread', function() {
       expect(promise.isFulfilled()).not.toBe(true);
       expect(promise.isRejected()).toBe(true);
     });
+
+
+    it('should update passed array of namespaces', function() {
+      var oldThreads = [mockThread1];
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
+        expect(threads.length).toBe(2);
+        expect(threads).toBe(oldThreads);
+        expect(threads[0]).toBe(oldThreads[0]);
+        expect(threads[1]).toContainObject(mockThread2);
+        expect(threads[1] instanceof InboxThread).toBe(true);
+      });
+      var promise = namespace.threads(oldThreads).then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThreads)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
   });
 
 

@@ -1,7 +1,15 @@
-InboxNamespace.prototype.threads = function(filters) {
+InboxNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
   var self = this;
   var _ = self._;
   var url;
+  var updateThreads = null;
+  if (typeof optionalThreadsOrFilters === 'object') {
+    if (IsArray(optionalThreadsOrFilters)) {
+      updateThreads = optionalThreadsOrFilters;
+    } else {
+      filters = optionalThreadsOrFilters;
+    }
+  }
 
   url = URLFormat("%@/threads%@", _.namespaceUrl, InboxURLFilters(filters));
 
@@ -13,12 +21,18 @@ InboxNamespace.prototype.threads = function(filters) {
     //   <thread_object>,
     //   ...
     // ]
-    var threads = new Array(response.length);
-    var i, n = response.length;
-    for (i = 0; i < n; ++i) {
-      threads[i] = new InboxThread(self, response[i]);
+    if (updateThreads) {
+      return MergeArray(updateThreads, response, 'id', function(data) {
+        return new InboxThread(self, data);
+      });
+    } else {
+      var threads = new Array(response.length);
+      var i, n = response.length;
+      for (i = 0; i < n; ++i) {
+        threads[i] = new InboxThread(self, response[i]);
+      }
+      return threads;
     }
-    return threads;
   });
 };
 
