@@ -86,3 +86,15 @@ function InboxThread(namespace, data) {
 
   DefineProperty(this, '_', INVISIBLE);
 }
+
+// TODO(@caitp): is `sync` a good name for this method? Do not want to confuse this with the
+// inboxapp concept of `sync`.
+InboxThread.prototype.sync = function() {
+  var self = this;
+  var _ = self._;
+  var inbox = _.inbox;
+  return XHR(_.inbox, 'get', _.threadUrl, function(response) {
+    Merge(self, response);
+    return self;
+  });
+};
