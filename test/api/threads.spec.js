@@ -55,6 +55,15 @@ describe('InboxThread', function() {
     "drafts": []
   };
 
+  var mockThread1Updated = __extend(mockThread1, {
+    "messages": [
+      "251r594smznew6yhiocht2v29",
+      "7upzl8ss738iz8xf48lm84q3e",
+      "ah5wuphj3t83j260jqucm9a28",
+      "ag9afs86as9g8gasfasfsaf98"
+    ]
+  });
+
   var mockThread2 = {
     "id": "fake_thread_id2",
     "object": "thread",
@@ -217,6 +226,48 @@ describe('InboxThread', function() {
       mockPromises.executeForPromise(promise);
       expect(promise.isFulfilled()).not.toBe(true);
       expect(promise.isRejected()).toBe(true);
+    });
+  });
+
+
+  describe('sync method', function() {
+    var thread;
+    beforeEach(function() {
+      thread = new InboxThread(namespace, mockThread1);
+    });
+
+
+    it('should resolve with original Thread object', function() {
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
+        expect(newThread).toBe(thread);
+      });
+      var promise = thread.sync().then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
+
+
+    it('should resolve including properties from original Thread', function() {
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
+        expect(newThread).toContainObject(mockThread1);
+      });
+      var promise = thread.sync().then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
+
+
+    it('should resolve including properties from updated Thread', function() {
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
+        expect(newThread).toContainObject(mockThread1Updated);
+        expect(newThread.messages[3]).toBe('ag9afs86as9g8gasfasfsaf98');
+      });
+      var promise = thread.sync().then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
     });
   });
 });
