@@ -1,4 +1,28 @@
 // TODO: support caching.
+InboxAPI.prototype.namespaces = function() {
+  var self = this;
+  var _ = self._;
+  var url;
+
+  url = URLFormat("%@/n", _.baseUrl);
+
+  return XHR(self, 'get', url, function(response) {
+    // :::json
+    // [
+    //   <namespace_object>,
+    //   <namespace_object>,
+    //   <namespace_object>,
+    //   ...
+    // ]
+    var namespaces = new Array(response.length);
+    var i, n = response.length;
+    for (i = 0; i < n; ++i) {
+      namespaces[i] = new InboxNamespace(self, response[i]);
+    }
+    return namespaces;
+  });
+};
+
 InboxAPI.prototype.namespace = function(namespaceId) {
   var self = this;
   var _ = self._;
