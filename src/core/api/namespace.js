@@ -73,7 +73,3 @@ function InboxNamespace(inbox, data) {
 
   DefineProperty(this, '_', INVISIBLE);
 }
-
-InboxNamespace.prototype.threads = function(options) {
-  
-};
