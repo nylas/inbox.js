@@ -1,3 +1,6 @@
+function ValueFn(obj) {
+  return obj;
+}
 
 function Merge(dest, src) {
   var key;
