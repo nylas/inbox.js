@@ -1,0 +1,39 @@
+<!doctype html>
+<html ng-app="inbox_list_namespaces">
+  <head>
+    <base href="./">
+    <title>Inbox SDK Examples --- List Namespaces</title>
+    <script src="/minievents.js"></script>
+    <script src="https://code.angularjs.org/1.2.18/angular.js"></script>
+    <script src="https://code.angularjs.org/1.2.18/angular-sanitize.js"></script>
+    <script src="/angular-inbox.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  </head>
+  <body>
+    <a href="../" target="_self" title="Back to examples">Back to examples...</a>
+    <section class="container" ng-controller="threadsCtrl as Threads">
+      <div class="row">
+        <div class="col-md-4">
+            <table class="table table-hover">
+              <tbody ng-repeat="tlist in threads">
+                <tr ng-repeat="thread in tlist | filter:filters" ng-click="Threads.select(thread)">
+                  <td>{{thread.subject | shorten}}</td>
+                  <td>{{thread.from}}</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-default" ng-repeat="msg in Threads.selectedThreadMessages">
+                <div class="panel-heading">
+                    <p>{{msg.subject}}</p>
+                </div>
+                <div class="panel-body" ng-bind-html="msg.body">
+                </div>
+            </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
