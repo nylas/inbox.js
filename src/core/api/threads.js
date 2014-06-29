@@ -94,7 +94,7 @@ InboxThread.prototype.sync = function() {
   var _ = self._;
   var inbox = _.inbox;
   return XHR(_.inbox, 'get', _.threadUrl, function(response) {
-    Merge(self, response);
+    InboxThreadSchema.merge(self, response);
     return self;
   });
 };

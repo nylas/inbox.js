@@ -64,6 +64,11 @@ describe('InboxThread', function() {
     ]
   });
 
+  var mockThread1Updated2 = __extend({}, mockThread1);
+  mockThread1Updated2.messages = [
+    "ag9afs86as9g8gasfasfsaf98"
+  ];
+
   var mockThread2 = {
     "id": "fake_thread_id2",
     "object": "thread",
@@ -262,10 +267,24 @@ describe('InboxThread', function() {
     it('should resolve including properties from updated Thread', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
         expect(newThread).toContainObject(mockThread1Updated);
+        expect(newThread.messages.length).toBe(4);
         expect(newThread.messages[3]).toBe('ag9afs86as9g8gasfasfsaf98');
       });
       var promise = thread.sync().then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
+
+
+    it('should resolve removing properties deleted in updated Thread', function() {
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
+        expect(newThread).toContainObject(mockThread1Updated2);
+        expect(newThread.messages.length).toBe(1);
+        expect(newThread.messages[0]).toBe('ag9afs86as9g8gasfasfsaf98');
+      });
+      var promise = thread.sync().then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated2)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
