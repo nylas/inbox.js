@@ -1,7 +1,15 @@
-InboxNamespace.prototype.threads = function(filters) {
+InboxNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
   var self = this;
   var _ = self._;
   var url;
+  var updateThreads = null;
+  if (typeof optionalThreadsOrFilters === 'object') {
+    if (IsArray(optionalThreadsOrFilters)) {
+      updateThreads = optionalThreadsOrFilters;
+    } else {
+      filters = optionalThreadsOrFilters;
+    }
+  }
 
   url = URLFormat("%@/threads%@", _.namespaceUrl, InboxURLFilters(filters));
 
@@ -13,12 +21,18 @@ InboxNamespace.prototype.threads = function(filters) {
     //   <thread_object>,
     //   ...
     // ]
-    var threads = new Array(response.length);
-    var i, n = response.length;
-    for (i = 0; i < n; ++i) {
-      threads[i] = new InboxThread(self, response[i]);
+    if (updateThreads) {
+      return MergeArray(updateThreads, response, 'id', function(data) {
+        return new InboxThread(self, data);
+      });
+    } else {
+      var threads = new Array(response.length);
+      var i, n = response.length;
+      for (i = 0; i < n; ++i) {
+        threads[i] = new InboxThread(self, response[i]);
+      }
+      return threads;
     }
-    return threads;
   });
 };
 
@@ -72,3 +86,45 @@ function InboxThread(namespace, data) {
 
   DefineProperty(this, '_', INVISIBLE);
 }
+
+// TODO(@caitp): is `sync` a good name for this method? Do not want to confuse this with the
+// inboxapp concept of `sync`.
+InboxThread.prototype.sync = function() {
+  var self = this;
+  var _ = self._;
+  var inbox = _.inbox;
+  return XHR(_.inbox, 'get', _.threadUrl, function(response) {
+    InboxThreadSchema.merge(self, response);
+    return self;
+  });
+};
+
+InboxThread.prototype.getMessages = function(updateMessages, filters) {
+  var url;
+  var self = this;
+  var namespace = self._.namespace;
+
+  if (!IsArray(updateMessages)) {
+    filters = updateMessages;
+    updateMessages = null;
+  }
+
+  filters = (typeof filters === 'object' && filters) || {};
+  filters.thread = this._.threadId;
+
+  url = URLFormat('%@/messages%@', namespace._.namespaceUrl, InboxURLFilters(filters));
+  return XHR(self._.inbox, 'get', url, function(response) {
+    if (updateMessages) {
+      return MergeArray(updateMessages, response, 'id', function(data) {
+        return new InboxMessage(self, data);
+      });
+    } else {
+      var messages = new Array(response.length);
+      var i, n = response.length;
+      for (i = 0; i < n; ++i) {
+        messages[i] = new InboxMessage(self, response[i]);
+      }
+      return messages;
+    }
+  });
+};

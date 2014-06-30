@@ -103,6 +103,22 @@ describe('InboxNamespace', function() {
       expect(promise.isFulfilled()).not.toBe(true);
       expect(promise.isRejected()).toBe(true);
     });
+
+
+    it('should update passed array of namespaces', function() {
+      var oldNamespaces = [mockNamespace];
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(namespaces) {
+        expect(namespaces.length).toBe(2);
+        expect(namespaces).toBe(oldNamespaces);
+        expect(namespaces[0]).toBe(oldNamespaces[0]);
+        expect(namespaces[1]).toContainObject(mockNamespace2);
+        expect(namespaces[1] instanceof InboxNamespace).toBe(true);
+      });
+      var promise = inbox.namespaces(oldNamespaces).then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockNamespaces)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
   });
 
 

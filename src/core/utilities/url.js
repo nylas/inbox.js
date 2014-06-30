@@ -127,7 +127,7 @@ function InboxURLFilters(filters) {
   var key;
   var value;
   var result = '';
-  if (!filters || typeof filters !== "object") {
+  if (!filters || typeof filters !== "object" || IsArray(filters)) {
     return '';
   }
 
