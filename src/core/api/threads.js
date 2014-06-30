@@ -98,3 +98,33 @@ InboxThread.prototype.sync = function() {
     return self;
   });
 };
+
+InboxThread.prototype.getMessages = function(updateMessages, filters) {
+  var url;
+  var self = this;
+  var namespace = self._.namespace;
+
+  if (!IsArray(updateMessages)) {
+    filters = updateMessages;
+    updateMessages = null;
+  }
+
+  filters = (typeof filters === 'object' && filters) || {};
+  filters.thread = this._.threadId;
+
+  url = URLFormat('%@/messages%@', namespace._.namespaceUrl, InboxURLFilters(filters));
+  return XHR(self._.inbox, 'get', url, function(response) {
+    if (updateMessages) {
+      return MergeArray(updateMessages, response, 'id', function(data) {
+        return new InboxMessage(self, data);
+      });
+    } else {
+      var messages = new Array(response.length);
+      var i, n = response.length;
+      for (i = 0; i < n; ++i) {
+        messages[i] = new InboxMessage(self, response[i]);
+      }
+      return messages;
+    }
+  });
+};
