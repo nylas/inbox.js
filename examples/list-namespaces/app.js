@@ -1,7 +1,7 @@
 angular.module('inbox_list_namespaces', ['inbox']).
 config(['$inboxProvider', function($inboxProvider) {
   $inboxProvider.
-    baseUrl('https://gunks.inboxapp.com').
+    baseUrl('http://localhost:5555').
     appId('test');
 }]).
 controller('inboxNamespacesCtrl', ['$scope', '$inbox', function(scope, $inbox) {
