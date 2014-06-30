@@ -3,7 +3,6 @@ var concat = require('gulp-concat');
 var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
 var connect = require('gulp-connect');
-var corser = require('corser');
 var args = require('yargs').argv;
 
 var LINT_SRC = [
@@ -63,6 +62,9 @@ gulp.task('serve', ['build'], function() {
   var port = process.env.PORT;
   if (port === undefined) port = args.port;
   if (port === undefined) port = 8000;
+  var host = process.env.HOST;
+  if (host === undefined) host = args.host;
+  if (host === undefined) host = 'localhost';
   var livereload = process.env.LIVERELOAD;
   if (livereload === undefined) livereload = args.livereload;
   if (livereload === undefined) livereload = false;
@@ -84,16 +86,15 @@ gulp.task('serve', ['build'], function() {
   console.log(livereload);
   connect.server({
     root: [__dirname + '/examples', __dirname + '/build'],
-    port: 8000,
+    port: port,
+    host: host,
     livereload: livereload,
     middleware: function(connect, opt) {
       return [
-        corser.create({
-          origins: [
-            'https://gunks.inboxapp.com'
-          ],
-          // TODO(@caitp): responseHeaders, requestHeaders
-        })
+        function(req, res, next) {
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          next();
+        }
       ];
     }
   });
