@@ -23,7 +23,9 @@ function InboxSchema(name, propertiesOrPrimitiveType, isCollection, id) {
 }
 
 InboxSchema.prototype.merge = function(oldData, newData) {
-  var key, properties, targetProp;
+  var key;
+  var properties;
+  var target;
   if (oldData === newData) {
     return;
   }
@@ -67,7 +69,7 @@ InboxSchema.prototype.merge = function(oldData, newData) {
       oldData[key] = newData[key];
     }
   }
-}
+};
 
 function MergeInboxSchemaCollection(schema, oldData, newData) {
   var properties = schema.properties;

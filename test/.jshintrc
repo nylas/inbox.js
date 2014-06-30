@@ -13,6 +13,7 @@
     "mockPromises": false,
     "sinon": false,
 
-    "FILTER_NAMES_OPTS": false
+    "FILTER_NAMES_OPTS": false,
+    "__extend": false
   }
 }
