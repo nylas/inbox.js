@@ -3,35 +3,43 @@
   <head>
     <base href="./">
     <title>Inbox SDK Examples --- List Namespaces</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <style>body { padding-top: 60px; } .clickable { cursor: pointer; }</style>
     <script src="/minievents.js"></script>
     <script src="https://code.angularjs.org/1.2.18/angular.js"></script>
     <script src="https://code.angularjs.org/1.2.18/angular-sanitize.js"></script>
     <script src="/angular-inbox.js"></script>
     <script src="app.js"></script>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
   </head>
   <body>
-    <a href="../" target="_self" title="Back to examples">Back to examples...</a>
+    <div class="navbar navbar-default navbar-fixed-top">
+      <a href="/" target="_self" class="navbar-brand">Inbox.js examples</a>
+      <ul class="nav navbar-nav">
+        <li><a href="#">list-threads</a></li>
+      </ul>
+    </div>
     <section class="container" ng-controller="threadsCtrl as Threads">
       <div class="row">
         <div class="col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">Threads</div>
             <table class="table table-hover">
               <tbody ng-repeat="tlist in threads">
-                <tr ng-repeat="thread in tlist | filter:filters" ng-click="Threads.select(thread)">
+                <tr class="clickable" ng-repeat="thread in tlist | filter:filters" ng-click="Threads.select(thread, $event)">
                   <td>{{thread.subject | shorten}}</td>
-                  <td>{{thread.from}}</td>
                 </tr>
               </tbody>
             </table>
+          </div>
         </div>
         <div class="col-md-8">
-            <div class="panel panel-default" ng-repeat="msg in Threads.selectedThreadMessages">
-                <div class="panel-heading">
-                    <p>{{msg.subject}}</p>
-                </div>
-                <div class="panel-body" ng-bind-html="msg.body">
-                </div>
+          <div class="panel panel-default" ng-repeat="msg in Threads.selectedThreadMessages">
+            <div class="panel-heading">
+                <p>{{msg.subject}}</p>
             </div>
+            <div class="panel-body" ng-bind-html="msg.body">
+            </div>
+          </div>
         </div>
       </div>
     </section>

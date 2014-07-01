@@ -73,8 +73,14 @@ controller('threadsCtrl', ['$scope', '$namespaces', function(scope, $namespaces)
       }
     }
   }
-
-  this.select = function(thread) {
+  var selectedNode;
+  this.select = function(thread, event) {
+    if (event) {
+      if (event.currentTarget === selectedNode) return;
+      angular.element(selectedNode).removeClass('active');
+      selectedNode = event.currentTarget;
+      angular.element(selectedNode).addClass('active');
+    }
     if (thread) {
       thread.getMessages().then(function(messages) {
         self.selectedThreadMessages = messages;

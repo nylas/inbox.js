@@ -3,21 +3,38 @@
   <head>
     <base href="./">
     <title>Inbox SDK Examples --- List Namespaces</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <style>body { padding-top: 60px; }</style>
     <script src="https://code.angularjs.org/1.2.18/angular.js"></script>
     <script src="/angular-inbox.js"></script>
     <script src="app.js"></script>
   </head>
   <body>
-    <a href="../" target="_self" title="Back to examples">Back to examples...</a>
-    <table ng-controller="inboxNamespacesCtrl as NS">
-      <tr>
-        <th>Email Address</th>
-        <th>Provider</th>
-      </tr>
-      <tr ng-repeat="ns in NS.namespaces">
-        <td>{{ns.email_address}}</td>
-        <td>{{ns.provider}}</td>
-      </tr>
-    </table>
+    <div class="navbar navbar-default navbar-fixed-top">
+      <a href="/" target="_self" class="navbar-brand">Inbox.js examples</a>
+      <ul class="nav navbar-nav">
+        <li><a href="#">list-namespaces</a></li>
+      </ul>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <table ng-controller="inboxNamespacesCtrl as NS" class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Email Address</th>
+                  <th>Provider</th>
+                </tr>
+              </thead>
+              <tr ng-repeat="ns in NS.namespaces">
+                <td>{{ns.email_address}}</td>
+                <td>{{ns.provider}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
