@@ -4,6 +4,28 @@ function NativePromiseWrapper(resolve, reject) {
   return new window.Promise(resolve, reject);
 }
 
+/**
+ * @class InboxAPI
+ *
+ * Class which represents a specific Inbox web service. From here, it's possible to query for and
+ * construct InboxNamespace objects, which represent email addresses associated with an account.
+ *
+ * @param {object|string} optionsOrAppId An object containing configuration kes, or alternatively
+ *   a string containing the appId for communicating with the webservice.
+ *
+ * @param {string=} optionalBaseUrl A string containing the base URL for the Inbox web service. If
+ *   the optionsOrAppId parameter is an object, then this field is not necessary. If not specified,
+ *   the baseUrl will be "http://api.inboxapp.co/"
+ *
+ * @param {function=} optionalPromiseConstructor A function which, when called, returns an instance
+ *   of an ES6-compatible Promise. If unspecified, window.Promise is used. Note that the Promise
+ *   constructor must be callable without `new`, so for non-native Promises, one should specify a
+ *   wrapper which constructs the associated promise.
+ *
+ * @throws {TypeError} The InboxAPI constructor will throw under the circumstances that we have
+ *   no appId, no Promise implementation, or if any of the configuration parameters are not of
+ *   the appropriate type.
+ */
 function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
   var options;
   var len;
