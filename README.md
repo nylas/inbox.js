@@ -35,4 +35,10 @@ To run the examples web-server, begin by ensuring that you've set up [inbox](htt
 gulp serve --port=<OPTIONAL PORT> --host=<OPTIONAL HOST>
 ```
 
+##Contributing
+
+We'd love your help making Inbox better! Join the Google Group for project updates and feature discussion. We also hang out in [##inbox on irc.freenode.net](http://webchat.freenode.net/?channels=##inbox), or you can email help@inboxapp.com.
+
+Please sign the [Contributor License Agreement](https://www.inboxapp.com/cla.html) before submitting patches. (It's similar to other projects, like NodeJS.)
+
 A more detailed guide on development, testing and contributing code is available in [CONTRIBUTING.md](CONTRIBUTING.md).
