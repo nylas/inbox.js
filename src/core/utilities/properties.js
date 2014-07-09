@@ -20,3 +20,11 @@ function DefineProperty(object, name, flags, get, set, value) {
     Object.defineProperty(object, name, defn);
   }
 }
+
+function DefineReadOnly(object, name, value, flags) {
+  if (Object.defineProperty) {
+    DefineProperty(object, name, (flags >>> 0) & ~WRITABLE, null, null, value);
+  } else {
+    object[name] = value;
+  }
+}

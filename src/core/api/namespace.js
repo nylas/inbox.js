@@ -34,18 +34,21 @@ InboxAPI.prototype.namespaces = function(optionalNamespaces) {
     //   ...
     // ]
     if (updateNamespaces) {
-      return MergeArray(updateNamespaces, response, 'id', function(data) {
-        return new InboxNamespace(self, data);
-      });
+      _.cache.PutInCache(_.cache, 'namespaces',
+        MergeArray(updateNamespaces, response, 'id', function(data) {
+          return new InboxNamespace(self, data);
+        }), Noop);
+      return updateNamespaces;
     } else {
       var namespaces = new Array(response.length);
       var i, n = response.length;
       for (i = 0; i < n; ++i) {
         namespaces[i] = new InboxNamespace(self, response[i]);
       }
+      PutInCache(_.cache, 'namespaces', namespaces, Noop);
       return namespaces;
     }
-  });
+  }, 'namespaces');
 };
 
 /**

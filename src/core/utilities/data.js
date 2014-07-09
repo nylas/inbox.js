@@ -70,3 +70,33 @@ function MergeArray(oldArray, newArray, id, newCallback) {
   }
   return oldArray;
 }
+
+function ForEach(collection, fn, thisArg) {
+  var i, ii, key;
+  if (typeof thisArg !== 'object' && typeof thisArg !== 'function') {
+    thisArg = null;
+  }
+  if (IsArray(collection)) {
+    if (collection.forEach) {
+      collection.forEach(fn, thisArg);
+    } else {
+      for (i=0, ii = collection.length; i<ii; ++i) {
+        fn.call(thisArg, collection[i], i, collection);
+      }
+    }
+  } else if (Object.getOwnPropertyNames) {
+    var keys = Object.getOwnPropertyNames(collection);
+    for (i=0, ii = keys.length; i<ii; ++i) {
+      key = keys[i];
+      fn.call(thisArg, collection[key], key, collection);
+    }
+  } else {
+    for (key in collection) {
+      if (Object.prototype.hasOwnProperty.call(collection, key)) {
+        fn.call(thisArg, collection[key], key, collection);
+      }
+    }
+  }
+}
+
+function Noop() {}

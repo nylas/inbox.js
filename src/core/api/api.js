@@ -75,8 +75,35 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
     return new InboxAPI(options);
   }
 
-  options._cache = {};
+  if (!options.cache) {
+    options.cache = DEFAULT_CACHE;
+  }
+
+  var self = this;
+  if (options.cache) {
+    var cache;
+    if (typeof options.cache === 'string') {
+      cache = GetCacheImplementation(options.cache);
+    } else if (typeof options.cache === 'function' || options.cache instanceof InboxCache) {
+      cache = options.cache;
+    }
+
+    if (!cache) {
+      cache = InboxCache;
+    }
+
+    cache = ((typeof cache === 'function' && new cache()) || cache);
+    cache.onStatusChanged(function(status) {
+      if (status === 'ready') {
+        DefineReadOnly(options, 'cache', cache, INVISIBLE);
+      }
+    });
+  } else {
+    options.cache = new InboxCache();
+  }
 
   this._ = options;
   DefineProperty(this, '_', INVISIBLE);
 }
+
+DefineReadOnly(InboxAPI, 'Cache', InboxCache);
