@@ -70,6 +70,8 @@ function XHR(inbox, method, url, data, onload) {
   return inbox._.promise(function(resolve, reject) {
     var xhr = XHRForMethod(method);
 
+    xhr.withCredentials = inbox.withCredentials();    
+
     AddListeners(xhr, {
       'load': function(event) {
         var response = ParseJSON('response' in xhr ? xhr.response : xhr.responseText);
@@ -86,9 +88,12 @@ function XHR(inbox, method, url, data, onload) {
       // TODO: timeout/progress events are useful.
     });
 
-    // TODO: headers / withCredentials
     XHRMaybeJSON(xhr);
-    xhr.open('get', url);
+
+    xhr.open(method, url);
+
+    inbox.forEachRequestHeader(xhr.setRequestHeader, xhr);
+
     xhr.send(data);
   });
 }
