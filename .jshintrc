@@ -9,6 +9,7 @@
   "globals": {
     "InboxAPI": false,
     "InboxNamespace": false,
+    "InboxTag": false,
     "InboxThread": false,
     "InboxMessage": false,
     "InboxURLFilters": false,
