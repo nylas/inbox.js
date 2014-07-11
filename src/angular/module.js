@@ -1,7 +1,11 @@
 angular.module('inbox', []).
   provider('$inbox', function() {
     var config = {
-      baseUrl: null
+      baseUrl: null,
+      http: {
+        headers: {},
+        withCredentials: false
+      }
     };
 
     this.baseUrl = function(value) {
@@ -18,6 +22,24 @@ angular.module('inbox', []).
         return this;
       }
       return config.appId;
+    };
+
+    this.withCredentials = function(value) {
+      if (!arguments.length) {
+        return config.http.withCredentials;
+      }
+      config.http.withCredentials = !!value;
+      return this;
+    };
+
+    this.setRequestHeader = function(header, value) {
+      if (arguments.length > 1) {
+        header = ('' + header).toLowerCase();
+        if (HEADER_REGEXP.test(header)) {
+          config.http.headers[header] = value;
+        }
+      }
+      return this;
     };
 
     this.$get = ['$q', function($q) {
