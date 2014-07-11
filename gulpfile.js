@@ -16,12 +16,11 @@ var LINT_SRC = [
   '!test/helpers/**/*.js'
 ];
 
-var CORE_SRC = 'src/core/**/*.js';
+var CORE_SRC = ['src/core/utilities/*.js', 'src/core/**/*.js'];
 function makeSrc(build, extra) {
   var src = [
     'src/' + build + '/prefix.js',
-    CORE_SRC
-  ];
+  ].concat(CORE_SRC);
   if (Array.isArray(extra)) src = Array.prototype.concat.apply(src, extra);
   else if (typeof extra === 'string') src = src.concat(extra);
   src = src.concat('src/' + build + '/suffix.js');

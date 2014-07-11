@@ -16,6 +16,7 @@
 InboxNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
   var self = this;
   var _ = self._;
+  var cache = _.inbox._.cache;
   var url;
   var updateThreads = null;
   if (typeof optionalThreadsOrFilters === 'object') {
@@ -37,18 +38,20 @@ InboxNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
     //   ...
     // ]
     if (updateThreads) {
-      return MergeArray(updateThreads, response, 'id', function(data) {
-        return new InboxThread(self, data);
-      });
+      PutInCache(cache, 'threads', MergeArray(updateThreads, response, 'id', function(data) {
+          return new InboxThread(self, data);
+        }), Noop);
+      return updateThreads;
     } else {
       var threads = new Array(response.length);
       var i, n = response.length;
       for (i = 0; i < n; ++i) {
         threads[i] = new InboxThread(self, response[i]);
       }
+      PutInCache(cache, 'threads', threads, Noop);
       return threads;
     }
-  });
+  }, filters ? null : 'threads');
 };
 
 /**
@@ -148,6 +151,7 @@ InboxThread.prototype.sync = function() {
   var inbox = _.inbox;
   return XHR(_.inbox, 'get', _.threadUrl, function(response) {
     InboxThreadSchema.merge(self, response);
+    PutInCache(_.inbox._.cache, 'threads', self, Noop);
     return self;
   });
 };

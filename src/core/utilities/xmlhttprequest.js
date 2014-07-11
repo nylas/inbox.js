@@ -59,8 +59,9 @@ function ParseResponseHeaders(xhr) {
   return headers;
 }
 
-function XHR(inbox, method, url, data, onload) {
+function XHR(inbox, method, url, data, onload, cacheMethod) {
   if (typeof data === 'function') {
+    cacheMethod = onload;
     onload = data;
     data = null;
   } else if (typeof data !== 'string') {
@@ -68,27 +69,35 @@ function XHR(inbox, method, url, data, onload) {
   }
 
   return inbox._.promise(function(resolve, reject) {
-    var xhr = XHRForMethod(method);
+    if (!cacheMethod) return fetch(null);
+    GetFromCache(inbox._.cache, cacheMethod, fetch);
+    function fetch(response) {
+      if (response) {
+        return resolve(onload(response));
+      }
 
-    AddListeners(xhr, {
-      'load': function(event) {
-        var response = ParseJSON('response' in xhr ? xhr.response : xhr.responseText);
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(onload(response));
-        } else {
-          reject(XHRData(xhr, response));
-        }
-      },
-      // TODO: retry count depending on status?
-      'error': RejectXHR(reject, xhr, 'json'),
+      var xhr = XHRForMethod(method);
 
-      'abort': RejectXHR(reject, xhr, 'json')
-      // TODO: timeout/progress events are useful.
-    });
+      AddListeners(xhr, {
+        'load': function(event) {
+          var response = ParseJSON('response' in xhr ? xhr.response : xhr.responseText);
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(onload(response));
+          } else {
+            reject(XHRData(xhr, response));
+          }
+        },
+        // TODO: retry count depending on status?
+        'error': RejectXHR(reject, xhr, 'json'),
 
-    // TODO: headers / withCredentials
-    XHRMaybeJSON(xhr);
-    xhr.open('get', url);
-    xhr.send(data);
+        'abort': RejectXHR(reject, xhr, 'json')
+        // TODO: timeout/progress events are useful.
+      });
+
+      // TODO: headers / withCredentials
+      XHRMaybeJSON(xhr);
+      xhr.open('get', url);
+      xhr.send(data);
+    }
   });
 }
