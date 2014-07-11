@@ -48,6 +48,8 @@
 
     "INVISIBLE": true,
     "CONFIGURABLE": true,
-    "WRITABLE": true
+    "WRITABLE": true,
+
+    "HEADER_REGEXP": true
   }
 }
