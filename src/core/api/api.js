@@ -1,5 +1,9 @@
 var ERROR = {};
 
+var DEFAULT_HTTP = {
+  
+};
+
 function NativePromiseWrapper(resolve, reject) {
   return new window.Promise(resolve, reject);
 }
@@ -77,6 +81,140 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
 
   options._cache = {};
 
+  options.http = Merge(Merge({}, DEFAULT_HTTP), (typeof options.http === 'object' && options.http));
+
   this._ = options;
   DefineProperty(this, '_', INVISIBLE);
 }
+
+/**
+ * @method InboxAPI#http
+ *
+ * Return or modify InboxAPI instance's HTTP configuration. If called with no arguments, it will
+ * return the HTTP configuration object. Otherwise, if passed a key, it will return the
+ * configuration for that key (case-sensitive). Finally, if there is a value, the key will be
+ * updated with that value, and the InboxAPI will be returned.
+ *
+ * @param {string=} key The optional key in the configuration object
+ *
+ * @param {*=} value The value which, if specified, will be assigned to property `key` in the
+ *   configuration.
+ *
+ * @returns {*} Either the InboxAPI instance, the HTTP configuration, or the value of a key in
+ *   the HTTP configuration.
+ */
+InboxAPI.prototype.http = function(key, value) {
+  if (!this._.http || typeof this._.http !== 'object') {
+    this._.http = Merge({}, DEFAULT_HTTP);
+  }
+
+  if (!arguments.length) {
+    return this._.http;
+  } else if (arguments.length === 1) {
+    return this._.http[key];
+  } else if (arguments.length > 1) {
+    this._.http[key] = value;
+  }
+  return this;
+};
+
+/**
+ * @method InboxAPI#withCredentials
+ *
+ * Convenience method for querying InboxAPI#http('withCredentials'), returning either the current
+ * value of `withCredentials`, or specifying a new value.
+ *
+ * @param {boolean=} value Boolean value to assign to the withCredentials configuration.
+ *
+ * @returns {*} Either the InboxAPI instance, or the value of `withCredentials` in the HTTP
+ *   configuration.
+ */
+InboxAPI.prototype.withCredentials = function(value) {
+  if (!arguments.length) {
+    return !!this.http('withCredentials');
+  } else {
+    return this.http('withCredentials', !!value);
+  }
+};
+
+var HEADER_REGEXP = /^[a-z0-9_-]+$/;
+
+/**
+ * @method InboxAPI#setRequestHeader
+ *
+ * Convenience method for specifying request headers to be issued by HTTP requests to the web
+ * service. Primarily useful for certain authentication strategies.
+ *
+ * @param {string} header The header name to query. This value should be a string, and will be
+ *   converted to lower-case. Non-lower-cased header names should not be specified manually.
+ *
+ * @param {*} value The value to assign to a header. If the value is a function, it will be
+ *   invoked during a request, and the return value will be used as the header value.
+ *
+ * @returns {InboxAPI} The InboxAPI instance.
+ *
+ * @throws {TypeError} setRequestHeader will throw if either a header name is bad (not made up of
+ *   ASCII letters, numbers, underscores and hyphens exclusively) or if there are fewer than two
+ *   arguments passed into the function.
+ */
+InboxAPI.prototype.setRequestHeader = function(header, value) {
+  if (arguments.length < 2) {
+    throw new TypeError('Cannot invoke `setRequestHeader` on `InboxAPI`: header name and value ' +
+      'are required.');
+  }
+
+  var http = this.http();
+  if (!http.headers || typeof http.headers !== 'object') {
+    http.headers = {};
+  }
+
+  header = ('' + header).toLowerCase();
+  if (!HEADER_REGEXP.test(header)) {
+    throw new TypeError('Cannot invoke `setRequestHeader` on `InboxAPI`: Bad header name "' +
+      header + '".');
+  }
+
+  http.headers[header] = value;
+
+  return this;
+};
+
+/**
+ * PRIVATE API InboxAPI#forEachRequestHeader
+ *
+ * Convenience method for iterating over each request header and calling a function with the
+ * header name and value. Only header names which are considered to be appropriate will be
+ * used, and if they happen to be functions, the return value of the function is used rather than
+ * the function itself.
+ *
+ * param {Function} fn The callback to be called for each iterated header and value.
+ *
+ * param {Object|Function} thisArg Value to use as `this` when invoking the callback.
+ *
+ * returns {InboxAPI} The InboxAPI instance.
+ */
+InboxAPI.prototype.forEachRequestHeader = function(fn, thisArg) {
+  if (!thisArg || typeof thisArg !== 'object' && typeof thisArg !== 'function') {
+    thisArg = null;
+  }
+
+  var headers = this.http('headers');
+  var key;
+  var value;
+  if (!headers || typeof headers !== 'object') {
+    return;
+  }
+
+  for (key in headers) {
+    if (Object.prototype.hasOwnProperty.call(headers, key) && HEADER_REGEXP.test(key)) {
+      value = headers[key];
+      if (typeof value === 'function') {
+        value = value();
+      }
+
+      fn.call(thisArg, key, value);
+    }
+  }
+
+  return this;
+};
