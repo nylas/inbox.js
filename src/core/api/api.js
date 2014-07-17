@@ -11,6 +11,7 @@ function NativePromiseWrapper(resolve, reject) {
 /**
  * @class InboxAPI
  *
+ * @description
  * Class which represents a specific Inbox web service. From here, it's possible to query for and
  * construct InboxNamespace objects, which represent email addresses associated with an account.
  *
@@ -79,17 +80,32 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
     return new InboxAPI(options);
   }
 
-  options._cache = {};
+  var cache = INStubCache;
 
-  options.http = Merge(Merge({}, DEFAULT_HTTP), (typeof options.http === 'object' && options.http));
+  if (options.cache) {
+    if (!INCache.isRegistered(options.cache)) {
+      throw new TypeError('Cache ' + options.cache + ' is not registered.');
+    }
+    cache = options.cache;
+  }
+
+  if (typeof cache === 'function') {
+    options.cache = new cache(this, options.cacheId);
+  } else {
+    options.cache = cache;
+  }
+
+  options.http = merge(merge({}, DEFAULT_HTTP), (typeof options.http === 'object' && options.http));
 
   this._ = options;
-  DefineProperty(this, '_', INVISIBLE);
+  defineProperty(this, '_', INVISIBLE);
 }
 
 /**
- * @method InboxAPI#http
+ * @function
+ * @name InboxAPI#http
  *
+ * @description
  * Return or modify InboxAPI instance's HTTP configuration. If called with no arguments, it will
  * return the HTTP configuration object. Otherwise, if passed a key, it will return the
  * configuration for that key (case-sensitive). Finally, if there is a value, the key will be
@@ -105,7 +121,7 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
  */
 InboxAPI.prototype.http = function(key, value) {
   if (!this._.http || typeof this._.http !== 'object') {
-    this._.http = Merge({}, DEFAULT_HTTP);
+    this._.http = merge({}, DEFAULT_HTTP);
   }
 
   if (!arguments.length) {
@@ -119,8 +135,10 @@ InboxAPI.prototype.http = function(key, value) {
 };
 
 /**
- * @method InboxAPI#withCredentials
+ * @function
+ * @name InboxAPI#withCredentials
  *
+ * @description
  * Convenience method for querying InboxAPI#http('withCredentials'), returning either the current
  * value of `withCredentials`, or specifying a new value.
  *
@@ -140,8 +158,10 @@ InboxAPI.prototype.withCredentials = function(value) {
 var HEADER_REGEXP = /^[a-z0-9_-]+$/;
 
 /**
- * @method InboxAPI#setRequestHeader
+ * @function
+ * @name InboxAPI#setRequestHeader
  *
+ * @description
  * Convenience method for specifying request headers to be issued by HTTP requests to the web
  * service. Primarily useful for certain authentication strategies.
  *
@@ -180,8 +200,11 @@ InboxAPI.prototype.setRequestHeader = function(header, value) {
 };
 
 /**
- * PRIVATE API InboxAPI#forEachRequestHeader
+ * @function
+ * @name InboxAPI#forEachRequestHeader
+ * @private
  *
+ * @description
  * Convenience method for iterating over each request header and calling a function with the
  * header name and value. Only header names which are considered to be appropriate will be
  * used, and if they happen to be functions, the return value of the function is used rather than
@@ -218,3 +241,128 @@ InboxAPI.prototype.forEachRequestHeader = function(fn, thisArg) {
 
   return this;
 };
+
+
+/**
+ * @function
+ * @name InboxAPI#promise
+ * @private
+ *
+ * @description
+ * Helper for constructing a Promise object using the configured promise constructor.
+ *
+ * @param {function(function, function)} resolver Callback function which performs a task and
+ *   fulfills the constructed promise.
+ *
+ * @returns {Promise} the constructed promise.
+ */
+defineProperty(InboxAPI.prototype, 'promise', INVISIBLE, null, null, function(resolver) {
+  return this._.promise(resolver);
+});
+
+
+/**
+ * @function
+ * @name InboxAPI#baseUrl
+ *
+ * @description
+ * Getter for the configured base-url of the InboxAPI instance.
+ *
+ * @returns {string} The configured base URL for API requests.
+ */
+InboxAPI.prototype.baseUrl = function() {
+  return this._.baseUrl;
+};
+
+
+/**
+ * @function
+ * @name InboxAPI#namespace
+ *
+ * @description
+ * Request a namespace by ID. This method will consult the cache before making an HTTP request.
+ *
+ * @param {string} namespaceId The ID of the namespace to query for.
+ *
+ * @returns {Promise} a promise which is resolved with an INNamespace object, or else rejected
+ *   with an error of some kind. The error may be from the cache subsystem, or may an HTTP
+ *   response with an erroneous status code.
+ */
+InboxAPI.prototype.namespace = function(namespaceId) {
+  var self = this;
+  var cache = this._.cache;
+  if (!arguments.length) {
+    throw new TypeError(
+      "Unable to perform 'namespace()' on InboxAPI: missing option `namespaceId`.");
+  } else if (typeof namespaceId !== 'string') {
+    throw new TypeError(
+      "Unable to perform 'namespace()' on InboxAPI: namespaceId must be a string.");
+  }
+  return this.promise(function(resolve, reject) {
+    cache.get(namespaceId, function(err, obj) {
+      if (err) return reject(err);
+      if (obj) return namespaceReady(null, obj);
+      apiRequest(self, 'get', formatUrl('%@/n/%@', self.baseUrl(), namespaceId), namespaceReady);
+
+      function namespaceReady(err, data) {
+        if (err) return reject(err);
+        cache.persist(namespaceId, data, noop);
+        resolve(new INNamespace(self, data));
+      }
+    });
+  });
+};
+
+
+/**
+ * @function
+ * @name InboxAPI#namespaces
+ *
+ * @description
+ * Request namespaces associated with the signed in user account. Optionally updates an array
+ * of INNamespace objects already present.
+ *
+ * @param {Array<INNamespace>=} optionalNamespaces An array of INNamespace objects to update.
+ *   If unspecified, a new array will be constructed.
+ *
+ * @returns {Promise} a promise which is resolved with an INNamespace object, or else rejected
+ *   with an error of some kind. The error may be from the cache subsystem, or may an HTTP
+ *   response with an erroneous status code.
+ */
+InboxAPI.prototype.namespaces = function(optionalNamespaces) {
+  var self = this;
+  var cache = this._.cache;
+  var updateNamespaces = null;
+
+  if (isArray(optionalNamespaces)) {
+    updateNamespaces = optionalNamespaces;
+  }
+
+  return this.promise(function(resolve, reject) {
+    cache.getByType('namespace', function(err, set) {
+      if (err) return reject(err);
+      if (set && set.length) return namespacesReady(null, set);
+      apiRequest(self, 'get', formatUrl('%@/n/', self.baseUrl()), namespacesReady);
+    });
+
+    function namespacesReady(err, set) {
+      if (err) return reject(err);
+
+      if (updateNamespaces) {
+        return resolve(mergeArray(updateNamespaces, set, 'id', function(data) {
+          cache.persist(data.id, data, noop);
+          return new INNamespace(self, data);
+        }));
+      }
+
+      set = map(set, function(item) {
+        cache.persist(item.id, item, noop);
+        return new INNamespace(self, item);
+      });
+
+      resolve(set);
+    }
+  });
+};
+
+

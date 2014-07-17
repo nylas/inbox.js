@@ -1,4 +1,16 @@
-var AddListener = (function() {
+/**
+ * @function
+ * @name addListener
+ * @private
+ *
+ * @description
+ * Adds an event listener to a DOM object.
+ *
+ * @param {object} object target of the event (DOM object)
+ * @param {string} event name of the event, such as "load".
+ * @param {function} handler callback to be invoked in response to the event.
+ */
+var addListener = (function() {
   if (typeof window.addEventListener === "function") {
     return function addEventListener(object, event, handler) {
       return object.addEventListener(event, handler);
@@ -15,7 +27,20 @@ var AddListener = (function() {
   }
 })();
 
-var RemoveListener = (function() {
+
+/**
+ * @function
+ * @name removeListener
+ * @private
+ *
+ * @description
+ * Removes an event listener to a DOM object.
+ *
+ * @param {object} object target of the event (DOM object)
+ * @param {string} event name of the event, such as "load".
+ * @param {function} handler callback to remove from the target's handlers for the event.
+ */
+var removeListener = (function() {
   if (typeof window.addEventListener === "function") {
     return function removeEventListener(object, event, handler) {
       return object.removeEventListener(event, handler);
@@ -32,11 +57,25 @@ var RemoveListener = (function() {
   }
 })();
 
-function AddListeners(object, listeners) {
+
+/**
+ * @function
+ * @name addListeners
+ * @private
+ *
+ * @description
+ * For each key/value in object 'listeners', add an event listener for 'key', whose value is the
+ * handler.
+ *
+ * @param {object} object target of the event (DOM object)
+ * @param {object} listeners object whose keys are event names, and whose values are handlers
+ *    for the respective event name.
+ */
+function addListeners(object, listeners) {
   var key;
   for (key in listeners) {
     if (listeners.hasOwnProperty(key) && typeof listeners[key] === "function") {
-      AddListener(object, key, listeners[key]);
+      addListener(object, key, listeners[key]);
     }
   }
 }

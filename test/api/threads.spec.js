@@ -1,4 +1,4 @@
-describe('InboxThread', function() {
+describe('INThread', function() {
   var haveOwnPromise = window.hasOwnProperty('Promise');
   var inbox;
   var server;
@@ -55,6 +55,43 @@ describe('InboxThread', function() {
     "drafts": []
   };
 
+  var mappedThread1 = {
+    "id": "fake_thread_id1",
+    "object": "thread",
+    "namespaceID": "fake_namespace_id",
+    "subject": "Mock Thread 1",
+    "lastMessageDate": new Date(1398229259000),
+    "participants": [
+      {
+        "name": "Ben Bitdiddle",
+        "email": "ben.bitdiddle@gmail.com"
+      },
+      {
+        "name": "Bill Rogers",
+        "email": "wrogers@mit.edu"
+      }
+    ],
+    "snippet": "Test thread 1...",
+    "tagData": [
+      {
+        "name": "inbox",
+        "id": "f0idlvozkrpj3ihxze7obpivh",
+        "object": "tag"
+      },
+      {
+        "name": "unread",
+        "id": "8keda28h8ijj2nogpj83yjep8",
+        "object": "tag"
+      }
+    ],
+    "messageIDs": [
+      "251r594smznew6yhiocht2v29",
+      "7upzl8ss738iz8xf48lm84q3e",
+      "ah5wuphj3t83j260jqucm9a28"
+    ],
+    "draftIDs": []
+  };
+
   var mockThread1Updated = __extend(mockThread1, {
     "messages": [
       "251r594smznew6yhiocht2v29",
@@ -64,8 +101,22 @@ describe('InboxThread', function() {
     ]
   });
 
+  var mappedThread1Updated = __extend(mappedThread1, {
+    "messageIDs": [
+      "251r594smznew6yhiocht2v29",
+      "7upzl8ss738iz8xf48lm84q3e",
+      "ah5wuphj3t83j260jqucm9a28",
+      "ag9afs86as9g8gasfasfsaf98"
+    ]
+  });
+
   var mockThread1Updated2 = __extend({}, mockThread1);
   mockThread1Updated2.messages = [
+    "ag9afs86as9g8gasfasfsaf98"
+  ];
+
+  var mappedThread1Updated2 = __extend({}, mappedThread1);
+  mappedThread1Updated2.messageIDs = [
     "ag9afs86as9g8gasfasfsaf98"
   ];
 
@@ -98,6 +149,37 @@ describe('InboxThread', function() {
     ],
     "drafts": []
   };
+
+  var mappedThread2 = {
+    "id": "fake_thread_id2",
+    "object": "thread",
+    "namespaceID": "fake_namespace_id",
+    "subject": "Mock Thread 2",
+    "lastMessageDate": new Date(1399238467000),
+    "participants": [
+      {
+        "name": "Ben Bitdiddle",
+        "email": "ben.bitdiddle@gmail.com"
+      },
+      {
+        "name": "Bill Rogers",
+        "email": "wrogers@mit.edu"
+      }
+    ],
+    "snippet": "Test thread 2...",
+    "tagData": [
+      {
+        "name": "inbox",
+        "id": "f0idlvozkrpj3ihxze7obpivh"
+      }
+    ],
+    "messageIDs": [
+      "251r594smznew6yhiocht2v29",
+      "7upzl8ss738iz8xf48lm84q3e"
+    ],
+    "draftIDs": []
+  };
+
   var mockThreads = [
     mockThread1,
     mockThread2
@@ -110,7 +192,7 @@ describe('InboxThread', function() {
       appId: '',
       baseUrl: 'http://api.inboxapp.co/'
     });
-    namespace = new InboxNamespace(inbox, mockNamespace);
+    namespace = new INNamespace(inbox, mockNamespace);
   });
 
 
@@ -124,12 +206,31 @@ describe('InboxThread', function() {
   });
 
 
+  it('should be a child class of INModelObject', function() {
+    expect(new INThread() instanceof INModelObject).toBe(true);
+  });
+
+
+  describe('when unsynced', function() {
+    it('should have null resourcePath()', function() {
+      expect ((new INThread(inbox, null, 'fake_namespace_id')).resourcePath()).toBe(null);
+    });
+  });
+
+
+  describe('when synced', function() {
+    it('should have resourcePath() like <baseUrl>/n/<namespaceId>/threads/<threadId>', function() {
+      expect ((new INThread(inbox, mockThread1)).resourcePath()).toBe('http://api.inboxapp.co/n/fake_namespace_id/threads/fake_thread_id1');
+    });
+  });
+
+
   describe('InboxNamespace#threads()', function() {
-    it('should resolve promise with an Array of InboxThreads', function() {
+    it('should resolve promise with an Array of INThreads', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
         expect(threads.length).toBe(2);
-        expect(threads[0] instanceof InboxThread).toBe(true);
-        expect(threads[1] instanceof InboxThread).toBe(true);
+        expect(threads[0] instanceof INThread).toBe(true);
+        expect(threads[1] instanceof INThread).toBe(true);
       });
       var promise = namespace.threads().then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThreads)]);
@@ -138,24 +239,10 @@ describe('InboxThread', function() {
     });
 
 
-    it('should copy properties from each thread object into new InboxThread', function() {
+    it('should copy mapped property values into resources', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
-        expect(threads[0]).toContainObject(mockThread1);
-        expect(threads[1]).toContainObject(mockThread2);
-      });
-      var promise = namespace.threads().then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThreads)]);
-      mockPromises.executeForPromise(promise);
-      expect(fulfilled).toHaveBeenCalled();
-    });
-
-
-    it('should include threadUrl in InboxThread private properties', function() {
-      var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
-        expect(threads[0]._.threadUrl).
-          toBe('http://api.inboxapp.co/n/fake_namespace_id/threads/fake_thread_id1');
-        expect(threads[1]._.threadUrl).
-          toBe('http://api.inboxapp.co/n/fake_namespace_id/threads/fake_thread_id2');
+        expect(threads[0]).toContainObject(mappedThread1);
+        //expect(threads[1]).toContainObject(mappedThread2);
       });
       var promise = namespace.threads().then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThreads)]);
@@ -179,8 +266,8 @@ describe('InboxThread', function() {
         expect(threads.length).toBe(2);
         expect(threads).toBe(oldThreads);
         expect(threads[0]).toBe(oldThreads[0]);
-        expect(threads[1]).toContainObject(mockThread2);
-        expect(threads[1] instanceof InboxThread).toBe(true);
+        expect(threads[1]).toContainObject(mappedThread2);
+        expect(threads[1] instanceof INThread).toBe(true);
       });
       var promise = namespace.threads(oldThreads).then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThreads)]);
@@ -191,9 +278,9 @@ describe('InboxThread', function() {
 
 
   describe('InboxNamespace#thread()', function() {
-    it('should resolve promise with InboxThread', function() {
+    it('should resolve promise with INThread', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(thread) {
-        expect(thread instanceof InboxThread).toBe(true);
+        expect(thread instanceof INThread).toBe(true);
       });
       var promise = namespace.thread('fake_thread_1').then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1)]);
@@ -202,24 +289,12 @@ describe('InboxThread', function() {
     });
 
 
-    it('should copy properties from thread object into new InboxThread', function() {
+    it('should copy mapped property values into new resource', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(thread) {
-        expect(thread).toContainObject(mockThread2);
+        expect(thread).toContainObject(mappedThread2);
       });
       var promise = namespace.thread('fake_thread_2').then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread2)]);
-      mockPromises.executeForPromise(promise);
-      expect(fulfilled).toHaveBeenCalled();
-    });
-
-
-    it('should include threadUrl in InboxThread private properties', function() {
-      var fulfilled = jasmine.createSpy('load').andCallFake(function(thread) {
-        expect(thread._.threadUrl).
-          toBe('http://api.inboxapp.co/n/fake_namespace_id/threads/fake_thread_id1');
-      });
-      var promise = namespace.thread('fake_thread_id1').then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -235,10 +310,10 @@ describe('InboxThread', function() {
   });
 
 
-  describe('sync method', function() {
+  describe('reload method', function() {
     var thread;
     beforeEach(function() {
-      thread = new InboxThread(namespace, mockThread1);
+      thread = new INThread(namespace, mockThread1);
     });
 
 
@@ -246,7 +321,7 @@ describe('InboxThread', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
         expect(newThread).toBe(thread);
       });
-      var promise = thread.sync().then(fulfilled);
+      var promise = thread.reload().then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
@@ -255,9 +330,9 @@ describe('InboxThread', function() {
 
     it('should resolve including properties from original Thread', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
-        expect(newThread).toContainObject(mockThread1);
+        expect(newThread).toContainObject(mappedThread1Updated);
       });
-      var promise = thread.sync().then(fulfilled);
+      var promise = thread.reload().then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
@@ -266,11 +341,11 @@ describe('InboxThread', function() {
 
     it('should resolve including properties from updated Thread', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
-        expect(newThread).toContainObject(mockThread1Updated);
-        expect(newThread.messages.length).toBe(4);
-        expect(newThread.messages[3]).toBe('ag9afs86as9g8gasfasfsaf98');
+        expect(newThread).toContainObject(mappedThread1Updated);
+        expect(newThread.messageIDs.length).toBe(4);
+        expect(newThread.messageIDs[3]).toBe('ag9afs86as9g8gasfasfsaf98');
       });
-      var promise = thread.sync().then(fulfilled);
+      var promise = thread.reload().then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
@@ -279,11 +354,11 @@ describe('InboxThread', function() {
 
     it('should resolve removing properties deleted in updated Thread', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
-        expect(newThread).toContainObject(mockThread1Updated2);
-        expect(newThread.messages.length).toBe(1);
-        expect(newThread.messages[0]).toBe('ag9afs86as9g8gasfasfsaf98');
+        expect(newThread).toContainObject(mappedThread1Updated2);
+        expect(newThread.messageIDs.length).toBe(1);
+        expect(newThread.messageIDs[0]).toBe('ag9afs86as9g8gasfasfsaf98');
       });
-      var promise = thread.sync().then(fulfilled);
+      var promise = thread.reload().then(fulfilled);
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated2)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();

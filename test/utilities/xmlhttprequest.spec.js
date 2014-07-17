@@ -2,7 +2,7 @@ describe('XMLHttpRequest', function() {
   var haveOwnPromise = window.hasOwnProperty('Promise');
   var inbox;
   var server;
-
+  var XHR = apiRequestPromise;
   function valueFn(value) { return value; }
 
   beforeEach(function() {

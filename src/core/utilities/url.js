@@ -1,18 +1,23 @@
-function URLAddPaths(url, paths) {
-  var i;
-  var ii;
-  paths = Array.prototype.slice.call(arguments, 1);
-
-  for (i = 0, ii = paths.length; i < ii; ++i) {
-    if (url.charAt(url.length-1) !== '/') {
-      url = url + '/';
-    }
-    url = url + paths[i];
-  }
-  return url;
-}
-
-function URLFormat(template, args) {
+/**
+ * @function
+ * @name formatUrl
+ * @private
+ *
+ * @description
+ * Given a template string, replace each `%@` in the string with a stringified value (arguments
+ * following the template).
+ *
+ * E.G, formatString("%@, %@!", "Hello", "World") -> "Hello, World!"
+ *
+ * This is similar to {formatString}, with the exception that for parameter names, leading and
+ * trailing slashes are removed automatically.
+ *
+ * @param {string} template the string template to process.
+ * @param {...*} args values to replace the instances of `%@` in the template string.
+ *
+ * @returns {string} the processed string.
+ */
+function formatUrl(template, args) {
   var i = 0;
   var ii;
   args = Array.prototype.slice.call(arguments, 1);
@@ -20,7 +25,9 @@ function URLFormat(template, args) {
 
   return template.replace(/\%\@/g, function() {
     if (i < ii) {
-      return ('' + args[i++]).
+      var str = args[i++];
+      if (typeof str === 'undefined') return '';
+      return ('' + str).
         replace(/^\/+/, '').
         replace(/\/+$/, '');
     }
@@ -30,21 +37,21 @@ function URLFormat(template, args) {
 
 var ARRAY_BRACKET_REGEXP = /\[\]$/;
 
-function BuildURLParams(key, value, add) {
+function buildURLParams(key, value, add) {
   var i, ii, name, v, classicArray = false;
-  if (IsArray(value)) {
+  if (isArray(value)) {
     classicArray = key.test(ARRAY_BRACKET_REGEXP);
     for (i=0, ii=value.length; i<ii; ++i) {
       v = value[i];
       if (classicArray) {
         add(key, v);
       } else {
-        BuildURLParams(key + '[' + (typeof v === 'object' ? i : '') + ']', v, add);
+        buildURLParams(key + '[' + (typeof v === 'object' ? i : '') + ']', v, add);
       }
     }
   } else if (typeof value === 'object') {
     for (name in value) {
-      BuildURLParams(key + '[' + name + ']', value[name], add);
+      buildURLParams(key + '[' + name + ']', value[name], add);
     }
   } else {
     add(key, value);
@@ -52,7 +59,7 @@ function BuildURLParams(key, value, add) {
 }
 
 // Based on jQuery.param (2.x.x)
-function SerializeURLParams(params) {
+function serializeURLParams(params) {
   var key, s;
   function add(key, value) {
     value = typeof value === 'function' ? value() : value == null ? '' : value;
@@ -63,7 +70,7 @@ function SerializeURLParams(params) {
     s = [];
     for (key in params) {
       if (params.hasOwnProperty(key)) {
-        BuildURLParams(key, params[key], add);
+        buildURLParams(key, params[key], add);
       }
     }
   }
@@ -122,12 +129,74 @@ var FILTER_INTS = {
 
 var INT_REGEXP = /^((0x[0-9a-f]+)|([0-9]+))$/i;
 
-function InboxURLFilters(filters) {
+
+/**
+ * @function
+ * @name applyFilters
+ * @private
+ *
+ * @description
+ * Apply a collection of filters to a URL (returns a query string).
+ *
+ * Supported filters include:
+ *   - subject
+ *       Return messages or threads with a subject matching this string or regular expression.
+ *
+ *   - email
+ *       Return messages or threads in which this email address has participated, either as a
+ *       sender, receiver, CC or BCC.
+ *
+ *   - from
+ *       Return messages or threads sent by this participant
+ *
+ *   - to
+ *       Return messages or threads in which this participant has been the recipient
+ *
+ *   - cc
+ *       Return messages or threads in which this participant has been CC'd
+ *
+ *   - bcc
+ *       Return messages or threads in which this participant has been BCC'd
+ *
+ *   - thread
+ *       Return messages, files or drafts attached to this thread.
+ *
+ *   - tag
+ *       Return messages or threads tagged with this tag.
+ *
+ *   - filename
+ *       Return files with this matching filename, or threads/messages where this filename was
+ *       attached.
+ *
+ *   - lastMessageBefore
+ *       Return threads whose last message arrived before this date.
+ *
+ *   - lastMessageAfter
+ *       Return threads whose last message arrived after this date.
+ *
+ *   - startedBefore
+ *       Return messages or threads which started before this date.
+ *
+ *   - startedAfter
+ *       Return messages or threads which started after this date.
+ *
+ *   - limit
+ *       The maximum number of items to return from the server. The server will impose a default
+ *       limit even if this value is not specified.
+ *
+ *   - offset
+ *       The offset in the collection of records, useful for pagination.
+ *
+ * @param {object} filters A collection of filters to use.
+ *
+ * @returns {string}| A query string, or the empty string if no filters are used.
+ */
+function applyFilters(filters) {
   var params;
   var key;
   var value;
   var result = '';
-  if (!filters || typeof filters !== "object" || IsArray(filters)) {
+  if (!filters || typeof filters !== "object" || isArray(filters)) {
     return '';
   }
 
@@ -150,7 +219,7 @@ function InboxURLFilters(filters) {
 
     if (FILTER_DATES[key] === true) {
       if (typeof value === 'number' || typeof value === 'string' || typeof value === 'object') {
-        value = ToUnixTimestamp(value);
+        value = toUnixTimestamp(value);
         params[key] = value;
         if (typeof value === 'number' && ((value !== value) || (Math.abs(value) === Infinity))) {
           // NaN/Infinity timestamp --- don't send.
@@ -179,6 +248,6 @@ function InboxURLFilters(filters) {
     }
   }
 
-  result = SerializeURLParams(params);
+  result = serializeURLParams(params);
   return result ? '?' + result : '';
 }

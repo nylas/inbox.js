@@ -4,6 +4,7 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     
     files: [
+      'src/core/utilities/*.js',
       'src/core/**/*.js',
       'test/helpers/**/*.js',
       'src/angular/module.js',

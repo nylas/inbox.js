@@ -1,0 +1,73 @@
+<!doctype html>
+<html ng-app="inbox_draft_messages">
+  <head>
+    <base href="./">
+    <title>Inbox SDK Examples --- Draft Messages</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/summernote.css">
+    <link rel="stylesheet" href="/summernote-bs3.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/theme/monokai.min.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/xml/xml.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/2.36.0/formatting.min.js"></script>
+    <style>body { padding-top: 60px; } .clickable { cursor: pointer; }
+    .input-group { padding-top: .5em; }
+    .input-group:first-of-type { padding-top: 0; }
+    </style>
+    <script src="/minievents.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="/summernote.js"></script>
+    <script src="https://code.angularjs.org/1.2.18/angular.js"></script>
+    <script src="https://code.angularjs.org/1.2.18/angular-sanitize.js"></script>
+    <script src="/angular-inbox.js"></script>
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <div class="navbar navbar-default navbar-fixed-top">
+      <a href="/" target="_self" class="navbar-brand">Inbox.js examples</a>
+      <ul class="nav navbar-nav">
+        <li><a href="#">draft-messages</a></li>
+      </ul>
+    </div>
+    <section class="container" ng-controller="draftsCtrl as Drafts">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">Send From:</div>
+            <table class="table table-hover">
+            <tr class="clickable" ng-repeat="ns in namespaces" ng-click="Drafts.new(ns, $event)">
+              <td>{{ns.emailAddress}}</td>
+            </tr>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-8" ng-show="Drafts.current !== null">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="input-group">
+                <span class="input-group-addon">Subject:</span>
+                <input type="text" class="form-control" name="subject" ng-model="Drafts.current.subject">
+              </div>
+              <div class="input-group">
+                <span class="input-group-addon">To:</span>
+                <input type="text" make-participants class="form-control" name="to" ng-model="Drafts.current.to">
+              </div>
+            </div>
+            <div class="panel-body" summer-note ng-model="Drafts.current.body">
+            </div>
+            <div class="panel-footer text-right">
+              <div class="btn-group">
+                <button type="button" class="btn btn-default glyphicon glyphicon-trash" ng-click="Drafts.dispose()"></button>
+                <button type="button" class="btn btn-default glyphicon glyphicon-floppy-disk" ng-click="Drafts.save()"></button>
+                <button type="button" class="btn btn-default glyphicon glyphicon-send" ng-click="Drafts.send()">&nbsp;Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

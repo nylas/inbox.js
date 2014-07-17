@@ -1,0 +1,63 @@
+<!doctype html>
+<html ng-app="inbox_reply_threads">
+  <head>
+    <base href="./">
+    <title>Inbox SDK Examples --- Reply to Threads</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/summernote.css">
+    <link rel="stylesheet" href="/summernote-bs3.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/theme/monokai.min.css">
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/codemirror.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/3.20.0/mode/xml/xml.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/codemirror/2.36.0/formatting.min.js"></script>
+    <style>body { padding-top: 60px; } .clickable { cursor: pointer; }
+    .input-group { padding-top: .5em; }
+    .input-group:first-of-type { padding-top: 0; }
+    </style>
+    <script src="/minievents.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="/summernote.js"></script>
+    <script src="https://code.angularjs.org/1.2.18/angular.js"></script>
+    <script src="https://code.angularjs.org/1.2.18/angular-sanitize.js"></script>
+    <script src="/angular-inbox.js"></script>
+    <script src="app.js"></script>
+  </head>
+  <body>
+    <div class="navbar navbar-default navbar-fixed-top">
+      <a href="/" target="_self" class="navbar-brand">Inbox.js examples</a>
+      <ul class="nav navbar-nav">
+        <li><a href="#">reply-to-threads</a></li>
+      </ul>
+    </div>
+    <section class="container" ng-controller="threadsCtrl as Threads">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">Threads</div>
+            <table class="table table-hover">
+              <tbody ng-repeat="tlist in threads">
+                <tr class="clickable" ng-repeat="thread in tlist | filter:filters" ng-click="Threads.select(thread, $event)">
+                  <td>{{thread.subject | shorten}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <h2 class="title" ng-if="Threads.selectedThreadID">Current thread: {{Threads.selectedThreadID}}</h2>
+          <div class="panel panel-default" ng-repeat="msg in Threads.selectedThreadMessages">
+            <div class="panel-heading">
+                <p>{{msg.subject}}</p>
+            </div>
+            <div class="panel-body" ng-bind-html="msg.body">
+            </div>
+            <div msg-footer="msg"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

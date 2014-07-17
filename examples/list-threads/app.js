@@ -53,8 +53,17 @@ controller('threadsCtrl', ['$scope', '$namespaces', function(scope, $namespaces)
   var filters = scope.filters = {};
   var self = this;
   function loadThreads(namespace, idx) {
+    var _2WeeksAgo = ((new Date().getTime() - 1209600000) / 1000) >>> 0;
     if (!threads[namespace.id]) threads[namespace.id] = [];
-    namespace.threads(threads[namespace.id]).then(function(threads) {
+    namespace.threads(threads[namespace.id], {
+      lastMessageAfter: _2WeeksAgo,
+      limit: 1000
+    }).then(function(threads) {
+      threads.sort(function(a, b) {
+        a = a.lastMessageDate.getTime();
+        b = b.lastMessageDate.getTime();
+        return b - a;
+      });
       return threads;
     }, function(error) {
       console.log(error);
@@ -82,7 +91,7 @@ controller('threadsCtrl', ['$scope', '$namespaces', function(scope, $namespaces)
       angular.element(selectedNode).addClass('active');
     }
     if (thread) {
-      thread.getMessages().then(function(messages) {
+      thread.messages().then(function(messages) {
         self.selectedThreadMessages = messages;
       }, function() {
         // show error message
