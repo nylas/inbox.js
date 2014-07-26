@@ -260,7 +260,7 @@ describe('INThread', function() {
     });
 
 
-    it('should update passed array of namespaces', function() {
+    it('should update passed array of threads', function() {
       var oldThreads = [mockThread1];
       var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
         expect(threads.length).toBe(2);
@@ -362,6 +362,6 @@ describe('INThread', function() {
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated2)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
-    });
+    })
   });
 });
