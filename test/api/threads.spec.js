@@ -276,7 +276,7 @@ describe('INThread', function() {
     });
 
 
-    iit('should update threads consistent with resourceMapping (issue #30)', function() {
+    it('should update threads consistent with resourceMapping (issue #30)', function() {
       var oldThreads = [new INThread(inbox, mockThread1)];
       var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
         expect(threads[0]).toContainObject(mappedThread1Updated2);
