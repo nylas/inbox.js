@@ -39,26 +39,38 @@ function noop() {}
  *
  * @param {object|Array} dest the destination object to which items are copied.
  * @param {object|Array} src the source object from which items are copied.
+ * @param {INModelObject=} resource optional resource class which defines how to merge properties.
  *
  * @returns {object|Array} the destination object.
  */
-function merge(dest, src) {
+function merge(dest, src, resource) {
   var key;
   var a;
   var b;
+  var mapping;
   for (key in src) {
-    if (key !== '_' && src.hasOwnProperty(key)) {
-      b = src[key];
-      if (dest.hasOwnProperty(key)) {
-        a = dest[key];
-        if (typeof a === 'object' && typeof b === 'object') {
-          var start = a ? (isArray(a) ? [] : {}) : null;
-          dest[key] = merge(merge(start, a), b);
-          continue;
+    if (key !== '_') {
+      mapping = resource && mappingForProperty(key, resource);
+      if (src.hasOwnProperty(key)) {
+        b = src[key];
+        if (dest.hasOwnProperty(key)) {
+          a = dest[key];
+          if (typeof a === 'object' && typeof b === 'object') {
+            if (mapping) {
+              if (mapping.merge) dest[key] = mapping.merge(a, b);
+            } else {
+              var start = a ? (isArray(a) ? [] : {}) : null;
+              dest[key] = merge(merge(start, a), b, true);
+            }
+            continue;
+          }
+          dest[key] = b;
+        } else {
+          dest[key] = b;
         }
-        dest[key] = b;
-      } else {
-        dest[key] = b;
+      } else if (mapping) {
+        // If there's a mapping for this property, delete it.
+        delete dest[key];
       }
     }
   }
@@ -82,10 +94,13 @@ function merge(dest, src) {
  * @param {string} id the property name by which objects are identified. This is typically 'id'.
  * @param {function=} newCallback a callback which modifies a new value in some way, typically by
  *   constructing a new INModelObject with it.
+ * @param {INModelObject=} resource the constructor for the resource type of which the arrays
+ *   should hold. Optional, but useful for ensuring properties are copied with regard for the
+ *   resource mapping.
  *
  * @returns {Array} the oldArray.
  */
-function mergeArray(oldArray, newArray, id, newCallback) {
+function mergeArray(oldArray, newArray, id, newCallback, resource) {
   var objects = {};
   var seen = {};
   var numOld = 0;
@@ -95,6 +110,7 @@ function mergeArray(oldArray, newArray, id, newCallback) {
   var callback = typeof newCallback === 'function' && newCallback;
   var i, ii, obj, oldObj;
   var oldLength = oldArray.length;
+
   for (i=0, ii=oldLength; i<ii; ++i) {
     obj = oldArray[i];
     if (typeof obj === 'object' && id in obj) {
@@ -102,13 +118,19 @@ function mergeArray(oldArray, newArray, id, newCallback) {
       objects[obj[id]] = obj;
     }
   }
+
   for (i=0, ii=newArray.length; i<ii; ++i) {
     obj = newArray[i];
+
+    if (resource && resource.resourceMapping) {
+      convertFromRaw(obj, resource);
+    }
+
     if (typeof obj === 'object' && id in obj) {
       ++numNew;
       if ((oldObj = objects[obj[id]])) {
         ++numSeen;
-        merge(oldObj, obj);
+        merge(oldObj, obj, resource);
         seen[obj[id]] = true;
       } else {
         if (callback) obj = callback(obj);
@@ -118,6 +140,7 @@ function mergeArray(oldArray, newArray, id, newCallback) {
       }
     }
   }
+
   if (numSeen < numOld) {
     // Go through and remove unseen indexes.
     for (i=oldLength; i--;) {
