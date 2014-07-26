@@ -253,7 +253,6 @@ INModelObject.prototype.toJSON = function() {
   return toJSON(this.raw());
 };
 
-
 var casters = {
   array: {
     to: function castToArray(val) {
@@ -262,18 +261,6 @@ var casters = {
     },
     from: function castFromArray(val) {
       return val;
-    },
-    merge: function mergeSimpleArrays(dest, src) {
-      // Merge simple arrays
-      if (!isArray(dest)) return merge([], src || []);
-      else if (!isArray(src) || !src.length) dest.length = 0;
-      else {
-        dest.length = src.length;
-        for (var i=0, ii = src.length; i < ii; ++i) {
-          dest[i] = src[i];
-        }
-      }
-      return dest;
     }
   },
   date: {
@@ -443,66 +430,6 @@ function defineResourceMapping(resourceClass, mapping, base) {
   defineProperty(resourceClass, 'resourceMapping', INVISIBLE, null, null, resourceMapping);
   defineProperty(resourceClass.prototype, 'resourceMapping', INVISIBLE, null, null,
     resourceMapping);
-}
-
-
-function mappingForProperty(propertyName, resource) {
-  if (propertyName === 'jsonKeys' || propertyName === 'resourceMapping') return;
-  var mapping = resource && resource.resourceMapping;
-  if (mapping) {
-    if (mapping.hasOwnProperty(propertyName)) {
-      return mapping[propertyName];
-    } else if (mapping.jsonKeys.hasOwnProperty(propertyName)) {
-      return mapping[mapping.jsonKeys[propertyName]];
-    }
-  }
-}
-
-
-/**
- * @function
- * @name convertFromRaw
- * @private
- *
- * @description
- * Convert a raw JSON object into an object similar to what the resource would look like, by
- * transforming the properties in the same way.
- *
- * @param {object} object raw object from the server
- * @param {INModelObject} resource resource class
- */
-function convertFromRaw(object, resource) {
-  var mapping = resource.resourceMapping;
-  var out;
-  if (!mapping) return;
-  out = {};
-
-  forEach(mapping.jsonKeys, function copyMappedProperties(propertyName, jsonKey) {
-    var mappingInfo = mapping[propertyName];
-    var cast = mappingInfo.to;
-    var cnst = mappingInfo.cnst;
-    var isObject;
-    var currentValue;
-
-    if (hasProperty(object, jsonKey)) {
-      currentValue = object[jsonKey];
-      if (propertyName !== jsonKey) {
-        delete object[jsonKey];
-      }
-
-      if (cnst) {
-        object[propertyName] = cnst;
-      } else {
-        cast = cast(currentValue, mappingInfo);
-        isObject = cast && typeof cast === 'object';
-        if (typeof currentValue !== 'undefined') {
-          object[propertyName] = cast;
-        }
-      }
-    } else if (cnst) {
-      object[propertyName] = cnst;
-    }
-  });
 }
 
 
