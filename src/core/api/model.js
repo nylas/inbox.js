@@ -166,7 +166,10 @@ INModelObject.prototype.reload = function() {
  * ResourceMapping. Unknown properties are ignored.
  */
 INModelObject.prototype.update = function(data) {
+  if (!data) return;
   var mapping = this.resourceMapping;
+  var updated = data.__converted_from_raw__ || false;
+
   forEach(mapping, function copyMappedProperties(mappingInfo, propertyName) {
     var cast = mappingInfo.to;
     var merge = mappingInfo.merge;
@@ -174,12 +177,14 @@ INModelObject.prototype.update = function(data) {
     var cnst = mappingInfo.cnst;
     var currentValue;
     var isObject;
+    var key = updated ? propertyName : jsonKey;
 
-    if (hasProperty(data, jsonKey)) {
+
+    if (hasProperty(data, key)) {
       if (cnst) {
         this[propertyName] = cnst;
       } else {
-        currentValue = data[jsonKey];
+        currentValue = data[key];
         if (typeof currentValue !== 'undefined') {
           cast = cast(currentValue, mappingInfo);
           isObject = cast && typeof cast === 'object';
@@ -503,6 +508,7 @@ function convertFromRaw(object, resource) {
       object[propertyName] = cnst;
     }
   });
+  defineProperty(object, '__converted_from_raw__', INVISIBLE, null, null, true);
 }
 
 
