@@ -274,6 +274,18 @@ describe('INThread', function() {
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
+
+
+    iit('should update threads consistent with resourceMapping (issue #30)', function() {
+      var oldThreads = [new INThread(inbox, mockThread1)];
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
+        expect(threads[0]).toContainObject(mappedThread1Updated2);
+      });
+      var promise = namespace.threads(oldThreads).then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify([mockThread1Updated2])]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
   });
 
 
@@ -362,6 +374,6 @@ describe('INThread', function() {
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated2)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
-    })
+    });
   });
 });

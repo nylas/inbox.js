@@ -217,7 +217,7 @@ INNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
         return resolve(mergeArray(updateThreads, set, 'id', function(data) {
           cache.persist(data.id, data, noop);
           return new INThread(self, data);
-        }));
+        }, INThread));
       }
 
       resolve(map(set, function(item) {
@@ -283,7 +283,7 @@ INNamespace.prototype.tags = function(optionalTagsOrFilters, filters) {
         return resolve(mergeArray(updateTags, set, 'id', function(data) {
           cache.persist(data.id, data, noop);
           return new INTag(self, data);
-        }));
+        }, INTag));
       }
 
       resolve(map(set, function(item) {
