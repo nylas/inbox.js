@@ -225,7 +225,7 @@ describe('INThread', function() {
   });
 
 
-  describe('InboxNamespace#threads()', function() {
+  describe('INNamespace#threads()', function() {
     it('should resolve promise with an Array of INThreads', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
         expect(threads.length).toBe(2);
@@ -277,7 +277,7 @@ describe('INThread', function() {
   });
 
 
-  describe('InboxNamespace#thread()', function() {
+  describe('INNamespace#thread()', function() {
     it('should resolve promise with INThread', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(thread) {
         expect(thread instanceof INThread).toBe(true);

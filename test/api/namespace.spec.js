@@ -94,7 +94,7 @@ describe('INNamespace', function() {
     });
 
 
-    it('should resolve promise with an array of InboxNamespaces', function() {
+    it('should resolve promise with an array of INNamespaces', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(namespaces) {
         expect(namespaces.length).toBe(2);
         expect(namespaces[0] instanceof INNamespace).toBe(true);
@@ -146,7 +146,7 @@ describe('INNamespace', function() {
 
 
   describe('InboxAPI#namespace()', function() {
-    it('should resolve promise with an instance of InboxNamespace', function() {
+    it('should resolve promise with an instance of INNamespace', function() {
       var fulfilled = jasmine.createSpy('load').andCallFake(function(namespace) {
         expect(namespace instanceof INNamespace).toBe(true);
       });
