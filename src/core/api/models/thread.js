@@ -110,7 +110,7 @@ INThread.prototype.messages = function(optionalMessagesOrFilters, filters) {
         return resolve(mergeArray(updateMessages, response, 'id', function(data) {
           persistModel(data = new INMessage(self.inbox(), data));
           return data;
-        }));
+        }, INMessage));
       }
       return resolve(map(response, function(data) {
         persistModel(data = new INMessage(self.inbox(), data));
