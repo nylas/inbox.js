@@ -163,6 +163,35 @@ defineProperty(INCache, 'unregister', 0, null, null, function(name) {
 
 
 /**
+ * @function getCacheType
+ * @private
+ *
+ * @description
+ * Translate a string, constructor, or object into a cacheType.
+ *
+ * @param {string|function|object} cache the cache to get the cacheType from
+ *
+ * @returns {string} the cacheType of the object
+ */
+function getCacheType(cache) {
+  var type;
+  if (typeof cache === 'function' && cache.prototype) {
+    type = cache.prototype.cacheType;
+  } else if (typeof cache === 'object' && cache) {
+    type = cache.cacheType;
+  } else if (typeof cache === 'string') {
+    type = cache;
+  }
+
+  if (typeof type === 'string' && type) {
+    return type.toLowerCase();
+  }
+
+  return undefined;
+}
+
+
+/**
  * @function INCache.isRegistered
  *
  * description
@@ -176,14 +205,26 @@ defineProperty(INCache, 'unregister', 0, null, null, function(name) {
  *   if the cache is not in the map of registered caches, or if the type is not appropriate.
  */
 defineProperty(INCache, 'isRegistered', 0, null, null, function(cacheOrName) {
-  if (typeof cacheOrName === 'function' && cacheOrName.cacheType &&
-      hasProperty(cacheOrName, cacheOrName.cacheType.toLowerCase())) {
-    return true;
-  } else if (hasProperty(caches, ('' + cacheOrName).toLowerCase())) {
-    return true;
-  }
-  return false;
+  return hasProperty(caches, getCacheType(cacheOrName));
 });
+
+
+/**
+ * @function getCacheByName
+ * @private
+ *
+ * @description
+ * Return the registered cache constructor for the given cache name, or undefined
+ *
+ * @param {string} cacheName the name of the cache
+ *
+ * @returns {function} the registered cache constructor for the given cache name, or undefined
+ */
+function getCacheByName(cacheName) {
+  if (typeof cacheName === 'string' && cacheName) {
+    return caches[cacheName.toLowerCase()];
+  }
+}
 
 
 /**

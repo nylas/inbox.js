@@ -85,13 +85,16 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
   if (options.cache) {
     if (!INCache.isRegistered(options.cache)) {
       throw new TypeError('Cache ' + options.cache + ' is not registered.');
+    } else if (typeof options.cache === 'string') {
+      cache = getCacheByName(options.cache);
+    } else {
+      cache = options.cache;
     }
-    cache = options.cache;
   }
 
   if (typeof cache === 'function') {
     options.cache = new cache(this, options.cacheId);
-  } else {
+  } else if (typeof cache === 'object' && cache) {
     options.cache = cache;
   }
 
