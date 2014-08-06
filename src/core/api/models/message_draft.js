@@ -24,8 +24,7 @@ function INDraft(inbox, id, namespaceId) {
   }
   INMessage.call(this, inbox, id, namespaceId);
   if (data) this.update(data);
-  this.attachmentIDs = []
-  this.attachments = []
+  this.attachmentData = []
 }
 
 inherits(INDraft, INMessage);
@@ -96,8 +95,7 @@ INDraft.prototype.uploadAttachment = function(fileNameOrFile, blobForFileName) {
         return reject(err);
       }
 
-      self.attachments.push(response);
-      self.attachmentIDs.push(response.id);
+      self.attachmentData.push(response);
       return resolve(response);
     });
   });
@@ -123,22 +121,15 @@ INDraft.prototype.removeAttachment = function(file) {
 	}
 	var id = typeof file === 'string' ? file : file.id;
 	var i;
-	var ii = this.attachmentIDs.length;
+	var ii = this.attachmentData.length;
 
 	for (i=0; i<ii; ++i) {
-		if (this.attachmentIDs[i] === id) {
-			this.attachmentIDs.splice(i, 1);
+		if (this.attachmentData[i]['id'] === id) {
+			this.attachmentData.splice(i, 1);
 			break;
 		}
 	}
 
-	var ii = this.attachments.length;
-	for (i=0; i<ii; ++i) {
-		if (this.attachments[i].id === id) {
-			this.attachments.splice(i, 1);
-			break;
-		}
-	}
 	return this;
 };
 
@@ -165,12 +156,18 @@ INDraft.prototype.save = function() {
 	var inbox = this.inbox();
 	var self = this;
 	var rawJson = this.toJSON();
+	rawJson.files = [];
+	for (var ii = 0; ii < this.attachmentData.length; ii++) {
+		data.files.push(this.attachmentData[ii]['id'])
+	}
 
 	return this.promise(function(resolve, reject) {
 		apiRequest(inbox, 'post', url, rawJson, function(err, response) {
 			if (err) return reject(err);
-			// Should delete the old cached version, if any
+			// Should delete the cached version, if any
+			self.update(response);
 			deleteModel(self);
+			resolve(self);
 		});
 	});
 };
@@ -195,6 +192,10 @@ INDraft.prototype.send = function() {
 	if (this.isUnsynced()) {
 		// Just send a message
 		data = this.raw();
+		data.files = [];
+		for (var ii = 0; ii < this.attachmentData.length; ii++) {
+			data.files.push(this.attachmentData[ii]['id'])
+		}
 		delete data.id;
 		delete data.object;
 		data = toJSON(data);
@@ -258,7 +259,6 @@ INDraft.prototype.dispose = function() {
  */
 defineResourceMapping(INDraft, {
 	'thread': 'reply_to_thread',
-	'attachmentIDs': 'files'
 	'state': 'state',
 	'object': 'const:draft'
 }, INMessage);

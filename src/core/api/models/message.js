@@ -100,9 +100,9 @@ INMessage.prototype.reply = function() {
  * @returns {Array<INFile>} an array of INFile objects
  */
 INMessage.prototype.attachments = function() {
-  var array = new Array(this.attachmentIDs.length);
-  forEach(this.attachmentIDs, function(id, i) {
-    array[i] = new INFile(this.inbox(), id, this.namespaceId());
+  var array = new Array(this.attachmentData.length);
+  forEach(this.attachmentData, function(data, i) {
+    array[i] = new INFile(this.inbox(), data, this.namespaceId());
   }, this);
   return array;
 };
@@ -125,7 +125,7 @@ INMessage.prototype.attachmentsPromise = function() {
   var self = this;
   var filters = {};
   return this.promise(function(resolve, reject) {
-    var url = urlFormat('%@/files%@', self.namespaceUrl(), applyFilters(filters));
+    var url = formatUrl('%@/files%@', self.namespaceUrl(), applyFilters(filters));
     apiRequest(self.inbox(), 'get', url, function(err, response) {
       if (err) return reject(err);
       return resolve(map(response, function(data) {
@@ -143,9 +143,9 @@ INMessage.prototype.attachment = function(indexOrId) {
     index = indexOrId >>> 0;
   } else if (typeof indexOrId === 'string') {
     var i;
-    var ii = this.attachmentIDs.length;
+    var ii = this.attachmentData.length;
     for (i=0; i<ii; ++i) {
-      if (indexOrId === this.attachmentIDs[i]) {
+      if (indexOrId === this.attachmentData[i]['id']) {
         index = i;
         break;
       }
@@ -159,13 +159,13 @@ INMessage.prototype.attachment = function(indexOrId) {
     return null;
   }
 
-  var element = this.attachmentIDs[index];
+  var data = this.attachmentData[index];
 
-  if (typeof element === 'undefined') {
+  if (typeof data === 'undefined') {
     return null;
   }
 
-  return new INFile(this.inbox(), element, this.namespaceId());
+  return new INFile(this.inbox(), data, this.namespaceId());
 };
 
 
@@ -279,6 +279,6 @@ defineResourceMapping(INMessage, {
   'cc': 'array:cc',
   'bcc': 'array:bcc',
   'unread': 'bool:unread',
-  'attachmentIDs': 'array:files',
+  'attachmentData': 'array:files',
   'object': 'const:message'
 });
