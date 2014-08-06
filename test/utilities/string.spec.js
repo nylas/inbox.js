@@ -8,3 +8,11 @@ describe('stringFormat', function() {
     expect(formatString('%@.%@jpeg', 'test')).toBe('test.jpeg');
   });
 });
+
+
+describe('capitalizeString', function() {
+  it('should capitalize each word in the string separated by whitespace', function() {
+    expect(capitalizeString('foo bar baz')).toBe('Foo Bar Baz');
+    expect(capitalizeString('foo\tbar\tbaz')).toBe('Foo\tBar\tBaz');
+  });
+});

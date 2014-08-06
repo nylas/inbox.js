@@ -66,7 +66,7 @@ INTag.prototype.name = function() {
   if (hasProperty(localizedTagNames, this.tagName)) {
     return localizedTagNames[this.tagName];
   }
-  capitalizeString(this.tagName);
+  return capitalizeString(this.tagName);
 };
 
 
