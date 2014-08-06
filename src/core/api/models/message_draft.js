@@ -24,6 +24,8 @@ function INDraft(inbox, id, namespaceId) {
   }
   INMessage.call(this, inbox, id, namespaceId);
   if (data) this.update(data);
+  this.attachmentIDs = []
+  this.attachments = []
 }
 
 inherits(INDraft, INMessage);
@@ -83,7 +85,8 @@ INDraft.prototype.addRecipients = function(participants) {
  */
 INDraft.prototype.uploadAttachment = function(fileNameOrFile, blobForFileName) {
   var namespace = this.namespace();
-	var self = this;
+  var self = this;
+
   return this.promise(function(resolve, reject) {
     uploadFile(self, fileNameOrFile, blobForFileName, function(err, response) {
       if (err) {
@@ -92,7 +95,9 @@ INDraft.prototype.uploadAttachment = function(fileNameOrFile, blobForFileName) {
         }
         return reject(err);
       }
-			self.attachmentIDs.push(response.id);
+
+      self.attachments.push(response);
+      self.attachmentIDs.push(response.id);
       return resolve(response);
     });
   });
@@ -126,6 +131,14 @@ INDraft.prototype.removeAttachment = function(file) {
 			break;
 		}
 	}
+
+	var ii = this.attachments.length;
+	for (i=0; i<ii; ++i) {
+		if (this.attachments[i].id === id) {
+			this.attachments.splice(i, 1);
+			break;
+		}
+	}
 	return this;
 };
 
@@ -152,15 +165,12 @@ INDraft.prototype.save = function() {
 	var inbox = this.inbox();
 	var self = this;
 	var rawJson = this.toJSON();
+
 	return this.promise(function(resolve, reject) {
 		apiRequest(inbox, 'post', url, rawJson, function(err, response) {
 			if (err) return reject(err);
 			// Should delete the old cached version, if any
 			deleteModel(self);
-
-			self.update(response);
-			persistModel(self);
-			resolve(self);
 		});
 	});
 };
@@ -183,11 +193,11 @@ INDraft.prototype.send = function() {
 	var url = formatUrl('%@/send', this.namespaceUrl());
 
 	if (this.isUnsynced()) {
-    // Just send a message
-    data = this.raw();
-    delete data.id;
-    delete data.object;
-    data = toJSON(data);
+		// Just send a message
+		data = this.raw();
+		delete data.id;
+		delete data.object;
+		data = toJSON(data);
 	} else {
 		// Send using the saved ID
 		data = toJSON({
@@ -248,5 +258,7 @@ INDraft.prototype.dispose = function() {
  */
 defineResourceMapping(INDraft, {
 	'thread': 'reply_to_thread',
-  'object': 'const:draft'
+	'attachmentIDs': 'files'
+	'state': 'state',
+	'object': 'const:draft'
 }, INMessage);

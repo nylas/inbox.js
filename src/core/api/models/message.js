@@ -121,6 +121,22 @@ INMessage.prototype.attachments = function() {
  *
  * @returns {INFile} an INFile object.
  */
+INMessage.prototype.attachmentsPromise = function() {
+  var self = this;
+  var filters = {};
+  return this.promise(function(resolve, reject) {
+    var url = urlFormat('%@/files%@', self.namespaceUrl(), applyFilters(filters));
+    apiRequest(self.inbox(), 'get', url, function(err, response) {
+      if (err) return reject(err);
+      return resolve(map(response, function(data) {
+        persistModel(data = new INFile(self.inbox(), data));
+        return data;
+      }));
+    });
+  });
+}
+
+
 INMessage.prototype.attachment = function(indexOrId) {
   var index;
   if (typeof indexOrId === 'number') {
@@ -260,6 +276,8 @@ defineResourceMapping(INMessage, {
   'date': 'date:date',
   'from': 'array:from',
   'to': 'array:to',
+  'cc': 'array:cc',
+  'bcc': 'array:bcc',
   'unread': 'bool:unread',
   'attachmentIDs': 'array:files',
   'object': 'const:message'

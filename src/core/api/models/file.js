@@ -68,6 +68,22 @@ INFile.prototype.downloadUrl = function() {
 };
 
 
+INFile.prototype.download = function(saveCallback) {
+  var inbox = this.namespace().inbox();
+  var url = urlFormat('%@/files/%@/download', this.namespaceUrl(), this.id);
+
+  var filename = this.filename || this.id;
+  var content_type = this.content_type || "text/plain;charset=utf-8";
+  apiRequestData(inbox, 'get', url, function(err, response) {
+    if (err) console.log('error downloading file');
+    else {
+      var blob = new Blob([response], {type: content_type});
+      saveCallback(blob, filename);
+    }
+  });
+};
+
+
 /**
  * @property
  * @name INFile#filename
@@ -115,9 +131,10 @@ INFile.prototype.downloadUrl = function() {
  *
  * The object type, which is always "file".
  */
+
 defineResourceMapping(INFile, {
   'filename': 'filename',
-  'mimetype': 'mimetype',
+  'content_type': 'content_type',
   'size': 'int:size',
   'messageID': 'message',
   'isEmbedded': 'bool:is_embedded',
@@ -133,6 +150,7 @@ function uploadFile(namespace, fileOrFileName, fileDataOrCallback, callback) {
 
   var inbox = namespace.inbox();
   var url = formatUrl('%@/files/', namespace.namespaceUrl());
+
   var data = new window.FormData();
   if (isFile(fileOrFileName)) {
     data.append('file', fileOrFileName);
@@ -145,7 +163,9 @@ function uploadFile(namespace, fileOrFileName, fileDataOrCallback, callback) {
   apiRequest(inbox, 'post', url, data, function(err, response) {
     if (err) return callback(err, null);
 
-    callback(null, makeFile(response));
+    var i = 0;
+    for(i = 0; i < response.length; i++)
+      callback(null, makeFile(response[i]));
 
     function makeFile(item) {
       item = new INFile(namespace, item);

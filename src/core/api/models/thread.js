@@ -60,6 +60,7 @@ INThread.prototype.reply = function() {
   var data = this.raw();
   delete data.id;
   var draft = new INDraft(this.namespace(), data);
+  draft.to = data.participants;
   draft.thread = this.id;
   return draft;
 };
@@ -84,7 +85,7 @@ INThread.prototype.reply = function() {
  * @returns {Promise} a promise to be fulfilled with the new or updated messages, or error from
  *   the server.
  */
-INThread.prototype.messages = function(optionalMessagesOrFilters, filters) {
+function getter(klass, endpoint, optionalMessagesOrFilters, filters) {
   var self = this;
   var updateMessages = null;
 
@@ -103,17 +104,17 @@ INThread.prototype.messages = function(optionalMessagesOrFilters, filters) {
   filters.thread = this.id;
 
   return this.promise(function(resolve, reject) {
-    var url = formatUrl('%@/messages%@', self.namespaceUrl(), applyFilters(filters));
+    var url = urlFormat('%@/%@%@', self.namespaceUrl(), endpoint, applyFilters(filters));
     apiRequest(self.inbox(), 'get', url, function(err, response) {
       if (err) return reject(err);
       if (updateMessages) {
         return resolve(mergeArray(updateMessages, response, 'id', function(data) {
-          persistModel(data = new INMessage(self.inbox(), data));
+          persistModel(data = new klass(self.inbox(), data));
           return data;
-        }, INMessage));
+        }, klass));
       }
       return resolve(map(response, function(data) {
-        persistModel(data = new INMessage(self.inbox(), data));
+        persistModel(data = new klass(self.inbox(), data));
         return data;
       }));
     });
@@ -192,6 +193,45 @@ INThread.prototype.messages = function(optionalMessagesOrFilters, filters) {
  *
  * The resource type, always "thread".
  */
+INThread.prototype.updateTags = function(addTags, removeTags) {
+  var self = this;
+  var url = urlFormat('%@/threads/%@', this.namespaceUrl(), this.id);
+
+  return this.promise(function(resolve, reject) {
+    // modify the tags, then reload ourselves, then call the promises' success method
+    apiRequestPromise(self.inbox(), 'put', url, JSON.stringify({
+        "add_tags" : addTags, "remove_tags" : removeTags 
+      }), function(value) {
+        self.reload().then(function(){
+          return resolve(self);
+        }, reject);
+    }, reject);
+  });
+}
+
+INThread.prototype.addTags = function(tags) {
+  return this.updateTags(tags, []);
+};
+
+INThread.prototype.removeTags = function(tags) {
+  return this.updateTags([], tags);
+};
+
+INThread.prototype.hasTag = function(tag) {
+  for(i = 0; i < this.tagData.length; i++)
+    if ((this.tagData[i].tagName == tag) || (this.tagData[i].name == tag))
+      return true;
+  return false;
+};
+
+INThread.prototype.messages = function(optionalMessagesOrFilters, filters) {
+  return getter.call(this, INMessage, 'messages', optionalMessagesOrFilters, filters);
+};
+
+INThread.prototype.drafts = function(optionalMessagesOrFilters, filters) {
+  return getter.call(this, INDraft, 'drafts', optionalMessagesOrFilters, filters);
+};
+
 defineResourceMapping(INThread, {
   'subject': 'subject',
   'subjectDate': 'date:subject_date',
@@ -200,6 +240,6 @@ defineResourceMapping(INThread, {
   'messageIDs': 'array:messages',
   'draftIDs': 'array:drafts',
   'tagData': 'array:tags',
-  'snippet': 'snippet',
-  'object': 'const:thread'
+  'object': 'const:thread',
+  'snippet': 'snippet'
 });
