@@ -82,7 +82,12 @@ describe('INMessage', function() {
     "date": 1370084645,
     "thread": "5vryyrki4fqt7am31uso27t3f",
     "files": [
-        "1g76i48k34wqbf6qgp285nw0o"
+        {
+            "content_type": "image/jpeg",
+            "filename": "walter.jpg",
+            "id": "7jm8bplrg5tx0c7pon56tx30r",
+            "size": 38633
+        }
     ],
     "body": "<html><body>....</body></html>",
     "unread": true
@@ -108,8 +113,13 @@ describe('INMessage', function() {
     "bcc": [],
     "date": new Date(1370084645000),
     "threadID": "5vryyrki4fqt7am31uso27t3f",
-    "attachmentIDs": [
-      "1g76i48k34wqbf6qgp285nw0o"
+    "attachmentData": [
+      {
+        "content_type": "image/jpeg",
+        "filename": "walter.jpg",
+        "id": "7jm8bplrg5tx0c7pon56tx30r",
+        "size": 38633
+      }
     ],
     "body": "<html><body>....</body></html>",
     "unread": true
@@ -131,7 +141,7 @@ describe('INMessage', function() {
       var oldMsgs = [new INMessage(inbox, mockMsg1)];
       var fulfilled = jasmine.createSpy('load').andCallFake(function(msg) {
         expect(msg[0]).toContainObject(mappedMsg1Updated);
-        expect(msg[0].attachmentIDs.length).toBe(1);
+        expect(msg[0].attachments().length).toBe(1);
         expect(msg[0].files).toBeUndefined();
       });
       var promise = thread.messages(oldMsgs).then(fulfilled);

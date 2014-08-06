@@ -257,9 +257,10 @@ INMessage.prototype.markAsRead = function() {
 
 /**
  * @property
- * @name INMessage#attachmentIDs
+ * @name INMessage#attachmentData
  *
- * An array of strings (attachment IDs), representing the files attached to this message.
+ * An array of the raw attachment JSON blocks, representing the files attached to this message.
+ * See the attachments() method for INFile objects instead.
  */
 
 
