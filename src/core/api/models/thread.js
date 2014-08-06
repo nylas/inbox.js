@@ -104,7 +104,7 @@ function getter(klass, endpoint, optionalMessagesOrFilters, filters) {
   filters.thread = this.id;
 
   return this.promise(function(resolve, reject) {
-    var url = urlFormat('%@/%@%@', self.namespaceUrl(), endpoint, applyFilters(filters));
+    var url = formatUrl('%@/%@%@', self.namespaceUrl(), endpoint, applyFilters(filters));
     apiRequest(self.inbox(), 'get', url, function(err, response) {
       if (err) return reject(err);
       if (updateMessages) {
@@ -195,7 +195,7 @@ function getter(klass, endpoint, optionalMessagesOrFilters, filters) {
  */
 INThread.prototype.updateTags = function(addTags, removeTags) {
   var self = this;
-  var url = urlFormat('%@/threads/%@', this.namespaceUrl(), this.id);
+  var url = formatUrl('%@/threads/%@', this.namespaceUrl(), this.id);
 
   return this.promise(function(resolve, reject) {
     // modify the tags, then reload ourselves, then call the promises' success method
@@ -218,8 +218,8 @@ INThread.prototype.removeTags = function(tags) {
 };
 
 INThread.prototype.hasTag = function(tag) {
-  for(i = 0; i < this.tagData.length; i++)
-    if ((this.tagData[i].tagName == tag) || (this.tagData[i].name == tag))
+  for(var i = 0; i < this.tagData.length; i++)
+    if ((this.tagData[i].tagName == tag) || (this.tagData[i].id == tag))
       return true;
   return false;
 };

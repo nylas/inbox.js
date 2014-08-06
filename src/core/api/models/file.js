@@ -70,7 +70,7 @@ INFile.prototype.downloadUrl = function() {
 
 INFile.prototype.download = function(saveCallback) {
   var inbox = this.namespace().inbox();
-  var url = urlFormat('%@/files/%@/download', this.namespaceUrl(), this.id);
+  var url = formatUrl('%@/files/%@/download', this.namespaceUrl(), this.id);
 
   var filename = this.filename || this.id;
   var content_type = this.content_type || "text/plain;charset=utf-8";
