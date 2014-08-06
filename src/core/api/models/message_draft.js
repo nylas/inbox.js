@@ -24,7 +24,7 @@ function INDraft(inbox, id, namespaceId) {
   }
   INMessage.call(this, inbox, id, namespaceId);
   if (data) this.update(data);
-  this.attachmentData = []
+  this.attachmentData = [];
 }
 
 inherits(INDraft, INMessage);
@@ -124,7 +124,7 @@ INDraft.prototype.removeAttachment = function(file) {
 	var ii = this.attachmentData.length;
 
 	for (i=0; i<ii; ++i) {
-		if (this.attachmentData[i]['id'] === id) {
+		if (this.attachmentData[i].id === id) {
 			this.attachmentData.splice(i, 1);
 			break;
 		}
@@ -158,7 +158,7 @@ INDraft.prototype.save = function() {
 	var rawJson = this.toJSON();
 	rawJson.files = [];
 	for (var ii = 0; ii < this.attachmentData.length; ii++) {
-		data.files.push(this.attachmentData[ii]['id'])
+		rawJson.files.push(this.attachmentData[ii].id);
 	}
 
 	return this.promise(function(resolve, reject) {
@@ -194,7 +194,7 @@ INDraft.prototype.send = function() {
 		data = this.raw();
 		data.files = [];
 		for (var ii = 0; ii < this.attachmentData.length; ii++) {
-			data.files.push(this.attachmentData[ii]['id'])
+			data.files.push(this.attachmentData[ii].id);
 		}
 		delete data.id;
 		delete data.object;

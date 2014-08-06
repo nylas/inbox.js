@@ -134,7 +134,7 @@ INMessage.prototype.attachmentsPromise = function() {
       }));
     });
   });
-}
+};
 
 
 INMessage.prototype.attachment = function(indexOrId) {
@@ -145,7 +145,7 @@ INMessage.prototype.attachment = function(indexOrId) {
     var i;
     var ii = this.attachmentData.length;
     for (i=0; i<ii; ++i) {
-      if (indexOrId === this.attachmentData[i]['id']) {
+      if (indexOrId === this.attachmentData[i].id) {
         index = i;
         break;
       }

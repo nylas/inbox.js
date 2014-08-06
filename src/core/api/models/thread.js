@@ -119,7 +119,7 @@ function getter(klass, endpoint, optionalMessagesOrFilters, filters) {
       }));
     });
   });
-};
+}
 
 
 /**
@@ -207,7 +207,7 @@ INThread.prototype.updateTags = function(addTags, removeTags) {
         }, reject);
     }, reject);
   });
-}
+};
 
 INThread.prototype.addTags = function(tags) {
   return this.updateTags(tags, []);
