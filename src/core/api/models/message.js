@@ -100,11 +100,11 @@ INMessage.prototype.reply = function() {
  * @returns {Array<INFile>} an array of INFile objects
  */
 INMessage.prototype.attachments = function() {
-  var array = new Array(this.attachmentData.length);
-  forEach(this.attachmentData, function(data, i) {
-    array[i] = new INFile(this.inbox(), data, this.namespaceId());
-  }, this);
-  return array;
+  var inbox = this.inbox();
+  var namespace = this.namespaceId();
+  return map(this.attachmentData, function(data) {
+    return new INFile(inbox, data, namespace);
+  });
 };
 
 
