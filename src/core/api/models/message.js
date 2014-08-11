@@ -128,8 +128,9 @@ INMessage.prototype.attachmentsPromise = function() {
     var url = formatUrl('%@/files%@', self.namespaceUrl(), applyFilters(filters));
     apiRequest(self.inbox(), 'get', url, function(err, response) {
       if (err) return reject(err);
+      var inbox = self.inbox();
       return resolve(map(response, function(data) {
-        persistModel(data = new INFile(self.inbox(), data));
+        persistModel(data = new INFile(inbox, data));
         return data;
       }));
     });
