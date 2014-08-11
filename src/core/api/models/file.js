@@ -68,18 +68,26 @@ INFile.prototype.downloadUrl = function() {
 };
 
 
-INFile.prototype.download = function(saveCallback) {
+INFile.prototype.download = function() {
   var inbox = this.namespace().inbox();
   var url = formatUrl('%@/files/%@/download', this.namespaceUrl(), this.id);
 
   var filename = this.filename || this.id;
   var contentType = this.contentType || "text/plain;charset=utf-8";
-  apiRequestData(inbox, 'get', url, function(err, response) {
-    if (err) console.log('error downloading file');
-    else {
-      var blob = new Blob([response], {type: contentType});
-      saveCallback(blob, filename);
-    }
+  return this.promise(function(resolve, reject) {
+    apiRequestData(inbox, 'get', url, function(err, response) {
+      if (err) reject(err);
+      else {
+        var blob = new Blob([response], {type: contentType});
+        resolve({
+          // Sadly, the File constructor isn't very useful yet --- but File is specifically designed
+          // to bundle this metadata with a Blob. Hopefully in 2015 it would be suitable to
+          // update this API to just return a new File instead.
+          filename: filename,
+          blob: blob
+        });
+      }
+    });
   });
 };
 
