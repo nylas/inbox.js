@@ -73,11 +73,11 @@ INFile.prototype.download = function(saveCallback) {
   var url = formatUrl('%@/files/%@/download', this.namespaceUrl(), this.id);
 
   var filename = this.filename || this.id;
-  var content_type = this.content_type || "text/plain;charset=utf-8";
+  var contentType = this.contentType || "text/plain;charset=utf-8";
   apiRequestData(inbox, 'get', url, function(err, response) {
     if (err) console.log('error downloading file');
     else {
-      var blob = new Blob([response], {type: content_type});
+      var blob = new Blob([response], {type: contentType});
       saveCallback(blob, filename);
     }
   });
@@ -134,7 +134,7 @@ INFile.prototype.download = function(saveCallback) {
 
 defineResourceMapping(INFile, {
   'filename': 'filename',
-  'content_type': 'content_type',
+  'contentType': 'content_type',
   'size': 'int:size',
   'messageID': 'message',
   'isEmbedded': 'bool:is_embedded',
