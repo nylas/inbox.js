@@ -341,7 +341,7 @@ INNamespace.prototype.uploadFile = function(fileNameOrFile, blobForFileName) {
  * @returns {INDraft} the newly constructed INDraft object.
  */
 INNamespace.prototype.draft = function() {
-	return new INDraft(this, null);
+  return new INDraft(this, null);
 };
 
 
