@@ -121,7 +121,7 @@ INMessage.prototype.attachments = function() {
  *
  * @returns {INFile} an INFile object.
  */
-INMessage.prototype.attachmentsPromise = function() {
+INMessage.prototype.getAttachments = function() {
   var self = this;
   var filters = {};
   return this.promise(function(resolve, reject) {
