@@ -204,6 +204,13 @@ function apiRequest(inbox, method, url, data, callback) {
   inbox.forEachRequestHeader(xhr.setRequestHeader, xhr);
 
   xhr.send(data);
+
+  return xhr;
+}
+
+function apiRequestData(inbox, method, url, data, callback) {
+  var xhr = apiRequest(inbox, method, url, data, callback);
+  xhr.responseType = "arraybuffer";
 }
 
 
@@ -229,7 +236,7 @@ function apiRequestPromise(inbox, method, url, data, callback) {
   if (typeof data === 'function') {
     callback = data;
     data = null;
-  } else if (typeof data !== 'string') {
+  } else if (typeof data !== 'string' && typeof data !== 'object') {
     data = null;
   }
   if (typeof callback !== 'function') {

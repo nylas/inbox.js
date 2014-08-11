@@ -1,4 +1,4 @@
-describe('urlFormat', function() {
+describe('formatUrl', function() {
   it('should replace `%@` with Object.toString()-ified parameter', function() {
     expect(formatUrl('%@/%@/%@', 'foo', 123, null)).toBe('foo/123/null');
   });

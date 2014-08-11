@@ -23,6 +23,7 @@
     "addListener": true,
     "addListeners": false,
     "apiRequest": false,
+    "apiRequestData": false,
     "apiRequestPromise": false,
     "applyFilters": false,
     "capitalizeString": false,
