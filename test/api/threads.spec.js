@@ -507,4 +507,24 @@ describe('INThread', function() {
       INThread.prototype.updateTags = orig;
     });
   });
+
+
+  describe('hasTag()', function() {
+    it('should return true if the tag name is found', function() {
+      var thread = new INThread(namespace, mockThread1);
+      expect(thread.hasTag('inbox')).toBe(true);
+    });
+
+
+    it('should return false if the tag name is not found', function() {
+      var thread = new INThread(namespace, mockThread1);
+      expect(thread.hasTag('gerbil')).toBe(false);
+    });
+
+
+    it('should search in a case-sensitive fashion', function() {
+      var thread = new INThread(namespace, mockThread1);
+      expect(thread.hasTag('InBoX')).toBe(false);
+    });
+  });
 });

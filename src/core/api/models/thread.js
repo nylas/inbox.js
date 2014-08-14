@@ -196,6 +196,30 @@ INThread.prototype.removeTags = function(removeTags) {
 
 
 /**
+ * @function
+ * @name INThread#hasTag
+ *
+ * @description
+ * Searches the thread's tagData collection for a tag with the specified tag name. The search is
+ * case-sensitive.
+ *
+ * @param {Array<string>} tagName Name of a tag to search for within the thread's tagData
+ *   collection.
+ *
+ * @returns {boolean} Returns true if the tag name is present within the thread, otherwise
+ *   false.
+ */
+INThread.prototype.hasTag = function(tagName) {
+  for (var i=0; i<this.tagData.length; ++i) {
+    var tag = this.tagData[i];
+    if (tag && (tag.tagName === tagName || tag.name === tagName)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
  * @property
  * @name INThread#subject
  *
