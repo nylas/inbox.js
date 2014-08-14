@@ -178,4 +178,16 @@ describe('InboxAPI', function() {
       });
     });
   });
+
+
+  describe('appId()', function() {
+    it('should be a function', function() {
+      expect(typeof (new InboxAPI('myApp', 'https://myapp.com')).appId).toBe('function');
+    });
+
+
+    it('should return the configured appId', function() {
+      expect((new InboxAPI('myApp', 'https://myapp.com')).appId()).toBe('myApp');
+    });
+  });
 });

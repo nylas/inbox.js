@@ -280,6 +280,20 @@ InboxAPI.prototype.baseUrl = function() {
 
 /**
  * @function
+ * @name InboxAPI#appId
+ *
+ * @description
+ * Getter for the configured App ID of the InboxAPI instance.
+ *
+ * @returns {string} The configured App ID.
+ */
+InboxAPI.prototype.appId = function() {
+  return this._.appId;
+};
+
+
+/**
+ * @function
  * @name InboxAPI#namespace
  *
  * @description
