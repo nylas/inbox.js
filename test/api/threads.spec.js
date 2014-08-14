@@ -4,230 +4,20 @@ describe('INThread', function() {
   var server;
   var namespace;
 
-  var mockNotFound = {
-    "message": "404: Not Found",
-    "type": "api_error"
-  };
-
-  var mockNamespace = {
-    "account": "fake_account_id",
-    "email_address": "fake.email@inboxapp.co",
-    "id": "fake_namespace_id",
-    "namespace": "fake_namespace_id",
-    "object": "namespace",
-    "provider": "FakeProvider"
-  };
-
-  var mockThread1 = {
-    "id": "fake_thread_id1",
-    "object": "thread",
-    "namespace": "fake_namespace_id",
-    "subject": "Mock Thread 1",
-    "last_message_timestamp": 1398229259,
-    "participants": [
-      {
-        "name": "Ben Bitdiddle",
-        "email": "ben.bitdiddle@gmail.com"
-      },
-      {
-        "name": "Bill Rogers",
-        "email": "wrogers@mit.edu"
-      }
-    ],
-    "snippet": "Test thread 1...",
-    "tags": [
-      {
-        "name": "inbox",
-        "id": "f0idlvozkrpj3ihxze7obpivh",
-        "object": "tag"
-      },
-      {
-        "name": "unread",
-        "id": "8keda28h8ijj2nogpj83yjep8",
-        "object": "tag"
-      }
-    ],
-    "messages": [
-      "251r594smznew6yhiocht2v29",
-      "7upzl8ss738iz8xf48lm84q3e",
-      "ah5wuphj3t83j260jqucm9a28"
-    ],
-    "drafts": []
-  };
-
-  var mappedThread1 = {
-    "id": "fake_thread_id1",
-    "object": "thread",
-    "namespaceID": "fake_namespace_id",
-    "subject": "Mock Thread 1",
-    "lastMessageDate": new Date(1398229259000),
-    "participants": [
-      {
-        "name": "Ben Bitdiddle",
-        "email": "ben.bitdiddle@gmail.com"
-      },
-      {
-        "name": "Bill Rogers",
-        "email": "wrogers@mit.edu"
-      }
-    ],
-    "snippet": "Test thread 1...",
-    "tagData": [
-      {
-        "name": "inbox",
-        "id": "f0idlvozkrpj3ihxze7obpivh",
-        "object": "tag"
-      },
-      {
-        "name": "unread",
-        "id": "8keda28h8ijj2nogpj83yjep8",
-        "object": "tag"
-      }
-    ],
-    "messageIDs": [
-      "251r594smznew6yhiocht2v29",
-      "7upzl8ss738iz8xf48lm84q3e",
-      "ah5wuphj3t83j260jqucm9a28"
-    ],
-    "draftIDs": []
-  };
-
-  var mockThread1Updated = __extend(mockThread1, {
-    "messages": [
-      "251r594smznew6yhiocht2v29",
-      "7upzl8ss738iz8xf48lm84q3e",
-      "ah5wuphj3t83j260jqucm9a28",
-      "ag9afs86as9g8gasfasfsaf98"
-    ]
-  });
-
-  var mappedThread1Updated = __extend(mappedThread1, {
-    "messageIDs": [
-      "251r594smznew6yhiocht2v29",
-      "7upzl8ss738iz8xf48lm84q3e",
-      "ah5wuphj3t83j260jqucm9a28",
-      "ag9afs86as9g8gasfasfsaf98"
-    ]
-  });
-
-  var mockThread1TagAdded = __extend(mockThread1, {
-    "tags": [
-      {
-        "name": "inbox",
-        "id": "f0idlvozkrpj3ihxze7obpivh",
-        "object": "tag"
-      },
-      {
-        "name": "unread",
-        "id": "8keda28h8ijj2nogpj83yjep8",
-        "object": "tag"
-      },
-      {
-        "name": "zing",
-        "id": "5235235142asasdasfasfafa1",
-        "object": "tag"
-      }
-    ],
-  });
-
-  var mockThread1TagRemoved = __extend({}, mockThread1);
-  mockThread1TagRemoved.tags = [
-    {
-      "name": "unread",
-      "id": "8keda28h8ijj2nogpj83yjep8",
-      "object": "tag"
-    }
-  ];
-
-  var mockThread1TagAddedRemoved = __extend(mockThread1, {
-    "tags": [
-      {
-        "name": "unread",
-        "id": "8keda28h8ijj2nogpj83yjep8",
-        "object": "tag"
-      },
-      {
-        "name": "zing",
-        "id": "5235235142asasdasfasfafa1",
-        "object": "tag"
-      }
-    ]
-  });
-
-  var mockThread1Updated2 = __extend({}, mockThread1);
-  mockThread1Updated2.messages = [
-    "ag9afs86as9g8gasfasfsaf98"
-  ];
-
-  var mappedThread1Updated2 = __extend({}, mappedThread1);
-  mappedThread1Updated2.messageIDs = [
-    "ag9afs86as9g8gasfasfsaf98"
-  ];
-
-  var mockThread2 = {
-    "id": "fake_thread_id2",
-    "object": "thread",
-    "namespace": "fake_namespace_id",
-    "subject": "Mock Thread 2",
-    "last_message_timestamp": 1399238467,
-    "participants": [
-      {
-        "name": "Ben Bitdiddle",
-        "email": "ben.bitdiddle@gmail.com"
-      },
-      {
-        "name": "Bill Rogers",
-        "email": "wrogers@mit.edu"
-      }
-    ],
-    "snippet": "Test thread 2...",
-    "tags": [
-      {
-        "name": "inbox",
-        "id": "f0idlvozkrpj3ihxze7obpivh"
-      }
-    ],
-    "messages": [
-      "251r594smznew6yhiocht2v29",
-      "7upzl8ss738iz8xf48lm84q3e"
-    ],
-    "drafts": []
-  };
-
-  var mappedThread2 = {
-    "id": "fake_thread_id2",
-    "object": "thread",
-    "namespaceID": "fake_namespace_id",
-    "subject": "Mock Thread 2",
-    "lastMessageDate": new Date(1399238467000),
-    "participants": [
-      {
-        "name": "Ben Bitdiddle",
-        "email": "ben.bitdiddle@gmail.com"
-      },
-      {
-        "name": "Bill Rogers",
-        "email": "wrogers@mit.edu"
-      }
-    ],
-    "snippet": "Test thread 2...",
-    "tagData": [
-      {
-        "name": "inbox",
-        "id": "f0idlvozkrpj3ihxze7obpivh"
-      }
-    ],
-    "messageIDs": [
-      "251r594smznew6yhiocht2v29",
-      "7upzl8ss738iz8xf48lm84q3e"
-    ],
-    "draftIDs": []
-  };
-
-  var mockThreads = [
-    mockThread1,
-    mockThread2
-  ];
+  var mockNotFound;
+  var mockNamespace;
+  var mockThread1;
+  var mappedThread1;
+  var mockThread1Updated;
+  var mappedThread1Updated;
+  var mockThread1TagAdded;
+  var mockThread1TagRemoved;
+  var mockThread1TagAddedRemoved;
+  var mockThread1Updated2;
+  var mappedThread1Updated2;
+  var mockThread2;
+  var mappedThread2;
+  var mockThreads;
 
   beforeEach(function() {
     window.Promise = mockPromises.getMockPromise(window.Promise);
@@ -237,6 +27,231 @@ describe('INThread', function() {
       baseUrl: 'http://api.inboxapp.co/'
     });
     namespace = new INNamespace(inbox, mockNamespace);
+
+    mockNotFound = {
+      "message": "404: Not Found",
+      "type": "api_error"
+    };
+
+    mockNamespace = {
+      "account": "fake_account_id",
+      "email_address": "fake.email@inboxapp.co",
+      "id": "fake_namespace_id",
+      "namespace": "fake_namespace_id",
+      "object": "namespace",
+      "provider": "FakeProvider"
+    };
+
+    mockThread1 = {
+      "id": "fake_thread_id1",
+      "object": "thread",
+      "namespace": "fake_namespace_id",
+      "subject": "Mock Thread 1",
+      "last_message_timestamp": 1398229259,
+      "participants": [
+        {
+          "name": "Ben Bitdiddle",
+          "email": "ben.bitdiddle@gmail.com"
+        },
+        {
+          "name": "Bill Rogers",
+          "email": "wrogers@mit.edu"
+        }
+      ],
+      "snippet": "Test thread 1...",
+      "tags": [
+        {
+          "name": "inbox",
+          "id": "f0idlvozkrpj3ihxze7obpivh",
+          "object": "tag"
+        },
+        {
+          "name": "unread",
+          "id": "8keda28h8ijj2nogpj83yjep8",
+          "object": "tag"
+        }
+      ],
+      "messages": [
+        "251r594smznew6yhiocht2v29",
+        "7upzl8ss738iz8xf48lm84q3e",
+        "ah5wuphj3t83j260jqucm9a28"
+      ],
+      "drafts": []
+    };
+
+    mappedThread1 = {
+      "id": "fake_thread_id1",
+      "object": "thread",
+      "namespaceID": "fake_namespace_id",
+      "subject": "Mock Thread 1",
+      "lastMessageDate": new Date(1398229259000),
+      "participants": [
+        {
+          "name": "Ben Bitdiddle",
+          "email": "ben.bitdiddle@gmail.com"
+        },
+        {
+          "name": "Bill Rogers",
+          "email": "wrogers@mit.edu"
+        }
+      ],
+      "snippet": "Test thread 1...",
+      "tagData": [
+        {
+          "name": "inbox",
+          "id": "f0idlvozkrpj3ihxze7obpivh",
+          "object": "tag"
+        },
+        {
+          "name": "unread",
+          "id": "8keda28h8ijj2nogpj83yjep8",
+          "object": "tag"
+        }
+      ],
+      "messageIDs": [
+        "251r594smznew6yhiocht2v29",
+        "7upzl8ss738iz8xf48lm84q3e",
+        "ah5wuphj3t83j260jqucm9a28"
+      ],
+      "draftIDs": []
+    };
+
+    mockThread1Updated = __extend(mockThread1, {
+      "messages": [
+        "251r594smznew6yhiocht2v29",
+        "7upzl8ss738iz8xf48lm84q3e",
+        "ah5wuphj3t83j260jqucm9a28",
+        "ag9afs86as9g8gasfasfsaf98"
+      ]
+    });
+
+    mappedThread1Updated = __extend(mappedThread1, {
+      "messageIDs": [
+        "251r594smznew6yhiocht2v29",
+        "7upzl8ss738iz8xf48lm84q3e",
+        "ah5wuphj3t83j260jqucm9a28",
+        "ag9afs86as9g8gasfasfsaf98"
+      ]
+    });
+
+    mockThread1TagAdded = __extend(mockThread1, {
+      "tags": [
+        {
+          "name": "inbox",
+          "id": "f0idlvozkrpj3ihxze7obpivh",
+          "object": "tag"
+        },
+        {
+          "name": "unread",
+          "id": "8keda28h8ijj2nogpj83yjep8",
+          "object": "tag"
+        },
+        {
+          "name": "zing",
+          "id": "5235235142asasdasfasfafa1",
+          "object": "tag"
+        }
+      ],
+    });
+
+    mockThread1TagRemoved = __extend({}, mockThread1);
+    mockThread1TagRemoved.tags = [
+      {
+        "name": "unread",
+        "id": "8keda28h8ijj2nogpj83yjep8",
+        "object": "tag"
+      }
+    ];
+
+    mockThread1TagAddedRemoved = __extend(mockThread1, {
+      "tags": [
+        {
+          "name": "unread",
+          "id": "8keda28h8ijj2nogpj83yjep8",
+          "object": "tag"
+        },
+        {
+          "name": "zing",
+          "id": "5235235142asasdasfasfafa1",
+          "object": "tag"
+        }
+      ]
+    });
+
+    mockThread1Updated2 = __extend({}, mockThread1);
+    mockThread1Updated2.messages = [
+      "ag9afs86as9g8gasfasfsaf98"
+    ];
+
+    mappedThread1Updated2 = __extend({}, mappedThread1);
+    mappedThread1Updated2.messageIDs = [
+      "ag9afs86as9g8gasfasfsaf98"
+    ];
+
+    mockThread2 = {
+      "id": "fake_thread_id2",
+      "object": "thread",
+      "namespace": "fake_namespace_id",
+      "subject": "Mock Thread 2",
+      "last_message_timestamp": 1399238467,
+      "participants": [
+        {
+          "name": "Ben Bitdiddle",
+          "email": "ben.bitdiddle@gmail.com"
+        },
+        {
+          "name": "Bill Rogers",
+          "email": "wrogers@mit.edu"
+        }
+      ],
+      "snippet": "Test thread 2...",
+      "tags": [
+        {
+          "name": "inbox",
+          "id": "f0idlvozkrpj3ihxze7obpivh"
+        }
+      ],
+      "messages": [
+        "251r594smznew6yhiocht2v29",
+        "7upzl8ss738iz8xf48lm84q3e"
+      ],
+      "drafts": []
+    };
+
+    mappedThread2 = {
+      "id": "fake_thread_id2",
+      "object": "thread",
+      "namespaceID": "fake_namespace_id",
+      "subject": "Mock Thread 2",
+      "lastMessageDate": new Date(1399238467000),
+      "participants": [
+        {
+          "name": "Ben Bitdiddle",
+          "email": "ben.bitdiddle@gmail.com"
+        },
+        {
+          "name": "Bill Rogers",
+          "email": "wrogers@mit.edu"
+        }
+      ],
+      "snippet": "Test thread 2...",
+      "tagData": [
+        {
+          "name": "inbox",
+          "id": "f0idlvozkrpj3ihxze7obpivh"
+        }
+      ],
+      "messageIDs": [
+        "251r594smznew6yhiocht2v29",
+        "7upzl8ss738iz8xf48lm84q3e"
+      ],
+      "draftIDs": []
+    };
+
+    mockThreads = [
+      mockThread1,
+      mockThread2
+    ];
   });
 
 
