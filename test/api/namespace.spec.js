@@ -44,6 +44,22 @@ describe('INNamespace', function() {
     mockNamespace2
   ];
 
+  var mockFile = [{
+    'content_type': 'text/plain',
+    'id': '3f7d6reg1k7hc2umqkz8gcfmo',
+    'namespace': 'fake_namespace_id',
+    'object': 'file',
+    'size': 9
+  }];
+
+  var mappedFile = [{
+    'contentType': 'text/plain',
+    'id': '3f7d6reg1k7hc2umqkz8gcfmo',
+    'namespaceID': 'fake_namespace_id',
+    'object': 'file',
+    'size': 9
+  }];
+
   var mockNotFound = {
     "message": "Couldn't find namespace with id `not_found_namespace_id` ",
     "type": "invalid_request_error"
@@ -190,6 +206,23 @@ describe('INNamespace', function() {
           inbox.namespace(28);
         }).toThrow("Unable to perform 'namespace()' on InboxAPI: namespaceId must be a string.");
       });
+    });
+  });
+
+
+  describe('uploadFile()', function() {
+    it('should resolve promise with a single INFile', function() {
+      if (!window.Blob) return;
+      var namespace = new INNamespace(inbox, mockNamespace);
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(file) {
+        expect(file instanceof INFile).toBe(true);
+        expect(file).toContainObject(mappedFile[0]);
+      });
+      var blob = new Blob(['Fake File'], { type: 'text/plain' });
+      var promise = namespace.uploadFile('fake_file.txt', blob).then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockFile)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
     });
   });
 });

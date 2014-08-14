@@ -117,7 +117,7 @@ INFile.prototype.downloadUrl = function() {
  */
 defineResourceMapping(INFile, {
   'filename': 'filename',
-  'mimetype': 'mimetype',
+  'contentType': 'content_type',
   'size': 'int:size',
   'messageID': 'message',
   'isEmbedded': 'bool:is_embedded',
@@ -145,7 +145,11 @@ function uploadFile(namespace, fileOrFileName, fileDataOrCallback, callback) {
   apiRequest(inbox, 'post', url, data, function(err, response) {
     if (err) return callback(err, null);
 
-    callback(null, makeFile(response));
+    // ASSERT(isArray(response) && response.length === 1)
+    if (!(isArray(response) && response.length === 1)) {
+      return callback(formatString('response for url `%@` must be an array.', url), null);
+    }
+    callback(null, makeFile(response[0]));
 
     function makeFile(item) {
       item = new INFile(namespace, item);
