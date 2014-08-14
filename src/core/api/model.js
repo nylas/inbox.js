@@ -140,19 +140,24 @@ INModelObject.prototype.isUnsynced = function() {
  */
 INModelObject.prototype.reload = function() {
   var self = this;
-  if (this.isUnsynced()) {
-    // Don't make a reload API request for unsynced models.
-    return this.promise(function(resolve) {
-      resolve(self);
+  return this.promise(function(resolve, reject) {
+    reloadModel(self, function(err, data) {
+      if (err) return reject(err);
+      return resolve(data);
     });
-  }
-
-  return apiRequestPromise(this.inbox(), 'get', this.resourcePath(), function(data) {
-    self.update(data);
-    persistModel(self);
-    return self;
   });
 };
+
+
+function reloadModel(model, callback) {
+  if (model.isUnsynced()) return callback(null, model);
+  apiRequest(model.inbox(), 'get', model.resourcePath(), function(err, data) {
+    if (err) return callback(err, null);
+    model.update(data);
+    persistModel(model);
+    callback(null, model);
+  });
+}
 
 
 /**

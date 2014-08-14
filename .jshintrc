@@ -50,6 +50,7 @@
     "noop": false,
     "parseJSON": true,
     "persistModel": false,
+    "reloadModel": false,
     "toJSON": true,
     "toUnixTimestamp": false,
     "uploadFile": false,
