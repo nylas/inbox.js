@@ -122,6 +122,80 @@ INThread.prototype.messages = function(optionalMessagesOrFilters, filters) {
 
 
 /**
+ * @function
+ * @name INThread#updateTags
+ *
+ * @description
+ * A method which makes a request with method PUT to the endpoint
+ * `/n/<namespace_id>/threads/<thread_id>` with keys `add_tags` and `remove_tags`, and expects a
+ * successful response to be the updated Thread model value.
+ *
+ * @param {Array<string>} addTags A collection of tag names to be added to the thread.
+ * @param {Array<string>} removeTags A collection of tag names to be removed from the thread.
+ *
+ * @returns {Promise} a promise to be fulfilled with the Thread after having been updated
+ */
+INThread.prototype.updateTags = function(addTags, removeTags) {
+  var self = this;
+  var url = formatUrl('%@/threads/%@', this.namespaceUrl(), this.id);
+  if (!isArray(addTags)) addTags = [];
+  if (!isArray(removeTags)) removeTags = [];
+
+  return this.promise(function(resolve, reject) {
+    apiRequest(self.inbox(), 'put', url, toJSON({
+      'add_tags': addTags,
+      'remove_tags': removeTags
+    }), function(err, thread) {
+      if (err) return reject(err);
+      self.update(thread);
+      persistModel(self);
+      resolve(self);
+    });
+  });
+};
+
+
+/**
+ * @function
+ * @name INThread#addTags
+ *
+ * @description
+ * A method which makes a request with method PUT to the endpoint
+ * `/n/<namespace_id>/threads/<thread_id>` with keys `add_tags` and `remove_tags`, and expects a
+ * successful response to be the updated Thread model value.
+ *
+ * Convenience method which invokes INThread#updateTags.
+ *
+ * @param {Array<string>} addTags A collection of tag names to be added to the thread.
+ *
+ * @returns {Promise} a promise to be fulfilled with the Thread after having been updated
+ */
+INThread.prototype.addTags = function(addTags) {
+  return this.updateTags(addTags, null);
+};
+
+
+/**
+ * @function
+ * @name INThread#removeTags
+ *
+ * @description
+ * A method which makes a request with method PUT to the endpoint
+ * `/n/<namespace_id>/threads/<thread_id>` with keys `add_tags` and `remove_tags`, and expects a
+ * successful response to be the updated Thread model value.
+ *
+ * Convenience method which invokes INThread#updateTags.
+ *
+ * @param {Array<string>} removeTags A collection of tag names to be removed from the thread.
+ *
+ * @returns {Promise} a promise to be fulfilled with the Thread after having been updated
+ */
+INThread.prototype.removeTags = function(removeTags) {
+  return this.updateTags(null, removeTags);
+};
+
+
+/**
  * @property
  * @name INThread#subject
  *

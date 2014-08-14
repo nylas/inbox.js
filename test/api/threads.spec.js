@@ -110,6 +110,50 @@ describe('INThread', function() {
     ]
   });
 
+  var mockThread1TagAdded = __extend(mockThread1, {
+    "tags": [
+      {
+        "name": "inbox",
+        "id": "f0idlvozkrpj3ihxze7obpivh",
+        "object": "tag"
+      },
+      {
+        "name": "unread",
+        "id": "8keda28h8ijj2nogpj83yjep8",
+        "object": "tag"
+      },
+      {
+        "name": "zing",
+        "id": "5235235142asasdasfasfafa1",
+        "object": "tag"
+      }
+    ],
+  });
+
+  var mockThread1TagRemoved = __extend({}, mockThread1);
+  mockThread1TagRemoved.tags = [
+    {
+      "name": "unread",
+      "id": "8keda28h8ijj2nogpj83yjep8",
+      "object": "tag"
+    }
+  ];
+
+  var mockThread1TagAddedRemoved = __extend(mockThread1, {
+    "tags": [
+      {
+        "name": "unread",
+        "id": "8keda28h8ijj2nogpj83yjep8",
+        "object": "tag"
+      },
+      {
+        "name": "zing",
+        "id": "5235235142asasdasfasfafa1",
+        "object": "tag"
+      }
+    ]
+  });
+
   var mockThread1Updated2 = __extend({}, mockThread1);
   mockThread1Updated2.messages = [
     "ag9afs86as9g8gasfasfsaf98"
@@ -374,6 +418,78 @@ describe('INThread', function() {
       server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated2)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
+    });
+  });
+
+
+  describe('updateTags()', function() {
+    var thread;
+    beforeEach(function() {
+      thread = new INThread(namespace, mockThread1);
+    });
+
+    it('should resolve promise with updated Thread after updating tags', function() {
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
+        expect(newThread.tagData.length).toBe(2);
+        expect(newThread.tagData[0].name).toBe('unread');
+        expect(newThread.tagData[1].name).toBe('zing');
+      });
+      var promise = thread.updateTags(['zing'], ['inbox']).then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1TagAddedRemoved)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
+
+
+    it('should resolve promise with updated Thread after adding tags', function() {
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
+        expect(newThread.tagData.length).toBe(3);
+        expect(newThread.tagData[0].name).toBe('inbox');
+        expect(newThread.tagData[1].name).toBe('unread');
+        expect(newThread.tagData[2].name).toBe('zing');
+      });
+      var promise = thread.updateTags(['zing']).then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1TagAdded)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
+
+
+    it('should resolve promise with updated Thread after removing tags', function() {
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(newThread) {
+        expect(newThread.tagData.length).toBe(1);
+        expect(newThread.tagData[0].name).toBe('unread');
+      });
+      var promise = thread.updateTags(['zing']).then(fulfilled);
+      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1TagRemoved)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
+
+
+    it('should perform work for INThread#addTags()', function() {
+      var orig = INThread.prototype.updateTags;
+      var spy = spyOn(INThread.prototype, 'updateTags').
+          andCallFake(function(add_tags, remove_tags) {
+        expect(add_tags).toContainObject(['foo', 'bar']);
+        expect(remove_tags).toBe(null);
+      });
+      thread.addTags(['foo', 'bar']);
+      expect(spy).toHaveBeenCalledOnce();
+      INThread.prototype.updateTags = orig;
+    });
+
+
+    it('should perform work for INThread#removeTags()', function() {
+      var orig = INThread.prototype.updateTags;
+      var spy = spyOn(INThread.prototype, 'updateTags').
+          andCallFake(function(add_tags, remove_tags) {
+        expect(add_tags).toBe(null);
+        expect(remove_tags).toContainObject(['foo', 'bar']);
+      });
+      thread.removeTags(['foo', 'bar']);
+      expect(spy).toHaveBeenCalledOnce();
+      INThread.prototype.updateTags = orig;
     });
   });
 });
