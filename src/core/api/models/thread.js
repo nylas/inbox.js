@@ -91,6 +91,30 @@ INThread.prototype.messages = function(optionalMessagesOrFilters, filters) {
 
 /**
  * @function
+ * @name INThread#drafts
+ *
+ * @description
+ * A method which fetches drafts from the server, associated with the thread on which the method
+ * is invoked, optionally updating an array of drafts, and optionally filtered.
+ *
+ * It is not currently possible to fetch drafts associated with a particular thread from the
+ * cache. TODO(@caitp): this should be possible.
+ *
+ * @param {Array<INMessage>|object=} optionalDraftsOrFilters Optionally, either an Array of
+ *   INDraft objects to be updated with the response, or an object containing filters to apply
+ *   to the URL.
+ * @param {object=} filters An optional object containing filters to apply to the URL.
+ *
+ * @returns {Promise} a promise to be fulfilled with the new or updated messages, or error from
+ *   the server.
+ */
+INThread.prototype.drafts = function(optionalDraftsOrFilters, filters) {
+  return threadRequestHelper(this, INDraft, 'drafts', optionalDraftsOrFilters, filters);
+};
+
+
+/**
+ * @function
  * @name INThread#updateTags
  *
  * @description
