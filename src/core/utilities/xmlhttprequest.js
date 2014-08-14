@@ -163,7 +163,11 @@ function parseResponseHeaders(xhr) {
  * @param {string|object=} data the data to send, defaults to null
  * @param {function(error, response)} callback function to be invoked after the request is complete
  */
-function apiRequest(inbox, method, url, data, callback) {
+function apiRequest(inbox, method, url, data, responseType, callback) {
+  if (typeof responseType === 'function') {
+    callback = responseType;
+    responseType = null;
+  }
   if (typeof data === 'function') {
     callback = data;
     data = null;
@@ -183,7 +187,13 @@ function apiRequest(inbox, method, url, data, callback) {
   addListeners(xhr, {
     'load': function(event) {
       if (!cb.cb) return;
-      var response = parseJSON('response' in xhr ? xhr.response : xhr.responseText);
+      var response;
+      switch (xhr._responseType) {
+      case 'text': /* falls through */
+      case 'json': response = parseJSON('response' in xhr ? xhr.response : xhr.responseText); break;
+      default: response = xhr.response;
+      }
+        
       if (xhr.status >= 200 && xhr.status < 300) {
         callback(null, response);
       } else {
@@ -197,7 +207,18 @@ function apiRequest(inbox, method, url, data, callback) {
     // TODO: timeout/progress events are useful.
   });
 
-  xhrMaybeJSON(xhr);
+  if (!responseType) {
+    // Most responses are JSON responses.
+    responseType = 'json';
+    xhrMaybeJSON(xhr);
+  } else {
+    try {
+      xhr.responseType = responseType;
+    } catch (e) {
+      return callback(e, null);
+    }
+  }
+  xhr._responseType = responseType;
 
   xhr.open(method, url);
 

@@ -69,6 +69,39 @@ INFile.prototype.downloadUrl = function() {
 
 
 /**
+ * @function
+ * @name INFile#download
+ *
+ * @description
+ * Downloads the file using XHR2, rather than the native browser.
+ *
+ * At this time, it is not possible to get progress readings from the file download.
+ *
+ * @returns {Promise} A promise to be fulfilled with the downloaded Blob in supporting browsers, or
+ *   rejected with an error. If fulfilled with a blob, the blob may have a `fileName` property,
+ *   indicating the current filename of the INFile at the time the promise was fulfilled.
+ */
+INFile.prototype.download = function() {
+  var self = this;
+  var url = this.downloadUrl();
+  var filename = this.filename || this.id;
+  var contentType = this.contentType || 'text/plain;charset=utf-8';
+
+  return this.promise(function(resolve, reject) {
+    apiRequest(self.inbox(), 'get', url, null, 'arraybuffer', function(err, response) {
+      if (err) return reject(err);
+      var blob = new Blob([response], {
+        type: contentType
+      });
+
+      blob.fileName = filename;
+
+      resolve(blob);
+    });
+  });
+};
+
+/**
  * @property
  * @name INFile#filename
  *
