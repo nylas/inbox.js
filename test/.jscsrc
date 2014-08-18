@@ -1,0 +1,11 @@
+{
+  "preset": "google",
+  "maximumLineLength": {
+    "value": 200,
+    "allowComments": true,
+    "allowRegex": true
+  },
+  "disallowSpacesInsideObjectBrackets": null,
+  "disallowSpacesInsideArrayBrackets": null,
+  "disallowMultipleLineBreaks": null
+}
