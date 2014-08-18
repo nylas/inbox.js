@@ -3,6 +3,7 @@ var concat = require('gulp-concat');
 var jscs = require('gulp-jscs');
 var jshint = require('gulp-jshint');
 var connect = require('gulp-connect');
+var merge = require('merge-stream');
 var args = require('yargs').argv;
 
 var LINT_SRC = [
@@ -12,6 +13,9 @@ var LINT_SRC = [
   '!src/angular/premodule.js',
   '!src/angular/prefix.js',
   '!src/angular/suffix.js',
+];
+
+var LINT_TEST = [
   'test/**/*.js',
   '!test/helpers/**/*.js'
 ];
@@ -35,8 +39,11 @@ gulp.task('style', ['jscs']);
 gulp.task('lint', ['jshint']);
 
 gulp.task('jscs', function() {
-  return gulp.src(LINT_SRC).
+  var src = gulp.src(LINT_SRC).
     pipe(jscs());
+  var test = gulp.src(LINT_TEST).
+  pipe(jscs('./test/.jscsrc'));
+  return merge(src, test);
 });
 
 gulp.task('jshint', function() {
