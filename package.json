@@ -17,6 +17,7 @@
     "gulp-jshint": "^1.6.2",
     "jshint-stylish": "^0.2.0",
     "gulp-connect": "^2.0.5",
-    "yargs": "^1.2.6"
+    "yargs": "^1.2.6",
+    "merge-stream": "^0.1.5"
   }
 }
