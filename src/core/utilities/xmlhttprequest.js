@@ -16,7 +16,7 @@ var IE8_METHODS = /^(get|post|head|put|delete|options)$/i;
  */
 function xhrForMethod(method) {
   if (document.documentMode <= 8 && (method.match(IE8_METHODS) || !window.XMLHttpRequest)) {
-    return new window.ActiveXObject("Microsoft.XMLHTTP");
+    return new window.ActiveXObject('Microsoft.XMLHTTP');
   } else if (window.XMLHttpRequest) {
     return new window.XMLHttpRequest();
   }
@@ -61,8 +61,8 @@ function xhrMaybeJSON(xhr) {
  * @param {XMLHttpRequest} xhr the HTTP request on which to operate
  * @param {*} response the processed response data
  *
- * @returns {object} An object containing "status", "statusText", "data", and parsed headers as
- *   "headers".
+ * @returns {object} An object containing 'status', 'statusText', 'data', and parsed headers as
+ *   'headers'.
  */
 function xhrData(xhr, response) {
   return {
@@ -131,7 +131,7 @@ function parseResponseHeaders(xhr) {
   for (var i = 0; i < headerPairs.length; i++) {
     var headerPair = headerPairs[i];
     // Can't use split() here because it does the wrong thing
-    // if the header value has the string ": " in it.
+    // if the header value has the string ': ' in it.
     var index = headerPair.indexOf('\u003a\u0020');
     if (index > 0) {
       var key = headerPair.substring(0, index);
@@ -182,18 +182,20 @@ function apiRequest(inbox, method, url, data, responseType, callback) {
   var cb = {cb: callback};
   var xhr = xhrForMethod(method);
 
-  xhr.withCredentials = inbox.withCredentials();    
+  xhr.withCredentials = inbox.withCredentials();
   var failed = rejectXHR(cb, xhr, 'json');
   addListeners(xhr, {
     'load': function(event) {
       if (!cb.cb) return;
       var response;
       switch (xhr._responseType) {
-      case 'text': /* falls through */
-      case 'json': response = parseJSON('response' in xhr ? xhr.response : xhr.responseText); break;
-      default: response = xhr.response;
+        case 'text': /* falls through */
+        case 'json':
+          response = parseJSON('response' in xhr ? xhr.response : xhr.responseText);
+          break;
+        default: response = xhr.response;
       }
-        
+
       if (xhr.status >= 200 && xhr.status < 300) {
         callback(null, response);
       } else {

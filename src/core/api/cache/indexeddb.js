@@ -10,7 +10,7 @@ function INIDBCache(inbox, name) {
   if (!haveIndexedDB) {
     throw new TypeError('IndexedDB is not supported in this browser.');
   }
-  INCache.call(this, inbox, name);  
+  INCache.call(this, inbox, name);
 }
 
 if (haveIndexedDB) {
@@ -32,7 +32,7 @@ function INIDBCacheDB(cache, callback) {
     req.onsuccess = function(event) {
       var db = event.target.result;
 
-      defineProperty(cache._, 'db', INVISIBLE|WRITABLE, null, null, db);
+      defineProperty(cache._, 'db', INVISIBLE | WRITABLE, null, null, db);
 
       callback(null, db);
       while (cache._.opening.length) {
@@ -52,7 +52,7 @@ function INIDBCacheDB(cache, callback) {
       store.createIndex('by_namespace', 'namespace');
       store.createIndex('by_object', 'object');
 
-      defineProperty(cache._, 'db', INVISIBLE|WRITABLE, null, null, db);
+      defineProperty(cache._, 'db', INVISIBLE | WRITABLE, null, null, db);
       callback(null, db);
       while (cache._.opening.length) {
         cache.opening.shift()(null, db);

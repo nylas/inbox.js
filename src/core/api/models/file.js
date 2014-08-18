@@ -114,7 +114,7 @@ INFile.prototype.download = function() {
  * @property
  * @name INFile#mimetype
  *
- * Mimetype of the file resource, such as "application/csv" or "image/png".
+ * Mimetype of the file resource, such as 'application/csv' or 'image/png'.
  */
 
 
@@ -146,7 +146,7 @@ INFile.prototype.download = function() {
  * @property
  * @name INFile#object
  *
- * The object type, which is always "file".
+ * The object type, which is always 'file'.
  */
 defineResourceMapping(INFile, {
   'filename': 'filename',

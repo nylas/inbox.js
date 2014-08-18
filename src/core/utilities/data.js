@@ -111,7 +111,7 @@ function mergeArray(oldArray, newArray, id, newCallback, resource) {
   var i, ii, obj, oldObj;
   var oldLength = oldArray.length;
 
-  for (i=0, ii=oldLength; i<ii; ++i) {
+  for (i = 0, ii = oldLength; i < ii; ++i) {
     obj = oldArray[i];
     if (typeof obj === 'object' && id in obj) {
       ++numOld;
@@ -119,7 +119,7 @@ function mergeArray(oldArray, newArray, id, newCallback, resource) {
     }
   }
 
-  for (i=0, ii=newArray.length; i<ii; ++i) {
+  for (i = 0, ii = newArray.length; i < ii; ++i) {
     obj = newArray[i];
 
     if (resource && resource.resourceMapping) {
@@ -143,7 +143,7 @@ function mergeArray(oldArray, newArray, id, newCallback, resource) {
 
   if (numSeen < numOld) {
     // Go through and remove unseen indexes.
-    for (i=oldLength; i--;) {
+    for (i = oldLength; i--;) {
       obj = oldArray[i];
       if (typeof obj === 'object' && id in obj && !seen[obj[id]]) {
         oldArray.splice(i, 1);
@@ -174,7 +174,7 @@ function fromArray(obj) {
   var ii = obj.length;
   var a = new Array(ii);
   var v;
-  for (i=0; i<ii; ++i) {
+  for (i = 0; i < ii; ++i) {
     v = obj[i];
     a[i] = v;
   }
@@ -204,13 +204,13 @@ function forEach(collection, fn, thisArg) {
     if (collection.forEach) {
       collection.forEach(fn, thisArg);
     } else {
-      for (i=0, ii = collection.length; i<ii; ++i) {
+      for (i = 0, ii = collection.length; i < ii; ++i) {
         fn.call(thisArg, collection[i], i, collection);
       }
     }
   } else if (Object.getOwnPropertyNames) {
     var keys = Object.getOwnPropertyNames(collection);
-    for (i=0, ii = keys.length; i<ii; ++i) {
+    for (i = 0, ii = keys.length; i < ii; ++i) {
       key = keys[i];
       fn.call(thisArg, collection[key], key, collection);
     }
@@ -250,7 +250,7 @@ function map(collection, fn, thisArg) {
   }
 
   result = new Array(collection.length);
-  for (i=0, ii = collection.length; i<ii; ++i) {
+  for (i = 0, ii = collection.length; i < ii; ++i) {
     result[i] = fn.call(thisArg, collection[i], i, collection);
   }
   return result;

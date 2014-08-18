@@ -125,7 +125,7 @@ INTag.prototype.threads = function(optionalThreadsOrFilters, filters) {
  * @property
  * @name INTag#object
  *
- * The resource type, always "tag".
+ * The resource type, always 'tag'.
  */
 defineResourceMapping(INTag, {
   'tagName': 'name',

@@ -31,7 +31,7 @@ describe('XMLHttpRequest', function() {
     var promise = XHR(inbox, 'get', 'http://api.inboxapp.co/', valueFn).then(fulfilled);
     expect(sinon.FakeXMLHttpRequest.prototype.setRequestHeader).
       toHaveBeenCalledWith('test-header', 'test-value');
-    server.respond([200, { "Content-Type": "application/json" }, "{}"]);
+    server.respond([200, { 'Content-Type': 'application/json' }, '{}']);
     mockPromises.executeForPromise(promise);
     expect(fulfilled).toHaveBeenCalled();
   });
@@ -43,7 +43,7 @@ describe('XMLHttpRequest', function() {
     headers['[test header]'] = 'test-value';
     spyOn(sinon.FakeXMLHttpRequest.prototype, 'setRequestHeader').andCallThrough();
     var promise = XHR(inbox, 'get', 'http://api.inboxapp.co/', valueFn).then(fulfilled);
-    server.respond([200, { "Content-Type": "application/json" }, "{}"]);
+    server.respond([200, { 'Content-Type': 'application/json' }, '{}']);
     mockPromises.executeForPromise(promise);
     expect(fulfilled).toHaveBeenCalled();
     expect(sinon.FakeXMLHttpRequest.prototype.setRequestHeader).not.toHaveBeenCalled();
@@ -58,8 +58,8 @@ describe('XMLHttpRequest', function() {
       send.apply(this, Array.prototype.slice.call(arguments, 0));
     });
     inbox.http('withCredentials', {});
-    var promise = XHR(inbox, 'get', 'http://api.inboxapp.co/', valueFn).then(fulfilled);    
-    server.respond([200, { "Content-Type": "application/json" }, "{}"]);
+    var promise = XHR(inbox, 'get', 'http://api.inboxapp.co/', valueFn).then(fulfilled);
+    server.respond([200, { 'Content-Type': 'application/json' }, '{}']);
     mockPromises.executeForPromise(promise);
     expect(fulfilled).toHaveBeenCalled();
     expect(sinon.FakeXMLHttpRequest.prototype.send).toHaveBeenCalled();

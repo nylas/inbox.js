@@ -8,7 +8,7 @@ describe('applyFilters', function() {
     if (str && str.charAt(0) === '?') {
       str = str.slice(1);
       strs = str.split('&');
-      for (i=0, ii=strs.length; i<ii; ++i) {
+      for (i=0, ii=strs.length; i < ii; ++i) {
         tuple = strs[i].split('=');
         if (tuple && tuple.length === 2) {
           query[decodeURIComponent(tuple[0])] = decodeURIComponent(tuple[1]);
@@ -39,7 +39,7 @@ describe('applyFilters', function() {
   }
 
 
-  for (i=0, ii=regexpFilters.length; i<ii; ++i) {
+  for (i=0, ii=regexpFilters.length; i < ii; ++i) {
     (function(name) {
       describe(name, function() {
         beforeEach(setName(name));
@@ -75,7 +75,7 @@ describe('applyFilters', function() {
 
 
   var stringFilters = ['email', 'from', 'to', 'cc', 'bcc', 'thread', 'tag', 'filename'];
-  for (i=0, ii=stringFilters.length; i<ii; ++i) {
+  for (i=0, ii=stringFilters.length; i < ii; ++i) {
     (function(name) {
       describe(name, function() {
         beforeEach(setName(name));
@@ -129,7 +129,7 @@ describe('applyFilters', function() {
     'startedBefore',
     'startedAfter'
   ];
-  for (i=0, ii=timestampFilters.length; i<ii; ++i) {
+  for (i=0, ii=timestampFilters.length; i < ii; ++i) {
     (function(name) {
       describe(name, function() {
         beforeEach(setName(name));
@@ -201,7 +201,7 @@ describe('applyFilters', function() {
 
 
   var integerFilters = ['limit', 'offset'];
-  for (i=0, ii=integerFilters.length; i<ii; ++i) {
+  for (i=0, ii=integerFilters.length; i < ii; ++i) {
     (function(name) {
       describe(name, function() {
         beforeEach(setName(name));
@@ -284,15 +284,15 @@ describe('applyFilters', function() {
     var date = new Date();
     var expectDate = ((date.getTime() / 1000) >>> 0);
     expect(parseQuery(applyFilters({
-      subject: /^foo bar$/,
-      lastMessageBefore: date,
-      email: 'natasha@evilspy.com',
-      from: 'boris@evilspy.com'
+      'subject': /^foo bar$/,
+      'lastMessageBefore': date,
+      'email': 'natasha@evilspy.com',
+      'from': 'boris@evilspy.com'
     }))).toContainObject({
-      subject: '/^foo+bar$/',
-      last_message_before: '' + expectDate,
-      any_email: 'natasha@evilspy.com',
-      from: 'boris@evilspy.com'
+      'subject': '/^foo+bar$/',
+      'last_message_before': '' + expectDate,
+      'any_email': 'natasha@evilspy.com',
+      'from': 'boris@evilspy.com'
     });
   });
 });

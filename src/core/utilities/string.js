@@ -7,7 +7,7 @@
  * Given a template string, replace each `%@` in the string with a stringified value (arguments
  * following the template).
  *
- * E.G, formatString("%@, %@!", "Hello", "World") -> "Hello, World!"
+ * E.G, formatString('%@, %@!', 'Hello', 'World') -> 'Hello, World!'
  *
  * @param {string} template the string template to process.
  * @param {...*} args values to replace the instances of `%@` in the template string.

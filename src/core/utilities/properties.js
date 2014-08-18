@@ -56,9 +56,9 @@ function defineProperty(object, name, flags, get, set, value) {
       configurable: !!(flags & CONFIGURABLE),
       writable: !!(flags & WRITABLE)
     };
-    if (typeof get === "function") {
+    if (typeof get === 'function') {
       defn.get = get;
-      if (typeof set === "function") {
+      if (typeof set === 'function') {
         defn.set = set;
       }
     } else if (arguments.length > 5) {
@@ -66,7 +66,7 @@ function defineProperty(object, name, flags, get, set, value) {
     }
     Object.defineProperty(object, name, defn);
   } else {
-    if (typeof get === "function") {
+    if (typeof get === 'function') {
       object[name] = get();
     } else if (arguments.length > 5) {
       object[name] = value;

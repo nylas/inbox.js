@@ -173,7 +173,7 @@ function reloadModel(model, callback) {
 INModelObject.prototype.update = function(data) {
   if (!data) return;
   var mapping = this.resourceMapping;
-  var updated = data.__converted_from_raw__ || false;
+  var updated = data['__converted_from_raw__'] || false;
 
   forEach(mapping, function copyMappedProperties(mappingInfo, propertyName) {
     var cast = mappingInfo.to;
@@ -268,7 +268,7 @@ var casters = {
   array: {
     to: function castToArray(val) {
       if (isArray(val)) return val;
-      else return fromArray(val);
+      return fromArray(val);
     },
     from: function castFromArray(val) {
       return val;
@@ -279,7 +279,7 @@ var casters = {
       else if (!isArray(src) || !src.length) dest.length = 0;
       else {
         dest.length = src.length;
-        for (var i=0, ii = src.length; i < ii; ++i) {
+        for (var i = 0, ii = src.length; i < ii; ++i) {
           dest[i] = src[i];
         }
       }
@@ -344,7 +344,7 @@ var casters = {
  * @description
  * Private method for associated a ResourceMapping with an INModelObject subclass.
  *
- * The mapping is an object where the key is the "client-side" name for the property, which is
+ * The mapping is an object where the key is the 'client-side' name for the property, which is
  * typically camel-cased. Sometimes, the name is changed from the original value to be more
  * semantically correct, and avoid shadowing method names (for instance,
  * `messages` -> `messageIDs`).
@@ -368,11 +368,11 @@ var casters = {
  *   messageIDs    |  array:messages     |  array           | json.messages[] becomes
  *                 |                     |                  | model.messageIDs[]
  * ----------------+---------------------+------------------+---------------------------------------
- *   resourceType  |  const:object:draft |  const (string)  | model.resourceType === "draft",
- *                 |                     |                  | json.object === "draft".
+ *   resourceType  |  const:object:draft |  const (string)  | model.resourceType === 'draft',
+ *                 |                     |                  | json.object === 'draft'.
  * ----------------+---------------------+------------------+---------------------------------------
  *
- * There are several supported types to cast to, including "date", "bool", "string", and "array".
+ * There are several supported types to cast to, including 'date', 'bool', 'string', and 'array'.
  *
  * @param {function} resourceClass Constructor for the child class of INModelObject.
  * @param {object} mapping Resource mapping, see the description for details.
@@ -429,7 +429,7 @@ function defineResourceMapping(resourceClass, mapping, base) {
       var merge = null;
 
       if (typeof caster === 'function') {
-        from = to = caster;        
+        from = to = caster;
       } else if (typeof caster === 'object') {
         from = caster.from;
         to = caster.to;

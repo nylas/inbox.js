@@ -1,7 +1,6 @@
 var ERROR = {};
 
 var DEFAULT_HTTP = {
-  
 };
 
 function NativePromiseWrapper(resolve, reject) {
@@ -20,7 +19,7 @@ function NativePromiseWrapper(resolve, reject) {
  *
  * @param {string=} optionalBaseUrl A string containing the base URL for the Inbox web service. If
  *   the optionsOrAppId parameter is an object, then this field is not necessary. If not specified,
- *   the baseUrl will be "http://api.inboxapp.co/"
+ *   the baseUrl will be 'http://api.inboxapp.co/'
  *
  * @param {function=} optionalPromiseConstructor A function which, when called, returns an instance
  *   of an ES6-compatible Promise. If unspecified, window.Promise is used. Note that the Promise
@@ -36,28 +35,28 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
   var len;
   var args = arguments;
 
-  if (optionsOrAppId && typeof optionsOrAppId === "object") {
+  if (optionsOrAppId && typeof optionsOrAppId === 'object') {
     options = optionsOrAppId;
   } else {
     options = {};
     len = Math.min(args.length, 3) - 1;
     options.promise = typeof args[len] === 'function' ? args[len--] : window.Promise;
     options.baseUrl = len ?
-      ((typeof args[len--] === 'string' || args[len+1] == null) ? args[len + 1] : ERROR) :
+      ((typeof args[len--] === 'string' || args[len + 1] == null) ? args[len + 1] : ERROR) :
       null;
     options.appId = args[len];
   }
 
   if (options.appId == null) {
-    throw new TypeError("Unable to construct 'InboxAPI': missing `appId`.");
+    throw new TypeError('Unable to construct \'InboxAPI\': missing `appId`.');
   } else if (typeof options.appId !== 'string') {
-    throw new TypeError("Unable to construct 'InboxAPI': option `appId` must be a string.");
+    throw new TypeError('Unable to construct \'InboxAPI\': option `appId` must be a string.');
   }
 
   if (options.baseUrl == null) {
     options.baseUrl = 'http://api.inboxapp.co/';
   } else if (typeof options.baseUrl !== 'string') {
-    throw new TypeError("Unable to construct 'InboxAPI': option `baseUrl` must be a string.");
+    throw new TypeError('Unable to construct \'InboxAPI\': option `baseUrl` must be a string.');
   }
 
   if (options.promise == null) {
@@ -65,11 +64,11 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
   }
 
   if (options.promise == null) {
-    throw new TypeError("Unable to construct 'InboxAPI': missing option `promise`, " +
-                        "or no native Promise available");
+    throw new TypeError('Unable to construct \'InboxAPI\': missing option `promise`, ' +
+                        'or no native Promise available');
   } else if (typeof options.promise !== 'function') {
-    throw new TypeError("Unable to construct 'InboxAPI': option `promise` must be a " +
-                        "function which returns an ECMAScript6-compatible Promise");
+    throw new TypeError('Unable to construct \'InboxAPI\': option `promise` must be a ' +
+                        'function which returns an ECMAScript6-compatible Promise');
   }
 
   if (options.promise === window.Promise) {
@@ -310,10 +309,10 @@ InboxAPI.prototype.namespace = function(namespaceId) {
   var cache = this._.cache;
   if (!arguments.length) {
     throw new TypeError(
-      "Unable to perform 'namespace()' on InboxAPI: missing option `namespaceId`.");
+      'Unable to perform \'namespace()\' on InboxAPI: missing option `namespaceId`.');
   } else if (typeof namespaceId !== 'string') {
     throw new TypeError(
-      "Unable to perform 'namespace()' on InboxAPI: namespaceId must be a string.");
+      'Unable to perform \'namespace()\' on InboxAPI: namespaceId must be a string.');
   }
   return this.promise(function(resolve, reject) {
     cache.get(namespaceId, function(err, obj) {

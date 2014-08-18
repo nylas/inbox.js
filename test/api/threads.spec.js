@@ -29,127 +29,127 @@ describe('INThread', function() {
     namespace = new INNamespace(inbox, mockNamespace);
 
     mockNotFound = {
-      "message": "404: Not Found",
-      "type": "api_error"
+      'message': '404: Not Found',
+      'type': 'api_error'
     };
 
     mockNamespace = {
-      "account": "fake_account_id",
-      "email_address": "fake.email@inboxapp.co",
-      "id": "fake_namespace_id",
-      "namespace": "fake_namespace_id",
-      "object": "namespace",
-      "provider": "FakeProvider"
+      'account': 'fake_account_id',
+      'email_address': 'fake.email@inboxapp.co',
+      'id': 'fake_namespace_id',
+      'namespace': 'fake_namespace_id',
+      'object': 'namespace',
+      'provider': 'FakeProvider'
     };
 
     mockThread1 = {
-      "id": "fake_thread_id1",
-      "object": "thread",
-      "namespace": "fake_namespace_id",
-      "subject": "Mock Thread 1",
-      "last_message_timestamp": 1398229259,
-      "participants": [
+      'id': 'fake_thread_id1',
+      'object': 'thread',
+      'namespace': 'fake_namespace_id',
+      'subject': 'Mock Thread 1',
+      'last_message_timestamp': 1398229259,
+      'participants': [
         {
-          "name": "Ben Bitdiddle",
-          "email": "ben.bitdiddle@gmail.com"
+          'name': 'Ben Bitdiddle',
+          'email': 'ben.bitdiddle@gmail.com'
         },
         {
-          "name": "Bill Rogers",
-          "email": "wrogers@mit.edu"
+          'name': 'Bill Rogers',
+          'email': 'wrogers@mit.edu'
         }
       ],
-      "snippet": "Test thread 1...",
-      "tags": [
+      'snippet': 'Test thread 1...',
+      'tags': [
         {
-          "name": "inbox",
-          "id": "f0idlvozkrpj3ihxze7obpivh",
-          "object": "tag"
+          'name': 'inbox',
+          'id': 'f0idlvozkrpj3ihxze7obpivh',
+          'object': 'tag'
         },
         {
-          "name": "unread",
-          "id": "8keda28h8ijj2nogpj83yjep8",
-          "object": "tag"
+          'name': 'unread',
+          'id': '8keda28h8ijj2nogpj83yjep8',
+          'object': 'tag'
         }
       ],
-      "messages": [
-        "251r594smznew6yhiocht2v29",
-        "7upzl8ss738iz8xf48lm84q3e",
-        "ah5wuphj3t83j260jqucm9a28"
+      'messages': [
+        '251r594smznew6yhiocht2v29',
+        '7upzl8ss738iz8xf48lm84q3e',
+        'ah5wuphj3t83j260jqucm9a28'
       ],
-      "drafts": []
+      'drafts': []
     };
 
     mappedThread1 = {
-      "id": "fake_thread_id1",
-      "object": "thread",
-      "namespaceID": "fake_namespace_id",
-      "subject": "Mock Thread 1",
-      "lastMessageDate": new Date(1398229259000),
-      "participants": [
+      'id': 'fake_thread_id1',
+      'object': 'thread',
+      'namespaceID': 'fake_namespace_id',
+      'subject': 'Mock Thread 1',
+      'lastMessageDate': new Date(1398229259000),
+      'participants': [
         {
-          "name": "Ben Bitdiddle",
-          "email": "ben.bitdiddle@gmail.com"
+          'name': 'Ben Bitdiddle',
+          'email': 'ben.bitdiddle@gmail.com'
         },
         {
-          "name": "Bill Rogers",
-          "email": "wrogers@mit.edu"
+          'name': 'Bill Rogers',
+          'email': 'wrogers@mit.edu'
         }
       ],
-      "snippet": "Test thread 1...",
-      "tagData": [
+      'snippet': 'Test thread 1...',
+      'tagData': [
         {
-          "name": "inbox",
-          "id": "f0idlvozkrpj3ihxze7obpivh",
-          "object": "tag"
+          'name': 'inbox',
+          'id': 'f0idlvozkrpj3ihxze7obpivh',
+          'object': 'tag'
         },
         {
-          "name": "unread",
-          "id": "8keda28h8ijj2nogpj83yjep8",
-          "object": "tag"
+          'name': 'unread',
+          'id': '8keda28h8ijj2nogpj83yjep8',
+          'object': 'tag'
         }
       ],
-      "messageIDs": [
-        "251r594smznew6yhiocht2v29",
-        "7upzl8ss738iz8xf48lm84q3e",
-        "ah5wuphj3t83j260jqucm9a28"
+      'messageIDs': [
+        '251r594smznew6yhiocht2v29',
+        '7upzl8ss738iz8xf48lm84q3e',
+        'ah5wuphj3t83j260jqucm9a28'
       ],
-      "draftIDs": []
+      'draftIDs': []
     };
 
     mockThread1Updated = __extend(mockThread1, {
-      "messages": [
-        "251r594smznew6yhiocht2v29",
-        "7upzl8ss738iz8xf48lm84q3e",
-        "ah5wuphj3t83j260jqucm9a28",
-        "ag9afs86as9g8gasfasfsaf98"
+      'messages': [
+        '251r594smznew6yhiocht2v29',
+        '7upzl8ss738iz8xf48lm84q3e',
+        'ah5wuphj3t83j260jqucm9a28',
+        'ag9afs86as9g8gasfasfsaf98'
       ]
     });
 
     mappedThread1Updated = __extend(mappedThread1, {
-      "messageIDs": [
-        "251r594smznew6yhiocht2v29",
-        "7upzl8ss738iz8xf48lm84q3e",
-        "ah5wuphj3t83j260jqucm9a28",
-        "ag9afs86as9g8gasfasfsaf98"
+      'messageIDs': [
+        '251r594smznew6yhiocht2v29',
+        '7upzl8ss738iz8xf48lm84q3e',
+        'ah5wuphj3t83j260jqucm9a28',
+        'ag9afs86as9g8gasfasfsaf98'
       ]
     });
 
     mockThread1TagAdded = __extend(mockThread1, {
-      "tags": [
+      'tags': [
         {
-          "name": "inbox",
-          "id": "f0idlvozkrpj3ihxze7obpivh",
-          "object": "tag"
+          'name': 'inbox',
+          'id': 'f0idlvozkrpj3ihxze7obpivh',
+          'object': 'tag'
         },
         {
-          "name": "unread",
-          "id": "8keda28h8ijj2nogpj83yjep8",
-          "object": "tag"
+          'name': 'unread',
+          'id': '8keda28h8ijj2nogpj83yjep8',
+          'object': 'tag'
         },
         {
-          "name": "zing",
-          "id": "5235235142asasdasfasfafa1",
-          "object": "tag"
+          'name': 'zing',
+          'id': '5235235142asasdasfasfafa1',
+          'object': 'tag'
         }
       ],
     });
@@ -157,95 +157,95 @@ describe('INThread', function() {
     mockThread1TagRemoved = __extend({}, mockThread1);
     mockThread1TagRemoved.tags = [
       {
-        "name": "unread",
-        "id": "8keda28h8ijj2nogpj83yjep8",
-        "object": "tag"
+        'name': 'unread',
+        'id': '8keda28h8ijj2nogpj83yjep8',
+        'object': 'tag'
       }
     ];
 
     mockThread1TagAddedRemoved = __extend(mockThread1, {
-      "tags": [
+      'tags': [
         {
-          "name": "unread",
-          "id": "8keda28h8ijj2nogpj83yjep8",
-          "object": "tag"
+          'name': 'unread',
+          'id': '8keda28h8ijj2nogpj83yjep8',
+          'object': 'tag'
         },
         {
-          "name": "zing",
-          "id": "5235235142asasdasfasfafa1",
-          "object": "tag"
+          'name': 'zing',
+          'id': '5235235142asasdasfasfafa1',
+          'object': 'tag'
         }
       ]
     });
 
     mockThread1Updated2 = __extend({}, mockThread1);
     mockThread1Updated2.messages = [
-      "ag9afs86as9g8gasfasfsaf98"
+      'ag9afs86as9g8gasfasfsaf98'
     ];
 
     mappedThread1Updated2 = __extend({}, mappedThread1);
     mappedThread1Updated2.messageIDs = [
-      "ag9afs86as9g8gasfasfsaf98"
+      'ag9afs86as9g8gasfasfsaf98'
     ];
 
     mockThread2 = {
-      "id": "fake_thread_id2",
-      "object": "thread",
-      "namespace": "fake_namespace_id",
-      "subject": "Mock Thread 2",
-      "last_message_timestamp": 1399238467,
-      "participants": [
+      'id': 'fake_thread_id2',
+      'object': 'thread',
+      'namespace': 'fake_namespace_id',
+      'subject': 'Mock Thread 2',
+      'last_message_timestamp': 1399238467,
+      'participants': [
         {
-          "name": "Ben Bitdiddle",
-          "email": "ben.bitdiddle@gmail.com"
+          'name': 'Ben Bitdiddle',
+          'email': 'ben.bitdiddle@gmail.com'
         },
         {
-          "name": "Bill Rogers",
-          "email": "wrogers@mit.edu"
+          'name': 'Bill Rogers',
+          'email': 'wrogers@mit.edu'
         }
       ],
-      "snippet": "Test thread 2...",
-      "tags": [
+      'snippet': 'Test thread 2...',
+      'tags': [
         {
-          "name": "inbox",
-          "id": "f0idlvozkrpj3ihxze7obpivh"
+          'name': 'inbox',
+          'id': 'f0idlvozkrpj3ihxze7obpivh'
         }
       ],
-      "messages": [
-        "251r594smznew6yhiocht2v29",
-        "7upzl8ss738iz8xf48lm84q3e"
+      'messages': [
+        '251r594smznew6yhiocht2v29',
+        '7upzl8ss738iz8xf48lm84q3e'
       ],
-      "drafts": []
+      'drafts': []
     };
 
     mappedThread2 = {
-      "id": "fake_thread_id2",
-      "object": "thread",
-      "namespaceID": "fake_namespace_id",
-      "subject": "Mock Thread 2",
-      "lastMessageDate": new Date(1399238467000),
-      "participants": [
+      'id': 'fake_thread_id2',
+      'object': 'thread',
+      'namespaceID': 'fake_namespace_id',
+      'subject': 'Mock Thread 2',
+      'lastMessageDate': new Date(1399238467000),
+      'participants': [
         {
-          "name": "Ben Bitdiddle",
-          "email": "ben.bitdiddle@gmail.com"
+          'name': 'Ben Bitdiddle',
+          'email': 'ben.bitdiddle@gmail.com'
         },
         {
-          "name": "Bill Rogers",
-          "email": "wrogers@mit.edu"
+          'name': 'Bill Rogers',
+          'email': 'wrogers@mit.edu'
         }
       ],
-      "snippet": "Test thread 2...",
-      "tagData": [
+      'snippet': 'Test thread 2...',
+      'tagData': [
         {
-          "name": "inbox",
-          "id": "f0idlvozkrpj3ihxze7obpivh"
+          'name': 'inbox',
+          'id': 'f0idlvozkrpj3ihxze7obpivh'
         }
       ],
-      "messageIDs": [
-        "251r594smznew6yhiocht2v29",
-        "7upzl8ss738iz8xf48lm84q3e"
+      'messageIDs': [
+        '251r594smznew6yhiocht2v29',
+        '7upzl8ss738iz8xf48lm84q3e'
       ],
-      "draftIDs": []
+      'draftIDs': []
     };
 
     mockThreads = [
@@ -292,7 +292,7 @@ describe('INThread', function() {
         expect(threads[1] instanceof INThread).toBe(true);
       });
       var promise = namespace.threads().then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThreads)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThreads)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -304,7 +304,7 @@ describe('INThread', function() {
         //expect(threads[1]).toContainObject(mappedThread2);
       });
       var promise = namespace.threads().then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThreads)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThreads)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -312,7 +312,7 @@ describe('INThread', function() {
 
     it('should not resolve promise on error status', function() {
       var promise = namespace.threads();
-      server.respond([404, { "Content-Type": "application/json" }, JSON.stringify(mockNotFound)]);
+      server.respond([404, { 'Content-Type': 'application/json' }, JSON.stringify(mockNotFound)]);
       mockPromises.executeForPromise(promise);
       expect(promise.isFulfilled()).not.toBe(true);
       expect(promise.isRejected()).toBe(true);
@@ -329,7 +329,7 @@ describe('INThread', function() {
         expect(threads[1] instanceof INThread).toBe(true);
       });
       var promise = namespace.threads(oldThreads).then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThreads)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThreads)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -341,7 +341,7 @@ describe('INThread', function() {
         expect(threads[0]).toContainObject(mappedThread1Updated2);
       });
       var promise = namespace.threads(oldThreads).then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify([mockThread1Updated2])]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify([mockThread1Updated2])]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -354,7 +354,7 @@ describe('INThread', function() {
         expect(thread instanceof INThread).toBe(true);
       });
       var promise = namespace.thread('fake_thread_1').then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThread1)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -365,7 +365,7 @@ describe('INThread', function() {
         expect(thread).toContainObject(mappedThread2);
       });
       var promise = namespace.thread('fake_thread_2').then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread2)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThread2)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -373,7 +373,7 @@ describe('INThread', function() {
 
     it('should not resolve promise on error status', function() {
       var promise = namespace.thread('124124124123');
-      server.respond([404, { "Content-Type": "application/json" }, JSON.stringify(mockNotFound)]);
+      server.respond([404, { 'Content-Type': 'application/json' }, JSON.stringify(mockNotFound)]);
       mockPromises.executeForPromise(promise);
       expect(promise.isFulfilled()).not.toBe(true);
       expect(promise.isRejected()).toBe(true);
@@ -393,7 +393,7 @@ describe('INThread', function() {
         expect(newThread).toBe(thread);
       });
       var promise = thread.reload().then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThread1Updated)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -404,7 +404,7 @@ describe('INThread', function() {
         expect(newThread).toContainObject(mappedThread1Updated);
       });
       var promise = thread.reload().then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThread1Updated)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -417,7 +417,7 @@ describe('INThread', function() {
         expect(newThread.messageIDs[3]).toBe('ag9afs86as9g8gasfasfsaf98');
       });
       var promise = thread.reload().then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThread1Updated)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -430,7 +430,7 @@ describe('INThread', function() {
         expect(newThread.messageIDs[0]).toBe('ag9afs86as9g8gasfasfsaf98');
       });
       var promise = thread.reload().then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1Updated2)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThread1Updated2)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -450,7 +450,7 @@ describe('INThread', function() {
         expect(newThread.tagData[1].name).toBe('zing');
       });
       var promise = thread.updateTags(['zing'], ['inbox']).then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1TagAddedRemoved)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThread1TagAddedRemoved)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -464,7 +464,7 @@ describe('INThread', function() {
         expect(newThread.tagData[2].name).toBe('zing');
       });
       var promise = thread.updateTags(['zing']).then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1TagAdded)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThread1TagAdded)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -476,7 +476,7 @@ describe('INThread', function() {
         expect(newThread.tagData[0].name).toBe('unread');
       });
       var promise = thread.updateTags(['zing']).then(fulfilled);
-      server.respond([200, { "Content-Type": "application/json" }, JSON.stringify(mockThread1TagRemoved)]);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThread1TagRemoved)]);
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
@@ -485,9 +485,9 @@ describe('INThread', function() {
     it('should perform work for INThread#addTags()', function() {
       var orig = INThread.prototype.updateTags;
       var spy = spyOn(INThread.prototype, 'updateTags').
-          andCallFake(function(add_tags, remove_tags) {
-        expect(add_tags).toContainObject(['foo', 'bar']);
-        expect(remove_tags).toBe(null);
+      andCallFake(function(addTags, removeTags) {
+        expect(addTags).toContainObject(['foo', 'bar']);
+        expect(removeTags).toBe(null);
       });
       thread.addTags(['foo', 'bar']);
       expect(spy).toHaveBeenCalledOnce();
@@ -498,9 +498,9 @@ describe('INThread', function() {
     it('should perform work for INThread#removeTags()', function() {
       var orig = INThread.prototype.updateTags;
       var spy = spyOn(INThread.prototype, 'updateTags').
-          andCallFake(function(add_tags, remove_tags) {
-        expect(add_tags).toBe(null);
-        expect(remove_tags).toContainObject(['foo', 'bar']);
+      andCallFake(function(addTags, removeTags) {
+        expect(addTags).toBe(null);
+        expect(removeTags).toContainObject(['foo', 'bar']);
       });
       thread.removeTags(['foo', 'bar']);
       expect(spy).toHaveBeenCalledOnce();
