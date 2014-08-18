@@ -48,15 +48,15 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
   }
 
   if (options.appId == null) {
-    throw new TypeError('Unable to construct \'InboxAPI\': missing `appId`.');
+    throw new TypeError('Unable to construct `InboxAPI`: missing `appId`.');
   } else if (typeof options.appId !== 'string') {
-    throw new TypeError('Unable to construct \'InboxAPI\': option `appId` must be a string.');
+    throw new TypeError('Unable to construct `InboxAPI`: option `appId` must be a string.');
   }
 
   if (options.baseUrl == null) {
     options.baseUrl = 'http://api.inboxapp.co/';
   } else if (typeof options.baseUrl !== 'string') {
-    throw new TypeError('Unable to construct \'InboxAPI\': option `baseUrl` must be a string.');
+    throw new TypeError('Unable to construct `InboxAPI`: option `baseUrl` must be a string.');
   }
 
   if (options.promise == null) {
@@ -64,10 +64,10 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
   }
 
   if (options.promise == null) {
-    throw new TypeError('Unable to construct \'InboxAPI\': missing option `promise`, ' +
+    throw new TypeError('Unable to construct `InboxAPI`: missing option `promise`, ' +
                         'or no native Promise available');
   } else if (typeof options.promise !== 'function') {
-    throw new TypeError('Unable to construct \'InboxAPI\': option `promise` must be a ' +
+    throw new TypeError('Unable to construct `InboxAPI`: option `promise` must be a ' +
                         'function which returns an ECMAScript6-compatible Promise');
   }
 
@@ -309,10 +309,10 @@ InboxAPI.prototype.namespace = function(namespaceId) {
   var cache = this._.cache;
   if (!arguments.length) {
     throw new TypeError(
-      'Unable to perform \'namespace()\' on InboxAPI: missing option `namespaceId`.');
+      'Unable to perform `namespace()` on InboxAPI: missing option `namespaceId`.');
   } else if (typeof namespaceId !== 'string') {
     throw new TypeError(
-      'Unable to perform \'namespace()\' on InboxAPI: namespaceId must be a string.');
+      'Unable to perform `namespace()` on InboxAPI: namespaceId must be a string.');
   }
   return this.promise(function(resolve, reject) {
     cache.get(namespaceId, function(err, obj) {

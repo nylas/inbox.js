@@ -141,10 +141,10 @@ INNamespace.prototype.thread = function(threadId) {
   var cache = inbox._.cache;
   if (!arguments.length) {
     throw new TypeError(
-      'Unable to perform \'thread()\' on INNamespace: missing option `threadId`.');
+      'Unable to perform `thread()` on INNamespace: missing option `threadId`.');
   } else if (typeof threadId !== 'string') {
     throw new TypeError(
-      'Unable to perform \'thread()\' on INNamespace: threadId must be a string.');
+      'Unable to perform `thread()` on INNamespace: threadId must be a string.');
   }
   return this.promise(function(resolve, reject) {
     cache.get(threadId, function(err, obj) {

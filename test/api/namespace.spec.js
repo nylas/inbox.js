@@ -61,7 +61,7 @@ describe('INNamespace', function() {
   }];
 
   var mockNotFound = {
-    'message': 'Couldn\'t find namespace with id `not_found_namespace_id` ',
+    'message': 'Couldn`t find namespace with id `not_found_namespace_id` ',
     'type': 'invalid_request_error'
   };
 
@@ -197,14 +197,14 @@ describe('INNamespace', function() {
       it('should be thrown when first parameter is not present', function() {
         expect(function() {
           inbox.namespace();
-        }).toThrow('Unable to perform \'namespace()\' on InboxAPI: missing option `namespaceId`.');
+        }).toThrow('Unable to perform `namespace()` on InboxAPI: missing option `namespaceId`.');
       });
 
 
       it('should be thrown when first parameter is not present', function() {
         expect(function() {
           inbox.namespace(28);
-        }).toThrow('Unable to perform \'namespace()\' on InboxAPI: namespaceId must be a string.');
+        }).toThrow('Unable to perform `namespace()` on InboxAPI: namespaceId must be a string.');
       });
     });
   });

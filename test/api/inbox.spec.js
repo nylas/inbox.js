@@ -90,7 +90,7 @@ describe('InboxAPI', function() {
     });
 
 
-    it('should use INIDBCache if \'indexeddb\' cache is specified', function() {
+    it('should use INIDBCache if `indexeddb` cache is specified', function() {
       var inbox = InboxAPI({ appId: '', cache: 'indexeddb' });
       expect(inbox._.cache instanceof INIDBCache).toBe(true);
     });
@@ -106,42 +106,42 @@ describe('InboxAPI', function() {
       it('should be thrown when `options.appId` is not present', function() {
         expect(function() {
           new InboxAPI({});
-        }).toThrow('Unable to construct \'InboxAPI\': missing `appId`.');
+        }).toThrow('Unable to construct `InboxAPI`: missing `appId`.');
       });
 
 
       it('should be thrown when `options.appId` is not a string', function() {
         expect(function() {
           new InboxAPI({ appId: 43 });
-        }).toThrow('Unable to construct \'InboxAPI\': option `appId` must be a string.');
+        }).toThrow('Unable to construct `InboxAPI`: option `appId` must be a string.');
       });
 
 
       it('should be thrown when positional `appId` is not present', function() {
         expect(function() {
           new InboxAPI();
-        }).toThrow('Unable to construct \'InboxAPI\': missing `appId`.');
+        }).toThrow('Unable to construct `InboxAPI`: missing `appId`.');
       });
 
 
       it('should be thrown when positional `appId` is not a string', function() {
         expect(function() {
           new InboxAPI(35);
-        }).toThrow('Unable to construct \'InboxAPI\': option `appId` must be a string.');
+        }).toThrow('Unable to construct `InboxAPI`: option `appId` must be a string.');
       });
 
 
       it('should be thrown when positional `baseUrl` not a string', function() {
         expect(function() {
           new InboxAPI('', 35);
-        }).toThrow('Unable to construct \'InboxAPI\': option `baseUrl` must be a string.');
+        }).toThrow('Unable to construct `InboxAPI`: option `baseUrl` must be a string.');
       });
 
 
       it('should be thrown when options.baseUrl is not string', function() {
         expect(function() {
           new InboxAPI({ appId: '', baseUrl: 57 });
-        }).toThrow('Unable to construct \'InboxAPI\': option `baseUrl` must be a string.');
+        }).toThrow('Unable to construct `InboxAPI`: option `baseUrl` must be a string.');
       });
 
 
@@ -149,7 +149,7 @@ describe('InboxAPI', function() {
         mockNoPromise();
         expect(function() {
           new InboxAPI({ appId: '', baseUrl: 'api.inboxapp.co' });
-        }).toThrow('Unable to construct \'InboxAPI\': missing option `promise`, or no native ' +
+        }).toThrow('Unable to construct `InboxAPI`: missing option `promise`, or no native ' +
                    'Promise available');
       });
 
@@ -157,7 +157,7 @@ describe('InboxAPI', function() {
       it('should be thrown when options.promise is specified and not a function', function() {
         expect(function() {
           new InboxAPI({ appId: '', baseUrl: 'api.inboxapp.co', promise: 999 });
-        }).toThrow('Unable to construct \'InboxAPI\': option `promise` must be a function which ' +
+        }).toThrow('Unable to construct `InboxAPI`: option `promise` must be a function which ' +
                    'returns an ECMAScript6-compatible Promise');
       });
 
