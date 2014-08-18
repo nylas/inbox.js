@@ -92,7 +92,7 @@ INDraft.prototype.uploadAttachment = function(fileNameOrFile, blobForFileName) {
         }
         return reject(err);
       }
-			self.attachmentIDs.push(response.id);
+      self.attachmentData.push(response);
       return resolve(response);
     });
   });
@@ -118,11 +118,11 @@ INDraft.prototype.removeAttachment = function(file) {
 	}
 	var id = typeof file === 'string' ? file : file.id;
 	var i;
-	var ii = this.attachmentIDs.length;
+	var ii = this.attachmentData.length;
 
 	for (i=0; i<ii; ++i) {
-		if (this.attachmentIDs[i] === id) {
-			this.attachmentIDs.splice(i, 1);
+		if (this.attachmentData[i].id === id) {
+			this.attachmentData.splice(i, 1);
 			break;
 		}
 	}
@@ -151,14 +151,20 @@ INDraft.prototype.save = function() {
 	var url = formatUrl(pattern, this.namespaceUrl(), this.id);
 	var inbox = this.inbox();
 	var self = this;
-	var rawJson = this.toJSON();
+	var rawJson = this.raw();
+
+	rawJson.files = map(this.attachmentData, function(data) {
+	  return data.id;
+	});
+
+  rawJson = toJSON(rawJson);
+
 	return this.promise(function(resolve, reject) {
 		apiRequest(inbox, 'post', url, rawJson, function(err, response) {
 			if (err) return reject(err);
-			// Should delete the old cached version, if any
-			deleteModel(self);
-
+			// Should delete the cached version, if any
 			self.update(response);
+			deleteModel(self);
 			persistModel(self);
 			resolve(self);
 		});
@@ -187,6 +193,9 @@ INDraft.prototype.send = function() {
     data = this.raw();
     delete data.id;
     delete data.object;
+    data.files = map(this.attachmentData, function(data) {
+      return data.id;
+    });
     data = toJSON(data);
 	} else {
 		// Send using the saved ID
@@ -248,5 +257,6 @@ INDraft.prototype.dispose = function() {
  */
 defineResourceMapping(INDraft, {
 	'thread': 'reply_to_thread',
-  'object': 'const:draft'
+	'state': 'state',
+	'object': 'const:draft'
 }, INMessage);

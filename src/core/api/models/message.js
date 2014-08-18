@@ -92,7 +92,7 @@ INMessage.prototype.reply = function() {
  * @name INMessage#attachments
  *
  * @description
- * Returns an array of INFile objects constructed from the attachmentIDs on the message.
+ * Returns an array of INFile objects constructed from the attachmentData on the message.
  *
  * TODO(caitp): don't construct an unsynced INFile if we can possibly avoid it --- the caching
  * strategy should handle this properly.
@@ -100,11 +100,65 @@ INMessage.prototype.reply = function() {
  * @returns {Array<INFile>} an array of INFile objects
  */
 INMessage.prototype.attachments = function() {
-  var array = new Array(this.attachmentIDs.length);
-  forEach(this.attachmentIDs, function(id, i) {
-    array[i] = new INFile(this.inbox(), id, this.namespaceId());
-  }, this);
-  return array;
+  var inbox = this.inbox();
+  var namespace = this.namespaceId();
+  return map(this.attachmentData, function(data) {
+    return new INFile(inbox, data, namespace);
+  });
+};
+
+
+/**
+ * @function
+ * @name INMessage#getAttachments
+ *
+ * @description
+ * Load INFile resources attached to the message.
+ *
+ * @param {Array<INMessage>|object=} optionalFilesOrFilters Optionally, either an Array of
+ *   INFile objects to be updated with the response, or an object containing filters to apply
+ *   to the URL.
+ * @param {object=} filters An optional object containing filters to apply to the URL.
+ *
+ * @returns {Promise} a promise to be fulfilled with the new or updated files, or error from
+ *   the server.
+ */
+INMessage.prototype.getAttachments = function(optionalFilesOrFilters, filters) {
+  var self = this;
+  var updateFiles = null;
+
+  if (optionalFilesOrFilters && typeof optionalFilesOrFilters === 'object') {
+    if (isArray(optionalFilesOrFilters)) {
+      updateFiles = optionalFilesOrFilters;
+    } else {
+      filters = optionalFilesOrFilters;
+    }
+  }
+
+  if (!filters || typeof filters !== 'object') {
+    filters = {};
+  }
+
+  filters.message = this.id;
+
+  return this.promise(function(resolve, reject) {
+    var url = formatUrl('%@/files%@', self.namespaceUrl(), applyFilters(filters));
+
+    apiRequest(self.inbox(), 'get', url, function(err, response) {
+      if (err) return reject(err);
+      var inbox = self.inbox();
+      if (updateFiles) {
+        return resolve(mergeArray(updateFiles, response, 'id', function(data) {
+          persistModel(data = new INFile(inbox, data));
+          return data;
+        }, INFile));
+      }
+      return resolve(map(response, function(data) {
+        persistModel(data = new INFile(inbox, data));
+        return data;
+      }));
+    });
+  });
 };
 
 
@@ -127,9 +181,9 @@ INMessage.prototype.attachment = function(indexOrId) {
     index = indexOrId >>> 0;
   } else if (typeof indexOrId === 'string') {
     var i;
-    var ii = this.attachmentIDs.length;
+    var ii = this.attachmentData.length;
     for (i=0; i<ii; ++i) {
-      if (indexOrId === this.attachmentIDs[i]) {
+      if (indexOrId === this.attachmentData[i].id) {
         index = i;
         break;
       }
@@ -143,13 +197,13 @@ INMessage.prototype.attachment = function(indexOrId) {
     return null;
   }
 
-  var element = this.attachmentIDs[index];
+  var data = this.attachmentData[index];
 
-  if (typeof element === 'undefined') {
+  if (typeof data === 'undefined') {
     return null;
   }
 
-  return new INFile(this.inbox(), element, this.namespaceId());
+  return new INFile(this.inbox(), data, this.namespaceId());
 };
 
 
@@ -241,9 +295,10 @@ INMessage.prototype.markAsRead = function() {
 
 /**
  * @property
- * @name INMessage#attachmentIDs
+ * @name INMessage#attachmentData
  *
- * An array of strings (attachment IDs), representing the files attached to this message.
+ * An array of the raw attachment JSON blocks, representing the files attached to this message.
+ * See the attachments() method for INFile objects instead.
  */
 
 
@@ -261,6 +316,6 @@ defineResourceMapping(INMessage, {
   'from': 'array:from',
   'to': 'array:to',
   'unread': 'bool:unread',
-  'attachmentIDs': 'array:files',
+  'attachmentData': 'array:files',
   'object': 'const:message'
 });
