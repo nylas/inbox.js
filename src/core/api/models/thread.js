@@ -202,7 +202,7 @@ INThread.prototype.removeTags = function(removeTags) {
  *   false.
  */
 INThread.prototype.hasTag = function(tagName) {
-  for (var i=0; i<this.tagData.length; ++i) {
+  for (var i = 0; i < this.tagData.length; ++i) {
     var tag = this.tagData[i];
     if (tag && (tag.tagName === tagName || tag.name === tagName)) {
       return true;
@@ -232,7 +232,7 @@ INThread.prototype.hasTag = function(tagName) {
  * @name INThread#participants
  *
  * An array of Participant objects representing accounts who have participated in the thread. Each
- * element of the array has the properties "name" and "email".
+ * element of the array has the properties 'name' and 'email'.
  */
 
 
@@ -280,7 +280,7 @@ INThread.prototype.hasTag = function(tagName) {
  * @property
  * @name INThread#object
  *
- * The resource type, always "thread".
+ * The resource type, always 'thread'.
  */
 defineResourceMapping(INThread, {
   'subject': 'subject',

@@ -182,7 +182,7 @@ INMessage.prototype.attachment = function(indexOrId) {
   } else if (typeof indexOrId === 'string') {
     var i;
     var ii = this.attachmentData.length;
-    for (i=0; i<ii; ++i) {
+    for (i = 0; i < ii; ++i) {
       if (indexOrId === this.attachmentData[i].id) {
         index = i;
         break;
@@ -215,7 +215,7 @@ INMessage.prototype.attachment = function(indexOrId) {
  * Marks the message as read. This operation is saved to the server immediately. However, if the
  * message is unsynced, no request is ever made.
  *
- * @returns {Promise} a promise to be fulfilled with the INMessage object, "this".
+ * @returns {Promise} a promise to be fulfilled with the INMessage object, 'this'.
  */
 INMessage.prototype.markAsRead = function() {
   var self = this;
@@ -270,7 +270,7 @@ INMessage.prototype.markAsRead = function() {
  * @property
  * @name INMessage#from
  *
- * An array of Participant objects, each element containing string "name" and string "email". These
+ * An array of Participant objects, each element containing string 'name' and string 'email'. These
  * are used to identify the senders of the message.
  */
 
@@ -279,7 +279,7 @@ INMessage.prototype.markAsRead = function() {
  * @property
  * @name INMessage#to
  *
- * An array of Participant objects, each element containing string "name" and string "email". These
+ * An array of Participant objects, each element containing string 'name' and string 'email'. These
  * are used to identify the recipients of the message.
  */
 
@@ -306,7 +306,7 @@ INMessage.prototype.markAsRead = function() {
  * @property
  * @name INMessage#object
  *
- * The resource type, always "message".
+ * The resource type, always 'message'.
  */
 defineResourceMapping(INMessage, {
   'subject': 'subject',

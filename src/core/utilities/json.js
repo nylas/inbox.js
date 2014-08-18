@@ -29,8 +29,8 @@ var toJSON = (function() {
     };
   } else {
     return function(maybeJSON) {
-      throw new TypeError("Cannot perform 'toJSON' on " + maybeJSON + ": JSON.stringify not " +
-                          "available.");
+      throw new TypeError('Cannot perform \'toJSON\' on ' + maybeJSON + ': JSON.stringify not ' +
+                          'available.');
     };
   }
 })();
@@ -63,8 +63,8 @@ var parseJSON = (function() {
     };
   } else {
     return function(json) {
-      throw new TypeError("Cannot perform 'parseJSON' on " + json + ": JSON.parse not " +
-                          "available.");
+      throw new TypeError('Cannot perform \'parseJSON\' on ' + json + ': JSON.parse not ' +
+                          'available.');
     };
   }
 })();

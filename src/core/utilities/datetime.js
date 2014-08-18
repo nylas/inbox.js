@@ -10,7 +10,7 @@
  * @returns {number} The current unix timestamp (milliseconds elapsed since the epoch).
  */
 var Now = (function() {
-  if (typeof Date.now === "function") {
+  if (typeof Date.now === 'function') {
     return Date.now;
   } else {
     return function() {
@@ -39,7 +39,7 @@ var Now = (function() {
  * @returns {number} The unix timestamp for the parsed date, possibly NaN.
  */
 var parseDate = (function() {
-  if (typeof Date.parse === "function") {
+  if (typeof Date.parse === 'function') {
     return Date.parse;
   } else {
     return function(dateString) {
@@ -69,9 +69,9 @@ var parseDate = (function() {
  */
 function toUnixTimestamp(date) {
   var timestamp;
-  if (typeof date === "number") {
+  if (typeof date === 'number') {
     return date;
-  } else if (typeof date === "string") {
+  } else if (typeof date === 'string') {
     // if Number(date) is not NaN, then we can treat it as a timestamp ---
     // Otherwise, see if Date can parse it, and use the Date timestamp.
     timestamp = Number(date);
@@ -82,13 +82,13 @@ function toUnixTimestamp(date) {
     }
     // May be NaN
     return timestamp;
-  } else if (typeof date === "object") {
+  } else if (typeof date === 'object') {
     // It might be a Moment.js date, or a real Date, or something in between.
     // If the object isn't recognized, try to use the results of toString()
     // and parse it as a string.
     if (date instanceof Date) {
       return (date.getTime() / 1000) >>> 0;
-    } else if (typeof (timestamp = date.toString()) === "string") {
+    } else if (typeof (timestamp = date.toString()) === 'string') {
       return toUnixTimestamp(timestamp);
     }
   }

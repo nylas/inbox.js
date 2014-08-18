@@ -37,18 +37,18 @@ inherits(INDraft, INMessage);
  * Adds a set of participants to {INDraft#to} --- the set of direct message recipients. These are
  * not CC'd or BCC'd.
  *
- * @param {Array<Object>} participants an array of Participant objects, containing keys "name" and
- *   "email". The name should be a name which identifies the recipient, and the email should be
+ * @param {Array<Object>} participants an array of Participant objects, containing keys 'name' and
+ *   'email'. The name should be a name which identifies the recipient, and the email should be
  *   their email address.
  *
- * @returns {INDraft} the INDraft object, "this", to enable chaining calls.
+ * @returns {INDraft} the INDraft object, 'this', to enable chaining calls.
  */
 INDraft.prototype.addRecipients = function(participants) {
   var to = this.to || (this.to = []);
   var i;
   var ii = arguments.length;
   var item;
-  for (i=0; i<ii; ++i) {
+  for (i = 0; i < ii; ++i) {
     item = arguments[i];
     if (isArray(item)) {
       mergeArray(to, item, 'email');
@@ -83,7 +83,7 @@ INDraft.prototype.addRecipients = function(participants) {
  */
 INDraft.prototype.uploadAttachment = function(fileNameOrFile, blobForFileName) {
   var namespace = this.namespace();
-	var self = this;
+  var self = this;
   return this.promise(function(resolve, reject) {
     uploadFile(self, fileNameOrFile, blobForFileName, function(err, response) {
       if (err) {
@@ -109,24 +109,24 @@ INDraft.prototype.uploadAttachment = function(fileNameOrFile, blobForFileName) {
  *
  * @param {string|INFile} file Either a file ID as a string, or an INFile object.
  *
- * @returns {INDraft} the INDraft object, "this", to enable chaining calls.
+ * @returns {INDraft} the INDraft object, 'this', to enable chaining calls.
  */
 INDraft.prototype.removeAttachment = function(file) {
-	if (!file) {
-		throw new TypeError(
-			'Cannot invoke `removeAttachment()` on INDraft: file must be a file ID or object');
-	}
-	var id = typeof file === 'string' ? file : file.id;
-	var i;
-	var ii = this.attachmentData.length;
+  if (!file) {
+    throw new TypeError(
+      'Cannot invoke `removeAttachment()` on INDraft: file must be a file ID or object');
+  }
+  var id = typeof file === 'string' ? file : file.id;
+  var i;
+  var ii = this.attachmentData.length;
 
-	for (i=0; i<ii; ++i) {
-		if (this.attachmentData[i].id === id) {
-			this.attachmentData.splice(i, 1);
-			break;
-		}
-	}
-	return this;
+  for (i = 0; i < ii; ++i) {
+    if (this.attachmentData[i].id === id) {
+      this.attachmentData.splice(i, 1);
+      break;
+    }
+  }
+  return this;
 };
 
 
@@ -147,28 +147,28 @@ INDraft.prototype.markAsRead = null;
  *   an exception thrown by apiRequest().
  */
 INDraft.prototype.save = function() {
-	var pattern = this.isUnsynced() ? '%@/drafts' : '%@/drafts/%@';
-	var url = formatUrl(pattern, this.namespaceUrl(), this.id);
-	var inbox = this.inbox();
-	var self = this;
-	var rawJson = this.raw();
+  var pattern = this.isUnsynced() ? '%@/drafts' : '%@/drafts/%@';
+  var url = formatUrl(pattern, this.namespaceUrl(), this.id);
+  var inbox = this.inbox();
+  var self = this;
+  var rawJson = this.raw();
 
-	rawJson.files = map(this.attachmentData, function(data) {
-	  return data.id;
-	});
+  rawJson.files = map(this.attachmentData, function(data) {
+    return data.id;
+  });
 
   rawJson = toJSON(rawJson);
 
-	return this.promise(function(resolve, reject) {
-		apiRequest(inbox, 'post', url, rawJson, function(err, response) {
-			if (err) return reject(err);
-			// Should delete the cached version, if any
-			self.update(response);
-			deleteModel(self);
-			persistModel(self);
-			resolve(self);
-		});
-	});
+  return this.promise(function(resolve, reject) {
+    apiRequest(inbox, 'post', url, rawJson, function(err, response) {
+      if (err) return reject(err);
+      // Should delete the cached version, if any
+      self.update(response);
+      deleteModel(self);
+      persistModel(self);
+      resolve(self);
+    });
+  });
 };
 
 
@@ -184,11 +184,11 @@ INDraft.prototype.save = function() {
  *   exception which may have been thrown.
  */
 INDraft.prototype.send = function() {
-	var data;
-	var inbox = this.inbox();
-	var url = formatUrl('%@/send', this.namespaceUrl());
+  var data;
+  var inbox = this.inbox();
+  var url = formatUrl('%@/send', this.namespaceUrl());
 
-	if (this.isUnsynced()) {
+  if (this.isUnsynced()) {
     // Just send a message
     data = this.raw();
     delete data.id;
@@ -197,20 +197,20 @@ INDraft.prototype.send = function() {
       return data.id;
     });
     data = toJSON(data);
-	} else {
-		// Send using the saved ID
-		data = toJSON({
-			"draft_id": this.id
-		});
-	}
+  } else {
+    // Send using the saved ID
+    data = toJSON({
+      'draft_id': this.id
+    });
+  }
 
-	return this.promise(function(resolve, reject) {
-		apiRequest(inbox, 'post', url, data, function(err, response) {
-			// TODO: update a 'state' flag indicating that the value has been saved
-			if (err) return reject(err);
-			resolve(response);
-		});
-	});
+  return this.promise(function(resolve, reject) {
+    apiRequest(inbox, 'post', url, data, function(err, response) {
+      // TODO: update a 'state' flag indicating that the value has been saved
+      if (err) return reject(err);
+      resolve(response);
+    });
+  });
 };
 
 
@@ -224,20 +224,20 @@ INDraft.prototype.send = function() {
  * @returns {Promise} promise fulfilled with either an error from the API, or with the draft itself.
  */
 INDraft.prototype.dispose = function() {
-	var self = this;
-	return this.promise(function(resolve, reject) {
-		deleteModel(self);
-		if (self.isUnsynced()) {
-			// Cached copy is already deleted --- just resolve.
-			resolve(self);
-		} else {
-			apiRequest(self.inbox(), 'delete', formatUrl('%@/drafts/%@', self.namespaceUrl(), self.id),
-				function(err, response) {
-					if (err) return reject(err);
-					resolve(self);
-				});
-		}
-	});
+  var self = this;
+  return this.promise(function(resolve, reject) {
+    deleteModel(self);
+    if (self.isUnsynced()) {
+      // Cached copy is already deleted --- just resolve.
+      resolve(self);
+    } else {
+      apiRequest(self.inbox(), 'delete', formatUrl('%@/drafts/%@', self.namespaceUrl(), self.id),
+      function(err, response) {
+        if (err) return reject(err);
+        resolve(self);
+      });
+    }
+  });
 };
 
 
@@ -253,10 +253,10 @@ INDraft.prototype.dispose = function() {
  * @property
  * @name INDraft#object
  *
- * The resource type, always "draft".
+ * The resource type, always 'draft'.
  */
 defineResourceMapping(INDraft, {
-	'thread': 'reply_to_thread',
-	'state': 'state',
-	'object': 'const:draft'
+  'thread': 'reply_to_thread',
+  'state': 'state',
+  'object': 'const:draft'
 }, INMessage);

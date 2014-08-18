@@ -26,7 +26,7 @@ inherits(INNamespace, INModelObject);
  * @name INNamespace#namespace
  *
  * @description
- * Overload of {INModelObject#namespace} which always returns the value "this". The overloaded
+ * Overload of {INModelObject#namespace} which always returns the value 'this'. The overloaded
  * method is provided to avoid getting stuck in circular traversal.
  *
  * @returns {INNamespace} this
@@ -60,7 +60,7 @@ INNamespace.prototype.resourcePath = function() {
  * @name INNamespace#emailAddress
  *
  * The email address associated with this namespace. The raw value for this property is
- * "email_address".
+ * 'email_address'.
  */
 
 
@@ -76,7 +76,7 @@ INNamespace.prototype.resourcePath = function() {
  * @property
  * @name INNamespace#provider
  *
- * A string representing the Provider --- typically "Gmail" or "yahoo" or similar.
+ * A string representing the Provider --- typically 'Gmail' or 'yahoo' or similar.
  */
 
 
@@ -108,7 +108,7 @@ INNamespace.prototype.resourcePath = function() {
  * @property
  * @name INNamespace#object
  *
- * The resource type, always "namespace".
+ * The resource type, always 'namespace'.
  */
 defineResourceMapping(INNamespace, {
   'emailAddress': 'email_address',
@@ -141,10 +141,10 @@ INNamespace.prototype.thread = function(threadId) {
   var cache = inbox._.cache;
   if (!arguments.length) {
     throw new TypeError(
-      "Unable to perform 'thread()' on INNamespace: missing option `threadId`.");
+      'Unable to perform \'thread()\' on INNamespace: missing option `threadId`.');
   } else if (typeof threadId !== 'string') {
     throw new TypeError(
-      "Unable to perform 'thread()' on INNamespace: threadId must be a string.");
+      'Unable to perform \'thread()\' on INNamespace: threadId must be a string.');
   }
   return this.promise(function(resolve, reject) {
     cache.get(threadId, function(err, obj) {
@@ -225,7 +225,7 @@ INNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
         return new INThread(self, item);
       }));
     }
-  });  
+  });
 };
 
 
@@ -291,7 +291,7 @@ INNamespace.prototype.tags = function(optionalTagsOrFilters, filters) {
         return new INTag(self, item);
       }));
     }
-  });  
+  });
 };
 
 

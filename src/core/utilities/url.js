@@ -7,7 +7,7 @@
  * Given a template string, replace each `%@` in the string with a stringified value (arguments
  * following the template).
  *
- * E.G, formatString("%@, %@!", "Hello", "World") -> "Hello, World!"
+ * E.G, formatString('%@, %@!', 'Hello', 'World') -> 'Hello, World!'
  *
  * This is similar to {formatString}, with the exception that for parameter names, leading and
  * trailing slashes are removed automatically.
@@ -41,7 +41,7 @@ function buildURLParams(key, value, add) {
   var i, ii, name, v, classicArray = false;
   if (isArray(value)) {
     classicArray = key.test(ARRAY_BRACKET_REGEXP);
-    for (i=0, ii=value.length; i<ii; ++i) {
+    for (i = 0, ii = value.length; i < ii; ++i) {
       v = value[i];
       if (classicArray) {
         add(key, v);
@@ -196,7 +196,7 @@ function applyFilters(filters) {
   var key;
   var value;
   var result = '';
-  if (!filters || typeof filters !== "object" || isArray(filters)) {
+  if (!filters || typeof filters !== 'object' || isArray(filters)) {
     return '';
   }
 
