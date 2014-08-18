@@ -14,8 +14,6 @@
     "while",
     "do",
     "try",
-    "catch",
-    "case",
-    "default"
+    "catch"
   ]
 }

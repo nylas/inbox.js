@@ -14,9 +14,7 @@
     "while",
     "do",
     "try",
-    "catch",
-    "case",
-    "default"
+    "catch"
   ],
   "validateJSDoc": null
 }
