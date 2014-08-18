@@ -7,5 +7,15 @@
   },
   "disallowSpacesInsideObjectBrackets": null,
   "disallowSpacesInsideArrayBrackets": null,
-  "disallowMultipleLineBreaks": null
+  "disallowMultipleLineBreaks": null,
+  "requireCurlyBraces": [
+    "else",
+    "for",
+    "while",
+    "do",
+    "try",
+    "catch",
+    "case",
+    "default"
+  ]
 }
