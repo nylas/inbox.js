@@ -17,5 +17,6 @@
     "catch",
     "case",
     "default"
-  ]
+  ],
+  "validateJSDoc": null
 }
