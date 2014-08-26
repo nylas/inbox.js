@@ -336,6 +336,7 @@ function threadRequestHelper(thread, Ctor, endpoint, optionalItemsOrFilters, fil
       }
       return resolve(map(response, function(data) {
         persistModel(data = new Ctor(thread.inbox(), data));
+        return data;
       }));
     });
   });
