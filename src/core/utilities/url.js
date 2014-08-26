@@ -83,6 +83,7 @@ function serializeURLParams(params) {
 var FILTER_NAMES_OPTS = {
   'subject': true,
   'email': 'any_email',
+  'any_email': 'any_email',
   'from': true,
   'to': true,
   'cc': true,
