@@ -38,7 +38,7 @@ inherits(INContact, INModelObject);
  *
  * @returns {string} the resource path of the message.
  */
-INMessage.prototype.resourcePath = function() {
+INContact.prototype.resourcePath = function() {
   if (!this.isUnsynced()) {
     return formatUrl('%@/contacts/%@', this.namespaceUrl(), this.id);
   }
