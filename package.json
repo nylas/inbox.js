@@ -8,16 +8,18 @@
   },
   "author": "",
   "license": "TBD",
-  "devDependencies": {
+  "dependencies": {
     "gulp": "^3.7.0",
     "gulp-concat": "^2.2.0",
+    "yargs": "^1.2.6",
+    "merge-stream": "^0.1.5"
+  },
+  "devDependencies": {
     "karma": "^0.12.16",
     "karma-jasmine": "^0.1.5",
     "gulp-jscs": "^1.1.0",
     "gulp-jshint": "^1.6.2",
     "jshint-stylish": "^0.2.0",
-    "gulp-connect": "^2.0.5",
-    "yargs": "^1.2.6",
-    "merge-stream": "^0.1.5"
+    "gulp-connect": "^2.0.5"
   }
 }
