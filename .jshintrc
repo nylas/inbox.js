@@ -19,6 +19,7 @@
     "INStubCache": false,
     "INTag": false,
     "INThread": false,
+    "INContact": false,
 
 
     "addListener": true,
