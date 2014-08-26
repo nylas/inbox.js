@@ -231,6 +231,72 @@ INNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
 
 /**
  * @function
+ * @name INNamespace#contacts
+ *
+ * @description
+ * A method which fetches contacts from the server, optionally updating an array of contacts, and
+ * optionally filtered. If either filters or optional contacts are provided, the system will not
+ * use the cache and go directly to the server.
+ *
+ * @param {Array<INContact>|object=} optionalContactsOrFilters Optionally, either an Array of
+ *   INContact objects to be updated with the response, or an object containing filters to apply
+ *   to the URL.
+ * @param {object=} filters An optional object containing filters to apply to the URL.
+ *
+ * @returns {Promise} a promise to be fulfilled with the new or updated threads, or error from
+ *   the cache subsystem or from the server.
+ */
+INNamespace.prototype.contacts = function(optionalContactsOrFilters, filters) {
+  var self = this;
+  var inbox = this.inbox();
+  var cache = inbox._.cache;
+  var updateContacts = null;
+
+  if (optionalContactsOrFilters && typeof optionalContactsOrFilters === 'object') {
+    if (isArray(optionalContactsOrFilters)) {
+      updateContacts = optionalContactsOrFilters;
+    } else if (!filters) {
+      filters = optionalContactsOrFilters;
+    }
+  }
+  if (filters && typeof filters !== 'object') {
+    filters = null;
+  }
+
+  return this.promise(function(resolve, reject) {
+    if (updateContacts || filters) {
+      return apiRequest(inbox, 'get', formatUrl('%@/contacts%@',
+        self.resourcePath(), applyFilters(filters)), contactsReady);
+    }
+
+    cache.getByType('namespace', function(err, set) {
+      if (err) return reject(err);
+      if (set && set.length) return contactsReady(null, set);
+      apiRequest(inbox, 'get', formatUrl('%@/contacts',
+        self.resourcePath()), contactsReady);
+    });
+
+    function contactsReady(err, set) {
+      if (err) return reject(err);
+
+      if (updateContacts) {
+        return resolve(mergeArray(updateContacts, set, 'id', function(data) {
+          cache.persist(data.id, data, noop);
+          return new INContact(self, data);
+        }, INContact));
+      }
+
+      resolve(map(set, function(item) {
+        cache.persist(item.id, item, noop);
+        return new INContact(self, item);
+      }));
+    }
+  });
+};
+
+
+/**
+ * @function
  * @name INNamespace#tags
  *
  * @description
