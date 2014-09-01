@@ -18,7 +18,7 @@ function INFile(inbox, id, namespaceId) {
   if (id && typeof id === 'object') {
     data = id;
     id = data.id;
-    namespaceId = data.namespace || data.namespaceId;
+    namespaceId = data.namespace || namespaceId;
   }
   INModelObject.call(this, inbox, id, namespaceId);
   if (data) this.update(data);
