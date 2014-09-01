@@ -62,7 +62,7 @@ INFile.prototype.resourcePath = function() {
  */
 INFile.prototype.downloadUrl = function() {
   if (!this.isUnsynced()) {
-    return formatUrl('%@/files/%@/download', this.namespaceId(), this.id);
+    return formatUrl('%@/files/%@/download', this.namespaceUrl(), this.id);
   }
   return null;
 };
