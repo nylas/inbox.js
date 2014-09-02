@@ -16,7 +16,7 @@ describe('INTag', function() {
   var mockTag1 = {
     'id': '84umizq7c4jtrew491brpa6iu',
     'name': 'sports',
-    'namespace': 'fake_namespace_id',
+    'namespace_id': 'fake_namespace_id',
     'object': 'tag'
   };
 
@@ -30,7 +30,7 @@ describe('INTag', function() {
   var mockTag2 = {
     'id': 'unread',
     'name': 'unread',
-    'namespace': 'fake_namespace_id',
+    'namespace_id': 'fake_namespace_id',
     'object': 'tag'
   };
 
@@ -54,7 +54,7 @@ describe('INTag', function() {
   var mockThread1 = {
     'id': 'fake_thread_id1',
     'object': 'thread',
-    'namespace': 'fake_namespace_id',
+    'namespace_id': 'fake_namespace_id',
     'subject': 'Mock Thread 1',
     'last_message_timestamp': 1398229259,
     'participants': [
@@ -78,18 +78,18 @@ describe('INTag', function() {
         'id': 'unread'
       }
     ],
-    'messages': [
+    'message_ids': [
       '251r594smznew6yhiocht2v29',
       '7upzl8ss738iz8xf48lm84q3e',
       'ah5wuphj3t83j260jqucm9a28'
     ],
-    'drafts': []
+    'draft_ids': []
   };
 
   var mockThread2 = {
     'id': 'fake_thread_id2',
     'object': 'thread',
-    'namespace': 'fake_namespace_id',
+    'namespace_id': 'fake_namespace_id',
     'subject': 'Mock Thread 2',
     'last_message_timestamp': 1399238467,
     'participants': [
@@ -109,11 +109,11 @@ describe('INTag', function() {
         'id': 'unread'
       }
     ],
-    'messages': [
+    'message_ids': [
       '251r594smznew6yhiocht2v29',
       '7upzl8ss738iz8xf48lm84q3e'
     ],
-    'drafts': []
+    'draft_ids': []
   };
   var mockThreads = [
     mockThread1,

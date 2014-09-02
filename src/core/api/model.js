@@ -596,7 +596,7 @@ function convertFromRaw(object, resource) {
  */
 defineResourceMapping(INModelObject, {
   'id': 'id',
-  'namespaceID': 'namespace',
+  'namespaceID': 'namespace_id',
   'createdAt': 'date:created_at',
   'updatedAt': 'date:updated_at'
 }, null);

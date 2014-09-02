@@ -45,7 +45,7 @@ describe('INThread', function() {
     mockThread1 = {
       'id': 'fake_thread_id1',
       'object': 'thread',
-      'namespace': 'fake_namespace_id',
+      'namespace_id': 'fake_namespace_id',
       'subject': 'Mock Thread 1',
       'last_message_timestamp': 1398229259,
       'participants': [
@@ -71,12 +71,12 @@ describe('INThread', function() {
           'object': 'tag'
         }
       ],
-      'messages': [
+      'message_ids': [
         '251r594smznew6yhiocht2v29',
         '7upzl8ss738iz8xf48lm84q3e',
         'ah5wuphj3t83j260jqucm9a28'
       ],
-      'drafts': []
+      'draft_ids': []
     };
 
     mappedThread1 = {
@@ -117,7 +117,7 @@ describe('INThread', function() {
     };
 
     mockThread1Updated = __extend(mockThread1, {
-      'messages': [
+      'message_ids': [
         '251r594smznew6yhiocht2v29',
         '7upzl8ss738iz8xf48lm84q3e',
         'ah5wuphj3t83j260jqucm9a28',
@@ -179,7 +179,7 @@ describe('INThread', function() {
     });
 
     mockThread1Updated2 = __extend({}, mockThread1);
-    mockThread1Updated2.messages = [
+    mockThread1Updated2.message_ids = [
       'ag9afs86as9g8gasfasfsaf98'
     ];
 
@@ -191,7 +191,7 @@ describe('INThread', function() {
     mockThread2 = {
       'id': 'fake_thread_id2',
       'object': 'thread',
-      'namespace': 'fake_namespace_id',
+      'namespace_id': 'fake_namespace_id',
       'subject': 'Mock Thread 2',
       'last_message_timestamp': 1399238467,
       'participants': [
@@ -211,11 +211,11 @@ describe('INThread', function() {
           'id': 'f0idlvozkrpj3ihxze7obpivh'
         }
       ],
-      'messages': [
+      'message_ids': [
         '251r594smznew6yhiocht2v29',
         '7upzl8ss738iz8xf48lm84q3e'
       ],
-      'drafts': []
+      'draft_ids': []
     };
 
     mappedThread2 = {
@@ -319,6 +319,7 @@ describe('INThread', function() {
       var oldThreads = [mockThread1];
       var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
         expect(threads.length).toBe(2);
+        console.log(threads);
         expect(threads).toBe(oldThreads);
         expect(threads[0]).toBe(oldThreads[0]);
         expect(threads[1]).toContainObject(mappedThread2);

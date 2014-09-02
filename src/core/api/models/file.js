@@ -132,7 +132,7 @@ defineResourceMapping(INFile, {
   'filename': 'filename',
   'contentType': 'content_type',
   'size': 'int:size',
-  'messageID': 'message',
+  'messageID': 'message_id',
   'isEmbedded': 'bool:is_embedded',
   'object': 'const:file'
 });

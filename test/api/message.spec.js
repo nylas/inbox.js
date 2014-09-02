@@ -14,7 +14,7 @@ describe('INMessage', function() {
     thread = new INThread(inbox, {
       'id': 'fake_thread_id1',
       'object': 'thread',
-      'namespace': 'fake_namespace_id',
+      'namespace_id': 'fake_namespace_id',
       'subject': 'Mock Thread 1',
       'last_message_timestamp': 1398229259,
       'participants': [
@@ -40,12 +40,12 @@ describe('INMessage', function() {
           'object': 'tag'
         }
       ],
-      'messages': [
+      'message_ids': [
         '251r594smznew6yhiocht2v29',
         '7upzl8ss738iz8xf48lm84q3e',
         'ah5wuphj3t83j260jqucm9a28'
       ],
-      'drafts': []
+      'draft_ids': []
     });
   });
 
@@ -81,7 +81,7 @@ describe('INMessage', function() {
     'cc': [],
     'bcc': [],
     'date': 1370084645,
-    'thread': '5vryyrki4fqt7am31uso27t3f',
+    'thread_id': '5vryyrki4fqt7am31uso27t3f',
     'files': [
       {
         'content_type': 'image/jpeg',

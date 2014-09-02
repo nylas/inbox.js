@@ -269,9 +269,9 @@ INDraft.prototype.dispose = function() {
 
 /**
  * @property
- * @name INDraft#thread
+ * @name INDraft#state
  *
- * If present, this is the ID of the thread to respond to.
+ * If present, this is the state of the draft (`draft`, `sending`, or `sent`).
  */
 
 
@@ -282,7 +282,6 @@ INDraft.prototype.dispose = function() {
  * The resource type, always 'draft'.
  */
 defineResourceMapping(INDraft, {
-  'thread': 'reply_to_thread',
   'state': 'state',
   'object': 'const:draft'
 }, INMessage);

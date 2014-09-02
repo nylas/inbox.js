@@ -267,8 +267,8 @@ defineResourceMapping(INThread, {
   'subjectDate': 'date:subject_date',
   'participants': 'array:participants',
   'lastMessageDate': 'date:last_message_timestamp',
-  'messageIDs': 'array:messages',
-  'draftIDs': 'array:drafts',
+  'messageIDs': 'array:message_ids',
+  'draftIDs': 'array:draft_ids',
   'tagData': 'array:tags',
   'snippet': 'snippet',
   'object': 'const:thread'
@@ -301,7 +301,7 @@ function threadRequestHelper(thread, Ctor, endpoint, optionalItemsOrFilters, fil
     filters = {};
   }
 
-  filters.thread = thread.id;
+  filters.thread_id = thread.id;
 
   return thread.promise(function(resolve, reject) {
     var url = formatUrl('%@/%@%@', thread.namespaceUrl(), endpoint, applyFilters(filters));

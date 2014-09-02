@@ -120,7 +120,7 @@ INMessage.prototype.getAttachments = function(optionalFilesOrFilters, filters) {
     filters = {};
   }
 
-  filters.message = this.id;
+  filters.message_id = this.id;
 
   return this.promise(function(resolve, reject) {
     var url = formatUrl('%@/files%@', self.namespaceUrl(), applyFilters(filters));
@@ -292,7 +292,7 @@ INMessage.prototype.markAsRead = function() {
 defineResourceMapping(INMessage, {
   'subject': 'subject',
   'body': 'body',
-  'threadID': 'thread',
+  'threadID': 'thread_id',
   'date': 'date:date',
   'from': 'array:from',
   'to': 'array:to',

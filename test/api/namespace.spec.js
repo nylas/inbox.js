@@ -47,7 +47,7 @@ describe('INNamespace', function() {
   var mockFile = [{
     'content_type': 'text/plain',
     'id': '3f7d6reg1k7hc2umqkz8gcfmo',
-    'namespace': 'fake_namespace_id',
+    'namespace_id': 'fake_namespace_id',
     'object': 'file',
     'size': 9
   }];
