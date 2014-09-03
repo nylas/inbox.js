@@ -38,6 +38,14 @@ gulp.task('default', ['style', 'lint', 'build']);
 gulp.task('style', ['jscs']);
 gulp.task('lint', ['jshint']);
 
+gulp.task('test', function (done) {
+  var karma = require('karma').server;
+  karma.start({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: true
+  }, done);
+});
+
 gulp.task('jscs', function() {
   var src = gulp.src(LINT_SRC).
     pipe(jscs());
