@@ -315,6 +315,8 @@ defineResourceMapping(INMessage, {
   'date': 'date:date',
   'from': 'array:from',
   'to': 'array:to',
+  'cc': 'array:cc',
+  'bcc': 'array:bcc',
   'unread': 'bool:unread',
   'attachmentData': 'array:files',
   'object': 'const:message'
