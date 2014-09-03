@@ -153,6 +153,32 @@ INDraft.prototype.save = function() {
   var self = this;
   var rawJson = this.raw();
 
+  // check the formatting of our participants fields. They must be either undefined or be
+  // arrays, and must contain objects that have an email key
+  var keys = ['from', 'to', 'cc', 'bcc'];
+  for (var ii = 0; ii < keys.length; ii ++) {
+    var list = self[keys[ii]];
+    var type = Object.prototype.toString.call(list).toLowerCase();
+    var valid = false;
+
+    if (type === '[object array]') {
+      valid = true;
+      for (var ii = 0; ii < list.length; ii++) {
+        if ((typeof list[ii] !== 'object') || (!list[ii].hasOwnProperty('email'))) {
+          valid = false;
+          break;
+        }
+      }
+    } else if (type === '[object undefined]') {
+      valid = true;
+    }
+
+    if (!valid) {
+      throw new TypeError(
+      'To, From, CC, and BCC must be arrays of objects with emails and optional names.');
+    }
+  }
+
   rawJson.files = map(this.attachmentData, function(data) {
     return data.id;
   });
