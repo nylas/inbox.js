@@ -60,7 +60,7 @@ INThread.prototype.reply = function() {
   var data = this.raw();
   delete data.id;
   var draft = new INDraft(this.namespace(), data);
-  draft.thread = this.id;
+  draft.threadID = this.id;
   return draft;
 };
 

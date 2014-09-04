@@ -527,4 +527,22 @@ describe('INThread', function() {
       expect(thread.hasTag('InBoX')).toBe(false);
     });
   });
+
+  describe('reply()', function() {
+    it('should return an instance of INDraft', function() {
+      var thread = new INThread(namespace, mockThread1);
+      expect(thread.reply() instanceof INDraft).toBe(true);
+    });
+
+    it('should populate draft.thread_id', function() {
+      var thread = new INThread(namespace, mockThread1);
+      expect(thread.reply().thread().id).toBe(thread.id);
+    });
+
+    it('should populate draft.subject with the thread subject', function() {
+      var thread = new INThread(namespace, mockThread1);
+      expect(thread.reply().subject).toBe(thread.subject);
+    });
+  });
+
 });
