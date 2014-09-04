@@ -1,10 +1,20 @@
 describe('INFile', function() {
+  var haveOwnPromise = window.hasOwnProperty('Promise');
   var mockFile1;
   var inbox;
-  
+  var server;
+
   beforeEach(function() {
+    window.Promise = mockPromises.getMockPromise(window.Promise);
+    server = sinon.fakeServer.create();
+    inbox = new InboxAPI({
+      appId: '',
+      baseUrl: 'http://api.inboxapp.co/'
+    });
+
     mockFile1 = {
         "id": '84umizq7c4jtrew491brpa6iu',
+        "filename": "image.jpg",
         "namespace": 'fake_namespace_id'
     };
     inbox = new InboxAPI({
@@ -13,6 +23,14 @@ describe('INFile', function() {
     });
   });
 
+  afterEach(function() {
+    server.restore();
+    if (haveOwnPromise) {
+      window.Promise = mockPromises.getOriginalPromise();
+    } else {
+      delete window.Promise;
+    }
+  });
 
   describe('resourceUrl()', function() {
     it ('should be null if the model is unsynced', function() {
@@ -37,61 +55,26 @@ describe('INFile', function() {
 
 
   describe('download()', function() {
-
-  });
-});
-
-
-/**
- * @function
- * @name INFile#downloadUrl
- *
- * @description
- * Returns the URL for downloading synced File objects or attachments from the server, or NULL if
- * the file is unsynced.
- *
- * The URL is of the format <baseURL>/n/<namespaceID>/files/<fileID>/download. Note, the file need
- * not belong to a namespace associated with a downloader's own account.
- *
- * @returns {string} the URL to download the attachment or file.
- */
-INFile.prototype.downloadUrl = function() {
-  if (!this.isUnsynced()) {
-    return formatUrl('%@/files/%@/download', this.namespaceUrl(), this.id);
-  }
-  return null;
-};
-
-
-/**
- * @function
- * @name INFile#download
- *
- * @description
- * Downloads the file using XHR2, rather than the native browser.
- *
- * At this time, it is not possible to get progress readings from the file download.
- *
- * @returns {Promise} A promise to be fulfilled with the downloaded Blob in supporting browsers, or
- *   rejected with an error. If fulfilled with a blob, the blob may have a `fileName` property,
- *   indicating the current filename of the INFile at the time the promise was fulfilled.
- */
-INFile.prototype.download = function() {
-  var self = this;
-  var url = this.downloadUrl();
-  var filename = this.filename || this.id;
-  var contentType = this.contentType || 'text/plain;charset=utf-8';
-
-  return this.promise(function(resolve, reject) {
-    apiRequest(self.inbox(), 'get', url, null, 'arraybuffer', function(err, response) {
-      if (err) return reject(err);
-      var blob = new Blob([response], {
-        type: contentType
+    it ('should return a promise that yields a blob', function () {
+      var file = new INFile(namespace, mockFile1);
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(response) {
+        expect(response instanceof Blob).toBe(true);
       });
+      var promise = file.download().then(fulfilled);
+      server.respond([200, { 'Content-Type': 'application/json' }, 'garbage data']);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
 
-      blob.fileName = filename;
-
-      resolve(blob);
+    it ('should yield a blob with the correct filename', function () {
+      var file = new INFile(namespace, mockFile1);
+      var fulfilled = jasmine.createSpy('load').andCallFake(function(blob) {
+        expect(blob.fileName).toBe(file.filename);
+      });
+      var promise = file.download().then(fulfilled);
+      server.respond([200, { 'Content-Type': 'application/json' }, 'garbage data']);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
     });
   });
-};
+});
