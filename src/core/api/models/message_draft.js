@@ -161,26 +161,25 @@ INDraft.prototype.save = function() {
   // check the formatting of our participants fields. They must be either undefined or be
   // arrays, and must contain objects that have an email key
   var keys = ['from', 'to', 'cc', 'bcc'];
-  for (var ii = 0; ii < keys.length; ii ++) {
-    var list = self[keys[ii]];
-    var type = Object.prototype.toString.call(list).toLowerCase();
+  for (var i = 0, ii = keys.length; i < ii; ++i) {
+    var list = self[keys[i]];
     var valid = false;
 
-    if (type === '[object array]') {
+    if (isArray(list)) {
       valid = true;
-      for (var x = 0; x < list.length; x++) {
-        if ((typeof list[x] !== 'object') || (!list[x].hasOwnProperty('email'))) {
+      for (var j = 0, jj = list.length; j < jj; ++j) {
+        if ((typeof list[j] !== 'object') || (!list[j].hasOwnProperty('email'))) {
           valid = false;
           break;
         }
       }
-    } else if (type === '[object undefined]') {
+    } else if (list === undefined) {
       valid = true;
     }
 
     if (!valid) {
       throw new TypeError(
-      'To, From, CC, and BCC must be arrays of objects with emails and optional names.');
+      'INDraft.save(): To, From, CC, BCC must be arrays of objects with emails and optional names.');
     }
   }
 
