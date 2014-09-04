@@ -168,8 +168,8 @@ INDraft.prototype.save = function() {
 
     if (type === '[object array]') {
       valid = true;
-      for (var ii = 0; ii < list.length; ii++) {
-        if ((typeof list[ii] !== 'object') || (!list[ii].hasOwnProperty('email'))) {
+      for (var x = 0; x < list.length; x++) {
+        if ((typeof list[x] !== 'object') || (!list[x].hasOwnProperty('email'))) {
           valid = false;
           break;
         }
