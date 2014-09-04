@@ -33,8 +33,8 @@ function INModelObject(inbox, id, namespaceId) {
     data = id;
     this.id = data.id;
     if (namespaceId && data.namespace && (namespaceId != data.namespace))
-      throw new TypeError('You cannot instantiate an INModelObject with JSON from one namespace\
-      into another namespace.');
+      throw new TypeError('You cannot instantiate an INModelObject with JSON from one namespace'+
+                          'into another namespace.');
     namespaceId = data.namespace;
 
   } else if (id) {
