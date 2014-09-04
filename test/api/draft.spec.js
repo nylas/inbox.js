@@ -133,25 +133,25 @@ describe('INDraft', function() {
         // valid
         expect(function() {
           draft.save();
-        }).not.toThrow('To, From, CC, and BCC must be arrays of objects with emails and optional names.');
+        }).not.toThrow();
 
         // not an array
         draft[key] = 'not-an-array@inboxapp.com';
         expect(function() {
           draft.save();
-        }).toThrow('To, From, CC, and BCC must be arrays of objects with emails and optional names.');
+        }).toThrow();
 
         // not an array of emails
         draft[key] = ['bengotow@gmail.com'];
         expect(function() {
           draft.save();
-        }).toThrow('To, From, CC, and BCC must be arrays of objects with emails and optional names.');
+        }).toThrow();
 
         // not an array of objects without email key
         draft[key] = [{name: 'Ben'}];
         expect(function() {
           draft.save();
-        }).toThrow('To, From, CC, and BCC must be arrays of objects with emails and optional names.');
+        }).toThrow();
       }
     });
   });
