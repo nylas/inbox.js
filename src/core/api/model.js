@@ -4,9 +4,12 @@
  * @description
  * Abstract base-class for all client-exposed models held by the Inbox api.
  */
+
+
 function INModelObject(inbox, id, namespaceId) {
-  this.id = id || '-selfdefined';
-  var namespace;
+  var namespace = null;
+  var data = null;
+
   if (namespaceId) {
     if (typeof namespaceId === 'object') {
       if (namespaceId instanceof INNamespace) {
@@ -16,12 +19,37 @@ function INModelObject(inbox, id, namespaceId) {
         namespace = new INNamespace(inbox, namespaceId, namespaceId);
       }
     }
-    this.namespaceID = namespaceId;
   }
+
+  if (inbox instanceof INNamespace) {
+    namespace = inbox;
+    inbox = namespace.inbox();
+    if (namespaceId && (namespaceId != namespace.id))
+      throw new TypeError('Two different namespace IDs provided to INModelObject constructor.');
+    namespaceId = namespace.id;
+  }
+
+  if (id && typeof id === 'object') {
+    data = id;
+    this.id = data.id;
+    if (namespaceId && data.namespace && (namespaceId != data.namespace))
+      throw new TypeError('You cannot instantiate JSON from one namespace into another namespace.');
+    namespaceId = data.namespace;
+
+  } else if (id) {
+    this.id = id;
+  } else {
+    this.id = '-selfdefined';
+  }
+
+  this.namespaceID = namespaceId;
+
   defineProperty(this, '_', INVISIBLE, null, null, {
     inbox: inbox,
     namespace: namespace
   });
+
+  if (data) this.update(data);
 }
 
 

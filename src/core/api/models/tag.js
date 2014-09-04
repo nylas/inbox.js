@@ -7,18 +7,7 @@
  * A small resource representing a Tag object from the Inbox API.
  */
 function INTag(inbox, id, namespaceId) {
-  if (inbox instanceof INNamespace) {
-    namespaceId = inbox;
-    inbox = namespaceId.inbox();
-  }
-  var data = null;
-  if (id && typeof id === 'object') {
-    data = id;
-    id = data.id;
-    namespaceId = data.namespace || data.namespaceId;
-  }
   INModelObject.call(this, inbox, id, namespaceId);
-  if (data) this.update(data);
 }
 
 inherits(INTag, INModelObject);

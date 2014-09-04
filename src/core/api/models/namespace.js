@@ -8,14 +8,8 @@
  * which can send and receive messages for the associated email address.
  */
 function INNamespace(inbox, id) {
-  var data = null;
-  if (id && typeof id === 'object') {
-    data = id;
-    id = data.id;
-  }
-  INModelObject.call(this, inbox, id, id);
+  INModelObject.call(this, inbox, id);
   this._.namespace = this;
-  if (data) this.update(data);
 }
 
 inherits(INNamespace, INModelObject);
