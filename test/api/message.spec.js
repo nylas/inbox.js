@@ -158,7 +158,7 @@ describe('INMessage', function() {
       expect ((new INMessage(inbox, null, 'fake_namespace_id')).resourceUrl()).toBe(null);
     });
 
-    it('should have resourceUrl() like <baseUrl>/n/<namespaceId>/messages/<filesId>', function() {
+    it('should have resourceUrl() like <baseUrl>/n/<namespaceId>/messages/<messageId>', function() {
       expect ((new INMessage(namespace, mockMsg1)).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_namespace_id/messages/84umizq7c4jtrew491brpa6iu');
     });
   });

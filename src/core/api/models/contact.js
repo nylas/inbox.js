@@ -25,7 +25,6 @@ inherits(INContact, INModelObject);
 INContact.prototype.resourceName = function() {
   return 'contacts';
 };
-INContact.resourceName = INContact.prototype.resourceName;
 
 
 /**

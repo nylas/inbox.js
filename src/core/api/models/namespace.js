@@ -29,23 +29,48 @@ INNamespace.prototype.namespace = function() {
   return this;
 };
 
+/**
+ * @function
+ * @name INNamespace#namespaceUrl
+ *
+ * @description
+ * Overload of {INModelObject#namespace} which always returns the value 'this'. The overloaded
+ * method is provided to avoid getting stuck in circular traversal.
+ *
+ * @returns {INNamespace} this
+ */
+INNamespace.prototype.namespaceUrl = function() {
+  return this.resourceUrl();
+};
+
 
 /**
  * @function
  * @name INNamespace#resourceUrl
  *
  * @description
- * The URL for the resource. If the namespace is synced, the URL is <baseURL>/n/<namespaceID>.
- * There is no real concept of unsynced namespaces yet, however if the namespace IS unsynced
- * for some reason, the result is <baseURL>/n/.
+ * Returns the URL for the namespace
  *
- * @returns {string} the resource path of the namespace.
+ * @returns {string} the resource path of the file.
  */
 INNamespace.prototype.resourceUrl = function() {
-  if (this.isUnsynced()) {
-    return formatUrl('%@/n/', this.baseUrl());
-  }
-  return formatUrl('%@/n/%@', this.baseUrl(), this.id);
+  if (this.isUnsynced())
+    return null;
+  return formatUrl('%@/%@/%@', this.baseUrl(), this.resourceName(), this.id);
+};
+
+
+/**
+ * @function
+ * @name INNamespace#resourceName
+ *
+ * @description
+ * Returns the name of the resource used when constructing URLs
+ *
+ * @returns {string} the resource path of the file.
+ */
+INNamespace.prototype.resourceName = function() {
+  return 'n';
 };
 
 
