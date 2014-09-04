@@ -119,6 +119,7 @@ describe('INDraft', function() {
     // no real reason for this.
     it('should throw an exception if the to, cc, or bcc fields are not properly formatted', function() {
       var data = {
+        'namespace': 'fake_namespace_id',
         'to': [{'name': 'Ben', 'email':'ben@inboxapp.com'}],
         'cc': [{'name': 'Michael', 'email':'mg@inboxapp.com'}],
         'bcc': [{'name': 'Spang', 'email':'spang@inboxapp.com'}],

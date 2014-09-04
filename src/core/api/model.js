@@ -33,7 +33,8 @@ function INModelObject(inbox, id, namespaceId) {
     data = id;
     this.id = data.id;
     if (namespaceId && data.namespace && (namespaceId != data.namespace))
-      throw new TypeError('You cannot instantiate JSON from one namespace into another namespace.');
+      throw new TypeError('You cannot instantiate an INModelObject with JSON from one namespace\
+      into another namespace.');
     namespaceId = data.namespace;
 
   } else if (id) {
@@ -104,6 +105,8 @@ INModelObject.prototype.baseUrl = function() {
  * @returns {string} The namespace URL for this model object, relative to the base URL.
  */
 INModelObject.prototype.namespaceUrl = function() {
+  if (!this.namespaceId())
+    throw new TypeError('INModelObject namespaceUrl() is undefined because the model has no namespace ID');
   return formatUrl('%@/n/%@', this._.inbox.baseUrl(), this.namespaceId());
 };
 
@@ -336,8 +339,8 @@ var casters = {
       case 'string': return new Date(val).getTime();
       case 'object':
         if (val === null) return null;
+        if (val instanceof Date) return (val.getTime() / 1000);
         if (typeof val.valueOf === 'function' && typeof (v = val.valueOf()) === 'number') return v;
-        if (val instanceof Date) return (val.getTime() / 1000) >>> 0;
         /* falls through */
       default:
         return;
