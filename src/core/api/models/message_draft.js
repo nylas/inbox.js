@@ -31,6 +31,24 @@ inherits(INDraft, INMessage);
 
 /**
  * @function
+ * @name INDraft#resourcePath
+ *
+ * @description
+ * If the message is synced, the path is <baseURL>/n/<namespaceID>/drafts/<messageID>.
+ *
+ * There's no real meaning for resourcePaths to unsynced drafts, because unsynced drafts should
+ * not exist.
+ *
+ * @returns {string} the resource path of the message.
+ */
+INDraft.prototype.resourcePath = function() {
+  if (this.isUnsynced())
+    return null;
+  return formatUrl('%@/drafts/%@', this.namespaceUrl(), this.id);
+};
+
+/**
+ * @function
  * @name INDraft#addRecipients
  *
  * @description
@@ -257,7 +275,7 @@ INDraft.prototype.dispose = function() {
       // Cached copy is already deleted --- just resolve.
       resolve(self);
     } else {
-      apiRequest(self.inbox(), 'delete', formatUrl('%@/drafts/%@', self.namespaceUrl(), self.id),
+      apiRequest(self.inbox(), 'delete', this.resourcePath(),
       function(err, response) {
         if (err) return reject(err);
         resolve(self);

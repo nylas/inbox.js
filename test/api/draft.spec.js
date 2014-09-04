@@ -1,6 +1,8 @@
 describe('INDraft', function() {
   var inbox;
   var mockNamespace;
+  var mockDraft1;
+  var mappedDraft1;
 
   beforeEach(function() {
     window.Promise = mockPromises.getMockPromise(window.Promise);
@@ -19,6 +21,89 @@ describe('INDraft', function() {
       'provider': 'FakeProvider'
     };
 
+    mockDraft1 = {
+      'id': '84umizq7c4jtrew491brpa6iu',
+      'namespace': 'fake_namespace_id',
+      'object': 'message',
+      'subject': 'Re: Dinner on Friday?',
+      'from': [
+        {
+          'name': 'Ben Bitdiddle',
+          'email': 'ben.bitdiddle@gmail.com'
+        }
+      ],
+      'to': [
+        {
+          'name': 'Bill Rogers',
+          'email': 'wbrogers@mit.edu'
+        }
+      ],
+      'cc': [],
+      'bcc': [],
+      'date': 1370084645,
+      'thread': '5vryyrki4fqt7am31uso27t3f',
+      'files': [
+        {
+          'content_type': 'image/jpeg',
+          'filename': 'walter.jpg',
+          'id': '7jm8bplrg5tx0c7pon56tx30r',
+          'size': 38633
+        }
+      ],
+      'body': '<html><body>....</body></html>',
+      'unread': true
+    };
+
+    mappedDraft1 = {
+      'id': '84umizq7c4jtrew491brpa6iu',
+      'object': 'message',
+      'subject': 'Re: Dinner on Friday?',
+      'from': [
+        {
+          'name': 'Ben Bitdiddle',
+          'email': 'ben.bitdiddle@gmail.com'
+        }
+      ],
+      'to': [
+        {
+          'name': 'Bill Rogers',
+          'email': 'wbrogers@mit.edu'
+        }
+      ],
+      'cc': [],
+      'bcc': [],
+      'date': new Date(1370084645000),
+      'threadID': '5vryyrki4fqt7am31uso27t3f',
+      'attachmentData': [
+        {
+          'content_type': 'image/jpeg',
+          'filename': 'walter.jpg',
+          'id': '7jm8bplrg5tx0c7pon56tx30r',
+          'size': 38633
+        }
+      ],
+      'body': '<html><body>....</body></html>',
+      'unread': true
+    };
+
+  });
+
+  it('should be a child class of INMessage', function() {
+    expect(new INDraft() instanceof INMessage).toBe(true);
+  });
+
+
+  describe('when unsynced', function() {
+    it('should have null resourcePath()', function() {
+      expect ((new INDraft(inbox, null, 'fake_namespace_id')).resourcePath()).toBe(null);
+    });
+  });
+
+
+  describe('when synced', function() {
+    it('should have resourcePath() like <baseUrl>/n/<namespaceId>/drafts/<threadId>', function() {
+      expect ((new INDraft(namespace, mockDraft1)).resourcePath()).toBe('http://api.inboxapp.co/n/fake_namespace_id/drafts/84umizq7c4jtrew491brpa6iu');
+    });
   });
 
   describe('INThread#drafts()', function() {
