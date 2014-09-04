@@ -14,15 +14,15 @@ describe('INTag', function() {
   };
 
   var mockTag1 = {
-    'id': 'all',
-    'name': 'all',
+    'id': '84umizq7c4jtrew491brpa6iu',
+    'name': 'sports',
     'namespace': 'fake_namespace_id',
     'object': 'tag'
   };
 
   var mappedTag1 = {
-    'id': 'all',
-    'tagName': 'all',
+    'id': '84umizq7c4jtrew491brpa6iu',
+    'tagName': 'sports',
     'namespaceID': 'fake_namespace_id',
     'object': 'tag'
   };
@@ -240,4 +240,16 @@ describe('INTag', function() {
       INNamespace.prototype.threads = threads;
     });
   });
+
+
+  describe('resourceUrl()', function() {
+    it ('should be null if the model is unsynced', function() {
+      expect ((new INTag(inbox, null, 'fake_namespace_id')).resourceUrl()).toBe(null);
+    });
+
+    it('should have resourceUrl() like <baseUrl>/n/<namespaceId>/tags/<filesId>', function() {
+      expect ((new INTag(namespace, mockTag1)).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_namespace_id/tags/84umizq7c4jtrew491brpa6iu');
+    });
+  });
+
 });

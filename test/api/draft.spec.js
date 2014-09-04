@@ -93,25 +93,24 @@ describe('INDraft', function() {
   });
 
 
-  describe('when unsynced', function() {
-    it('should have null resourcePath()', function() {
-      expect ((new INDraft(inbox, null, 'fake_namespace_id')).resourcePath()).toBe(null);
-    });
-  });
-
-
-  describe('when synced', function() {
-    it('should have resourcePath() like <baseUrl>/n/<namespaceId>/drafts/<threadId>', function() {
-      expect ((new INDraft(namespace, mockDraft1)).resourcePath()).toBe('http://api.inboxapp.co/n/fake_namespace_id/drafts/84umizq7c4jtrew491brpa6iu');
-    });
-  });
-
   describe('INThread#drafts()', function() {
     // TODO:
     // Implement tests for INThread#drafts().
     //
     // These should be similar to tests for INThread#messages().
   });
+
+
+  describe('resourceUrl()', function() {
+    it ('should be null if the model is  unsynced', function() {
+      expect ((new INDraft(inbox, null, 'fake_namespace_id')).resourceUrl()).toBe(null);
+    });
+
+    it('should have resourceUrl() like <baseUrl>/n/<namespaceId>/drafts/<threadId>', function() {
+      expect ((new INDraft(namespace, mockDraft1)).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_namespace_id/drafts/84umizq7c4jtrew491brpa6iu');
+    });
+  });
+
 
   describe ('save()', function() {
     // Messages should be immutable, so this should never matter in practice, but it's theoretically
