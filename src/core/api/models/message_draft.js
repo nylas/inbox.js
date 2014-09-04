@@ -10,23 +10,24 @@
  * The draft-message may be sent without being synced to the server.
  */
 function INDraft(inbox, id, namespaceId) {
-  var namespace;
-  if (inbox instanceof INNamespace) {
-    namespace = inbox;
-    inbox = namespace.inbox();
-    namespaceId = namespace.id;
-  }
-  var data = null;
-  if (id && typeof id === 'object') {
-    data = id;
-    id = data.id;
-    namespaceId = data.namespace || data.namespaceId;
-  }
   INMessage.call(this, inbox, id, namespaceId);
-  if (data) this.update(data);
 }
 
 inherits(INDraft, INMessage);
+
+
+/**
+ * @function
+ * @name INDraft#resourceName
+ *
+ * @description
+ * Returns the name of the resource used when constructing URLs
+ *
+ * @returns {string} the resource path of the file.
+ */
+INDraft.prototype.resourceName = function() {
+  return 'drafts';
+};
 
 
 /**
@@ -153,6 +154,31 @@ INDraft.prototype.save = function() {
   var self = this;
   var rawJson = this.raw();
 
+  // check the formatting of our participants fields. They must be either undefined or be
+  // arrays, and must contain objects that have an email key
+  var keys = ['from', 'to', 'cc', 'bcc'];
+  for (var i = 0, ii = keys.length; i < ii; ++i) {
+    var list = self[keys[i]];
+    var valid = false;
+
+    if (isArray(list)) {
+      valid = true;
+      for (var j = 0, jj = list.length; j < jj; ++j) {
+        if ((typeof list[j] !== 'object') || (!list[j].hasOwnProperty('email'))) {
+          valid = false;
+          break;
+        }
+      }
+    } else if (list === undefined) {
+      valid = true;
+    }
+
+    if (!valid) {
+      throw new TypeError(
+      'INDraft.save(): To, From, CC, BCC must be arrays of objects with emails and optional names.');
+    }
+  }
+
   rawJson.files = map(this.attachmentData, function(data) {
     return data.id;
   });
@@ -231,7 +257,7 @@ INDraft.prototype.dispose = function() {
       // Cached copy is already deleted --- just resolve.
       resolve(self);
     } else {
-      apiRequest(self.inbox(), 'delete', formatUrl('%@/drafts/%@', self.namespaceUrl(), self.id),
+      apiRequest(self.inbox(), 'delete', this.resourceUrl(),
       function(err, response) {
         if (err) return reject(err);
         resolve(self);

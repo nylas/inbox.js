@@ -4,9 +4,12 @@
  * @description
  * Abstract base-class for all client-exposed models held by the Inbox api.
  */
+
+
 function INModelObject(inbox, id, namespaceId) {
-  this.id = id || '-selfdefined';
-  var namespace;
+  var namespace = null;
+  var data = null;
+
   if (namespaceId) {
     if (typeof namespaceId === 'object') {
       if (namespaceId instanceof INNamespace) {
@@ -16,12 +19,38 @@ function INModelObject(inbox, id, namespaceId) {
         namespace = new INNamespace(inbox, namespaceId, namespaceId);
       }
     }
-    this.namespaceID = namespaceId;
   }
+
+  if (inbox instanceof INNamespace) {
+    namespace = inbox;
+    inbox = namespace.inbox();
+    if (namespaceId && (namespaceId != namespace.id))
+      throw new TypeError('Two different namespace IDs provided to INModelObject constructor.');
+    namespaceId = namespace.id;
+  }
+
+  if (id && typeof id === 'object') {
+    data = id;
+    this.id = data.id;
+    if (namespaceId && data.namespace && (namespaceId != data.namespace))
+      throw new TypeError('You cannot instantiate an INModelObject with JSON from one namespace'+
+                          'into another namespace.');
+    namespaceId = data.namespace;
+
+  } else if (id) {
+    this.id = id;
+  } else {
+    this.id = '-selfdefined';
+  }
+
+  this.namespaceID = namespaceId;
+
   defineProperty(this, '_', INVISIBLE, null, null, {
     inbox: inbox,
     namespace: namespace
   });
+
+  if (data) this.update(data);
 }
 
 
@@ -76,6 +105,8 @@ INModelObject.prototype.baseUrl = function() {
  * @returns {string} The namespace URL for this model object, relative to the base URL.
  */
 INModelObject.prototype.namespaceUrl = function() {
+  if (!this.namespaceId())
+    throw new TypeError('INModelObject namespaceUrl() is undefined because the model has no namespace ID');
   return formatUrl('%@/n/%@', this._.inbox.baseUrl(), this.namespaceId());
 };
 
@@ -97,16 +128,32 @@ INModelObject.prototype.namespaceId = function() {
 
 /**
  * @function
- * @name INModelObject#resourcePath
+ * @name INModelObject#resourceName
  *
  * @description
- * The URL for this resource. If the model is unsynced, this should be a URL which, if pushed to,
- * would result in syncing the model. Otherwise, it is the path of the specific resource instance.
+ * The URL component for this resource, used to build URLs with the collection name
  *
  * @returns {string} The URL for this model.
  */
-INModelObject.prototype.resourcePath = function() {
-  return this.baseUrl();
+INModelObject.prototype.resourceName = function() {
+  throw new TypeError('INModelObject base class does not have a resourceName()');
+};
+
+
+/**
+ * @function
+ * @name INModelObject#resourceUrl
+ *
+ * @description
+ * The URL for this resource. If the model is unsynced, return null.
+ * Otherwise, it is the path of the specific resource instance.
+ *
+ * @returns {string} The URL for this model.
+ */
+INModelObject.prototype.resourceUrl = function() {
+  if (this.isUnsynced())
+    return null;
+  return formatUrl('%@/%@/%@', this.namespaceUrl(), this.resourceName(), this.id);
 };
 
 
@@ -151,7 +198,7 @@ INModelObject.prototype.reload = function() {
 
 function reloadModel(model, callback) {
   if (model.isUnsynced()) return callback(null, model);
-  apiRequest(model.inbox(), 'get', model.resourcePath(), function(err, data) {
+  apiRequest(model.inbox(), 'get', model.resourceUrl(), function(err, data) {
     if (err) return callback(err, null);
     model.update(data);
     persistModel(model);
@@ -308,8 +355,8 @@ var casters = {
       case 'string': return new Date(val).getTime();
       case 'object':
         if (val === null) return null;
+        if (val instanceof Date) return (val.getTime() / 1000);
         if (typeof val.valueOf === 'function' && typeof (v = val.valueOf()) === 'number') return v;
-        if (val instanceof Date) return (val.getTime() / 1000) >>> 0;
         /* falls through */
       default:
         return;

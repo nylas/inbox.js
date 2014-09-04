@@ -270,19 +270,15 @@ describe('INThread', function() {
   });
 
 
-  describe('when unsynced', function() {
-    it('should have null resourcePath()', function() {
-      expect ((new INThread(inbox, null, 'fake_namespace_id')).resourcePath()).toBe(null);
+  describe('resourceUrl()', function() {
+    it ('should be null if the model is unsynced', function() {
+      expect ((new INThread(inbox, null, 'fake_namespace_id')).resourceUrl()).toBe(null);
+    });
+
+    it('should have resourceUrl() like <baseUrl>/n/<namespaceId>/threads/<threadId>', function() {
+      expect ((new INThread(namespace, mockThread1)).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_namespace_id/threads/fake_thread_id1');
     });
   });
-
-
-  describe('when synced', function() {
-    it('should have resourcePath() like <baseUrl>/n/<namespaceId>/threads/<threadId>', function() {
-      expect ((new INThread(inbox, mockThread1)).resourcePath()).toBe('http://api.inboxapp.co/n/fake_namespace_id/threads/fake_thread_id1');
-    });
-  });
-
 
   describe('INNamespace#threads()', function() {
     it('should resolve promise with an Array of INThreads', function() {
@@ -527,4 +523,22 @@ describe('INThread', function() {
       expect(thread.hasTag('InBoX')).toBe(false);
     });
   });
+
+  describe('reply()', function() {
+    it('should return an instance of INDraft', function() {
+      var thread = new INThread(namespace, mockThread1);
+      expect(thread.reply() instanceof INDraft).toBe(true);
+    });
+
+    it('should populate draft.thread_id', function() {
+      var thread = new INThread(namespace, mockThread1);
+      expect(thread.reply().thread().id).toBe(thread.id);
+    });
+
+    it('should populate draft.subject with the thread subject', function() {
+      var thread = new INThread(namespace, mockThread1);
+      expect(thread.reply().subject).toBe(thread.subject);
+    });
+  });
+
 });

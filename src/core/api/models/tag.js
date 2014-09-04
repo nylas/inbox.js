@@ -7,18 +7,7 @@
  * A small resource representing a Tag object from the Inbox API.
  */
 function INTag(inbox, id, namespaceId) {
-  if (inbox instanceof INNamespace) {
-    namespaceId = inbox;
-    inbox = namespaceId.inbox();
-  }
-  var data = null;
-  if (id && typeof id === 'object') {
-    data = id;
-    id = data.id;
-    namespaceId = data.namespace || data.namespaceId;
-  }
   INModelObject.call(this, inbox, id, namespaceId);
-  if (data) this.update(data);
 }
 
 inherits(INTag, INModelObject);
@@ -26,18 +15,15 @@ inherits(INTag, INModelObject);
 
 /**
  * @function
- * @name INTag#resourcePath
+ * @name INTag#resourceName
  *
  * @description
- * Currently, Tags have no concept of an unsynced state, and it is not possible to fetch metadata
- * for a single tag. So because of this, {INTag#resourcePath} is only capable of returning a single
- * URL: <baseURL>/n/<namespaceID>/tags.
+ * Returns the name of the resource used when constructing URLs
  *
- * @returns {string} the resource path for the Tag object. This resource path is not meaningful,
- *   see the description for details.
+ * @returns {string} the resource path of the file.
  */
-INTag.prototype.resourcePath = function() {
-  return formatUrl('%@/tags', this.namespaceUrl());
+INTag.prototype.resourceName = function() {
+  return 'tags';
 };
 
 

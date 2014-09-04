@@ -8,14 +8,8 @@
  * which can send and receive messages for the associated email address.
  */
 function INNamespace(inbox, id) {
-  var data = null;
-  if (id && typeof id === 'object') {
-    data = id;
-    id = data.id;
-  }
-  INModelObject.call(this, inbox, id, id);
+  INModelObject.call(this, inbox, id);
   this._.namespace = this;
-  if (data) this.update(data);
 }
 
 inherits(INNamespace, INModelObject);
@@ -35,23 +29,48 @@ INNamespace.prototype.namespace = function() {
   return this;
 };
 
+/**
+ * @function
+ * @name INNamespace#namespaceUrl
+ *
+ * @description
+ * Overload of {INModelObject#namespace} which always returns the value 'this'. The overloaded
+ * method is provided to avoid getting stuck in circular traversal.
+ *
+ * @returns {INNamespace} this
+ */
+INNamespace.prototype.namespaceUrl = function() {
+  return this.resourceUrl();
+};
+
 
 /**
  * @function
- * @name INNamespace#resourcePath
+ * @name INNamespace#resourceUrl
  *
  * @description
- * The URL for the resource. If the namespace is synced, the URL is <baseURL>/n/<namespaceID>.
- * There is no real concept of unsynced namespaces yet, however if the namespace IS unsynced
- * for some reason, the result is <baseURL>/n/.
+ * Returns the URL for the namespace
  *
- * @returns {string} the resource path of the namespace.
+ * @returns {string} the resource path of the file.
  */
-INNamespace.prototype.resourcePath = function() {
-  if (this.isUnsynced()) {
-    return formatUrl('%@/n/', this.baseUrl());
-  }
-  return formatUrl('%@/n/%@', this.baseUrl(), this.id);
+INNamespace.prototype.resourceUrl = function() {
+  if (this.isUnsynced())
+    return null;
+  return formatUrl('%@/%@/%@', this.baseUrl(), this.resourceName(), this.id);
+};
+
+
+/**
+ * @function
+ * @name INNamespace#resourceName
+ *
+ * @description
+ * Returns the name of the resource used when constructing URLs
+ *
+ * @returns {string} the resource path of the file.
+ */
+INNamespace.prototype.resourceName = function() {
+  return 'n';
 };
 
 
@@ -200,14 +219,14 @@ INNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
   return this.promise(function(resolve, reject) {
     if (updateThreads || filters) {
       return apiRequest(inbox, 'get', formatUrl('%@/threads%@',
-        self.resourcePath(), applyFilters(filters)), threadsReady);
+        self.resourceUrl(), applyFilters(filters)), threadsReady);
     }
 
     cache.getByType('namespace', function(err, set) {
       if (err) return reject(err);
       if (set && set.length) return threadsReady(null, set);
       apiRequest(inbox, 'get', formatUrl('%@/threads',
-        self.resourcePath()), threadsReady);
+        self.resourceUrl()), threadsReady);
     });
 
     function threadsReady(err, set) {
@@ -266,14 +285,14 @@ INNamespace.prototype.contacts = function(optionalContactsOrFilters, filters) {
   return this.promise(function(resolve, reject) {
     if (updateContacts || filters) {
       return apiRequest(inbox, 'get', formatUrl('%@/contacts%@',
-        self.resourcePath(), applyFilters(filters)), contactsReady);
+        self.resourceUrl(), applyFilters(filters)), contactsReady);
     }
 
     cache.getByType('namespace', function(err, set) {
       if (err) return reject(err);
       if (set && set.length) return contactsReady(null, set);
       apiRequest(inbox, 'get', formatUrl('%@/contacts',
-        self.resourcePath()), contactsReady);
+        self.resourceUrl()), contactsReady);
     });
 
     function contactsReady(err, set) {
@@ -332,14 +351,14 @@ INNamespace.prototype.tags = function(optionalTagsOrFilters, filters) {
   return this.promise(function(resolve, reject) {
     if (updateTags || filters) {
       return apiRequest(inbox, 'get', formatUrl('%@/tags%@',
-        self.resourcePath(), applyFilters(filters)), tagsReady);
+        self.resourceUrl(), applyFilters(filters)), tagsReady);
     }
 
     cache.getByType('namespace', function(err, set) {
       if (err) return reject(err);
       if (set && set.length) return tagsReady(null, set);
       apiRequest(inbox, 'get', formatUrl('%@/tags',
-        self.resourcePath()), tagsReady);
+        self.resourceUrl()), tagsReady);
     });
 
     function tagsReady(err, set) {

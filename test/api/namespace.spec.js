@@ -90,16 +90,13 @@ describe('INNamespace', function() {
   });
 
 
-  describe('when unsynced', function() {
-    it('should have resourcePath() like <baseUrl>/n/', function() {
-      expect ((new INNamespace(inbox)).resourcePath()).toBe('http://api.inboxapp.co/n/');
+  describe('resourceUrl()', function() {
+    it ('should be null if the model is unsynced', function() {
+      expect ((new INNamespace(inbox)).resourceUrl()).toBe(null);
     });
-  });
 
-
-  describe('when synced', function() {
-    it('should have resourcePath() like <baseUrl>/n/<id>', function() {
-      expect ((new INNamespace(inbox, 'fake_id')).resourcePath()).toBe('http://api.inboxapp.co/n/fake_id');
+    it('should have resourceUrl() like <baseUrl>/n/<namespaceId>', function() {
+      expect ((new INNamespace(inbox, 'fake_id')).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_id');
     });
   });
 

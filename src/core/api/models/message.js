@@ -8,20 +8,7 @@
  * and are not possible to construct locally.
  */
 function INMessage(inbox, id, namespaceId) {
-  var namespace;
-  if (inbox instanceof INNamespace) {
-    namespace = inbox;
-    inbox = namespace.inbox();
-    namespaceId = namespace.id;
-  }
-  var data = null;
-  if (id && typeof id === 'object') {
-    data = id;
-    id = data.id;
-    namespaceId = data.namespace || data.namespaceId;
-  }
   INModelObject.call(this, inbox, id, namespaceId);
-  if (data) this.update(data);
 }
 
 inherits(INMessage, INModelObject);
@@ -29,21 +16,15 @@ inherits(INMessage, INModelObject);
 
 /**
  * @function
- * @name INMessage#resourcePath
+ * @name INMessage#resourceName
  *
  * @description
- * If the message is synced, the path is <baseURL>/n/<namespaceID>/messages/<messageID>.
+ * Returns the name of the resource used when constructing URLs
  *
- * There's no real meaning for resourcePaths to unsynced messages, because unsynced messages should
- * not exist. TODO(@caitp): do not return a path for unsynced messages, return null.
- *
- * @returns {string} the resource path of the message.
+ * @returns {string} the resource path of the file.
  */
-INMessage.prototype.resourcePath = function() {
-  if (!this.isUnsynced()) {
-    return formatUrl('%@/messages/%@', this.namespaceUrl(), this.id);
-  }
-  return formatUrl('%@/messages', this.namespaceUrl());
+INMessage.prototype.resourceName = function() {
+  return 'messages';
 };
 
 
@@ -225,7 +206,7 @@ INMessage.prototype.markAsRead = function() {
       resolve(self);
     });
   }
-  return apiRequestPromise(this.inbox(), 'put', this.resourcePath(), {
+  return apiRequestPromise(this.inbox(), 'put', this.resourceUrl(), {
     unread: false
   }, function(value) {
     self.update(value);

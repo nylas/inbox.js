@@ -63,6 +63,7 @@ describe('INMessage', function() {
 
   var mockMsg1 = {
     'id': '84umizq7c4jtrew491brpa6iu',
+    'namespace': 'fake_namespace_id',
     'object': 'message',
     'subject': 'Re: Dinner on Friday?',
     'from': [
@@ -95,6 +96,7 @@ describe('INMessage', function() {
 
   var mappedMsg1 = {
     'id': '84umizq7c4jtrew491brpa6iu',
+    'namespace': 'fake_namespace_id',
     'object': 'message',
     'subject': 'Re: Dinner on Friday?',
     'from': [
@@ -150,4 +152,15 @@ describe('INMessage', function() {
       expect(fulfilled).toHaveBeenCalled();
     });
   });
+
+  describe('resourceUrl()', function() {
+    it ('should be null if the model is unsynced', function() {
+      expect ((new INMessage(inbox, null, 'fake_namespace_id')).resourceUrl()).toBe(null);
+    });
+
+    it('should have resourceUrl() like <baseUrl>/n/<namespaceId>/messages/<messageId>', function() {
+      expect ((new INMessage(namespace, mockMsg1)).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_namespace_id/messages/84umizq7c4jtrew491brpa6iu');
+    });
+  });
+
 });

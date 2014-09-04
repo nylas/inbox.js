@@ -7,20 +7,7 @@
  * Model representing a single Thread.
  */
 function INThread(inbox, id, namespaceId) {
-  var namespace;
-  if (inbox instanceof INNamespace) {
-    namespace = inbox;
-    inbox = namespace.inbox();
-    namespaceId = namespace.id;
-  }
-  var data = null;
-  if (id && typeof id === 'object') {
-    data = id;
-    id = data.id;
-    namespaceId = data.namespace || data.namespaceId;
-  }
   INModelObject.call(this, inbox, id, namespaceId);
-  if (data) this.update(data);
 }
 
 inherits(INThread, INModelObject);
@@ -28,22 +15,15 @@ inherits(INThread, INModelObject);
 
 /**
  * @function
- * @name INThread#resourcePath
+ * @name INThread#resourceName
  *
  * @description
- * Currently, Threads have no concept of an unsynced state, and it is not possible to get the
- * resource path for an unsynced Thread, should one ever be created for some reason.
+ * Returns the name of the resource used when constructing URLs
  *
- * If the thread is synced from the server, the resource path is
- * <baseURL>/n/<namespaceID>/threads/<threadID>.
- *
- * @returns {string} the resource path for the Thread object.
+ * @returns {string} the resource path of the file.
  */
-INThread.prototype.resourcePath = function() {
-  if (this.isUnsynced()) {
-    return null;
-  }
-  return formatUrl('%@/threads/%@', this.namespaceUrl(), this.id);
+INThread.prototype.resourceName = function() {
+  return 'threads';
 };
 
 
@@ -60,7 +40,7 @@ INThread.prototype.reply = function() {
   var data = this.raw();
   delete data.id;
   var draft = new INDraft(this.namespace(), data);
-  draft.thread = this.id;
+  draft.threadID = this.id;
   return draft;
 };
 

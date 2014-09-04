@@ -8,20 +8,7 @@
  * locally.
  */
 function INFile(inbox, id, namespaceId) {
-  var namespace;
-  if (inbox instanceof INNamespace) {
-    namespace = inbox;
-    inbox = namespace.inbox();
-    namespaceId = namespace.id;
-  }
-  var data = null;
-  if (id && typeof id === 'object') {
-    data = id;
-    id = data.id;
-    namespaceId = data.namespace || namespaceId;
-  }
   INModelObject.call(this, inbox, id, namespaceId);
-  if (data) this.update(data);
 }
 
 inherits(INFile, INModelObject);
@@ -29,21 +16,15 @@ inherits(INFile, INModelObject);
 
 /**
  * @function
- * @name INFile#resourcePath
+ * @name INFile#resourceName
  *
  * @description
- * If unsynced, returns the path for uploading files:  <baseURL>/n/<namespaceID>/files, and one
- * should only POST to this url.
- *
- * Otherwise, the path is <baseURL>/n/<namespaceID>/files/<fileID>, and may be PUT or PATCH'd.
+ * Returns the name of the resource used when constructing URLs
  *
  * @returns {string} the resource path of the file.
  */
-INFile.prototype.resourcePath = function() {
-  if (this.isUnsynced()) {
-    return formatUrl('%@/files', this.namespaceUrl());
-  }
-  return formatUrl('%@/files/%@', this.namespaceUrl(), this.id);
+INFile.prototype.resourceName = function() {
+  return 'files';
 };
 
 
@@ -61,10 +42,9 @@ INFile.prototype.resourcePath = function() {
  * @returns {string} the URL to download the attachment or file.
  */
 INFile.prototype.downloadUrl = function() {
-  if (!this.isUnsynced()) {
-    return formatUrl('%@/files/%@/download', this.namespaceUrl(), this.id);
-  }
-  return null;
+  if (this.isUnsynced())
+    return null;
+  return this.resourceUrl()+'/download';
 };
 
 
