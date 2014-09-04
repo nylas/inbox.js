@@ -15,22 +15,15 @@ inherits(INThread, INModelObject);
 
 /**
  * @function
- * @name INThread#resourcePath
+ * @name INThread#resourceName
  *
  * @description
- * Currently, Threads have no concept of an unsynced state, and it is not possible to get the
- * resource path for an unsynced Thread, should one ever be created for some reason.
+ * Returns the name of the resource used when constructing URLs
  *
- * If the thread is synced from the server, the resource path is
- * <baseURL>/n/<namespaceID>/threads/<threadID>.
- *
- * @returns {string} the resource path for the Thread object.
+ * @returns {string} the resource path of the file.
  */
-INThread.prototype.resourcePath = function() {
-  if (this.isUnsynced()) {
-    return null;
-  }
-  return formatUrl('%@/threads/%@', this.namespaceUrl(), this.id);
+INThread.prototype.resourceName = function() {
+  return 'threads';
 };
 
 

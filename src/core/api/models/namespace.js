@@ -32,7 +32,7 @@ INNamespace.prototype.namespace = function() {
 
 /**
  * @function
- * @name INNamespace#resourcePath
+ * @name INNamespace#resourceUrl
  *
  * @description
  * The URL for the resource. If the namespace is synced, the URL is <baseURL>/n/<namespaceID>.
@@ -41,7 +41,7 @@ INNamespace.prototype.namespace = function() {
  *
  * @returns {string} the resource path of the namespace.
  */
-INNamespace.prototype.resourcePath = function() {
+INNamespace.prototype.resourceUrl = function() {
   if (this.isUnsynced()) {
     return formatUrl('%@/n/', this.baseUrl());
   }
@@ -194,14 +194,14 @@ INNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
   return this.promise(function(resolve, reject) {
     if (updateThreads || filters) {
       return apiRequest(inbox, 'get', formatUrl('%@/threads%@',
-        self.resourcePath(), applyFilters(filters)), threadsReady);
+        self.resourceUrl(), applyFilters(filters)), threadsReady);
     }
 
     cache.getByType('namespace', function(err, set) {
       if (err) return reject(err);
       if (set && set.length) return threadsReady(null, set);
       apiRequest(inbox, 'get', formatUrl('%@/threads',
-        self.resourcePath()), threadsReady);
+        self.resourceUrl()), threadsReady);
     });
 
     function threadsReady(err, set) {
@@ -260,14 +260,14 @@ INNamespace.prototype.contacts = function(optionalContactsOrFilters, filters) {
   return this.promise(function(resolve, reject) {
     if (updateContacts || filters) {
       return apiRequest(inbox, 'get', formatUrl('%@/contacts%@',
-        self.resourcePath(), applyFilters(filters)), contactsReady);
+        self.resourceUrl(), applyFilters(filters)), contactsReady);
     }
 
     cache.getByType('namespace', function(err, set) {
       if (err) return reject(err);
       if (set && set.length) return contactsReady(null, set);
       apiRequest(inbox, 'get', formatUrl('%@/contacts',
-        self.resourcePath()), contactsReady);
+        self.resourceUrl()), contactsReady);
     });
 
     function contactsReady(err, set) {
@@ -326,14 +326,14 @@ INNamespace.prototype.tags = function(optionalTagsOrFilters, filters) {
   return this.promise(function(resolve, reject) {
     if (updateTags || filters) {
       return apiRequest(inbox, 'get', formatUrl('%@/tags%@',
-        self.resourcePath(), applyFilters(filters)), tagsReady);
+        self.resourceUrl(), applyFilters(filters)), tagsReady);
     }
 
     cache.getByType('namespace', function(err, set) {
       if (err) return reject(err);
       if (set && set.length) return tagsReady(null, set);
       apiRequest(inbox, 'get', formatUrl('%@/tags',
-        self.resourcePath()), tagsReady);
+        self.resourceUrl()), tagsReady);
     });
 
     function tagsReady(err, set) {
