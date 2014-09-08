@@ -23,7 +23,7 @@ describe('INDraft', function() {
 
     mockDraft1 = {
       'id': '84umizq7c4jtrew491brpa6iu',
-      'namespace': 'fake_namespace_id',
+      'namespace_id': 'fake_namespace_id',
       'object': 'message',
       'subject': 'Re: Dinner on Friday?',
       'from': [
@@ -118,7 +118,7 @@ describe('INDraft', function() {
     // no real reason for this.
     it('should throw an exception if the to, cc, or bcc fields are not properly formatted', function() {
       var data = {
-        'namespace': 'fake_namespace_id',
+        'namespace_id': 'fake_namespace_id',
         'to': [{'name': 'Ben', 'email':'ben@inboxapp.com'}],
         'cc': [{'name': 'Michael', 'email':'mg@inboxapp.com'}],
         'bcc': [{'name': 'Spang', 'email':'spang@inboxapp.com'}],

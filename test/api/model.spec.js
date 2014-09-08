@@ -6,7 +6,7 @@ describe('INModelObject', function() {
     'account': 'fake_account_id',
     'email_address': 'fake.email@inboxapp.co',
     'id': 'fake_namespace_id',
-    'namespace': 'fake_namespace_id',
+    'namespace_id': 'fake_namespace_id',
     'object': 'namespace',
     'provider': 'FakeProvider'
   };
@@ -14,7 +14,7 @@ describe('INModelObject', function() {
   var mockObject = {
     'id': 'fake_object_id',
     'object': 'crazy_type',
-    'namespace': 'fake_namespace_id',
+    'namespace_id': 'fake_namespace_id',
     'created_at': 1398229259,
     'updated_at': 1398229259
   };
@@ -57,7 +57,7 @@ describe('INModelObject', function() {
       expect(function() {
         new INModelObject(namespace, {
           'id': 'fake_object_id',
-          'namespace': 'bogus_namespace_id'
+          'namespace_id': 'bogus_namespace_id'
         })
       }).toThrow();
     });

@@ -63,7 +63,7 @@ describe('INMessage', function() {
 
   var mockMsg1 = {
     'id': '84umizq7c4jtrew491brpa6iu',
-    'namespace': 'fake_namespace_id',
+    'namespace_id': 'fake_namespace_id',
     'object': 'message',
     'subject': 'Re: Dinner on Friday?',
     'from': [
@@ -96,7 +96,7 @@ describe('INMessage', function() {
 
   var mappedMsg1 = {
     'id': '84umizq7c4jtrew491brpa6iu',
-    'namespace': 'fake_namespace_id',
+    'namespaceID': 'fake_namespace_id',
     'object': 'message',
     'subject': 'Re: Dinner on Friday?',
     'from': [
