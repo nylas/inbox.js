@@ -177,12 +177,16 @@ describe('INTag', function() {
 
 
     it('should update passed array of tags', function() {
-      var oldTags = [mockTag1];
+      var oldTags = [new INTag(inbox, mockTag1)];
+      var newTag = new INTag(inbox, mockTag2);
+
       var fulfilled = jasmine.createSpy('load').andCallFake(function(tags) {
         expect(tags.length).toBe(2);
         expect(tags).toBe(oldTags);
         expect(tags[0]).toBe(oldTags[0]);
-        expect(tags[1]).toContainObject(mappedTag2);
+
+        expect(tags[1].id).toBe(newTag.id);
+        expect(tags[1]).toContainObject(newTag);
         expect(tags[1] instanceof INTag).toBe(true);
       });
       var promise = namespace.tags(oldTags).then(fulfilled);

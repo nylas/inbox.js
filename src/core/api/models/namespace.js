@@ -233,17 +233,16 @@ INNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
     function threadsReady(err, set) {
       if (err) return reject(err);
 
-      if (updateThreads) {
-        return resolve(mergeArray(updateThreads, set, 'id', function(data) {
-          cache.persist(data.id, data, noop);
-          return new INThread(self, data);
-        }, INThread));
-      }
-
-      resolve(map(set, function(item) {
+      var constructor = function(item) {
         cache.persist(item.id, item, noop);
         return new INThread(self, item);
-      }));
+      };
+
+      if (updateThreads) {
+        return resolve(mergeModelArray(updateThreads, set, constructor));
+      } else {
+        return resolve(map(set, constructor));
+      }
     }
   });
 };
@@ -365,17 +364,16 @@ INNamespace.prototype.tags = function(optionalTagsOrFilters, filters) {
     function tagsReady(err, set) {
       if (err) return reject(err);
 
-      if (updateTags) {
-        return resolve(mergeArray(updateTags, set, 'id', function(data) {
-          cache.persist(data.id, data, noop);
-          return new INTag(self, data);
-        }, INTag));
-      }
-
-      resolve(map(set, function(item) {
+      var constructor = function(item) {
         cache.persist(item.id, item, noop);
         return new INTag(self, item);
-      }));
+      };
+
+      if (updateTags) {
+        return resolve(mergeModelArray(updateTags, set, constructor));
+      } else {
+        return resolve(map(set, constructor));
+      }
     }
   });
 };

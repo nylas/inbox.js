@@ -316,14 +316,17 @@ describe('INThread', function() {
 
 
     it('should update passed array of threads', function() {
-      var oldThreads = [mockThread1];
+      var oldThreads = [new INThread(inbox, mockThread1)];
+      var newThread = new INThread(inbox, mockThread2);
+
       var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
         expect(threads.length).toBe(2);
         console.log(threads);
         expect(threads).toBe(oldThreads);
         expect(threads[0]).toBe(oldThreads[0]);
-        expect(threads[1]).toContainObject(mappedThread2);
         expect(threads[1] instanceof INThread).toBe(true);
+        expect(threads[1].id).toBe(newThread.id);
+        expect(threads[1]).toContainObject(newThread);
       });
       var promise = namespace.threads(oldThreads).then(fulfilled);
       server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockThreads)]);

@@ -153,6 +153,24 @@ function mergeArray(oldArray, newArray, id, newCallback, resource) {
   return oldArray;
 }
 
+function mergeModelArray(oldArray, newArray, constructor) {
+  var oldItems = [];
+  oldItems.concat(oldArray);
+  oldArray.length = 0;
+
+  for (var i = 0, ii = newArray.length; i < ii; ++i) {
+    var item = null;
+    for (var j = 0, jj = oldItems.length; j < jj; ++j) {
+      if (oldItems[j].id == item.id)
+        item = oldItems[j];
+    }
+    if (!item) {
+      item = constructor(newArray[i]);
+    }
+    oldArray.push(item);
+  }
+  return oldArray;
+}
 
 /**
  * @function
