@@ -22,7 +22,7 @@ inherits(INContact, INModelObject);
  *
  * @returns {string} the resource path of the file.
  */
-INContact.prototype.resourceName = function() {
+INContact.resourceName = INContact.prototype.resourceName = function() {
   return 'contacts';
 };
 

@@ -48,7 +48,7 @@
     "map": false,
     "mappingForProperty": false,
     "merge": false,
-    "mergeArray": false,
+    "mergeModelArray": false,
     "noop": false,
     "parseJSON": true,
     "persistModel": false,

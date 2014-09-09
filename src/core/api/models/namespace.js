@@ -70,7 +70,7 @@ INNamespace.prototype.resourceUrl = function() {
  *
  * @returns {string} the resource path of the file.
  */
-INNamespace.prototype.resourceName = function() {
+INNamespace.resourceName = INNamespace.prototype.resourceName = function() {
   return 'n';
 };
 
@@ -143,6 +143,28 @@ defineResourceMapping(INNamespace, {
 
 /**
  * @function
+ * @name INNamespace#threads
+ *
+ * @description
+ * A method which fetches threads from the server, optionally updating an array of threads, and
+ * optionally filtered. If either filters or optional threads are provided, the system will not
+ * use the cache and go directly to the server.
+ *
+ * @param {Array<INThread>|object=} existingArrayOrFilters Optionally, either an Array of
+ *   INThread objects to be updated with the response, or an object containing filters to apply
+ *   to the URL.
+ * @param {object=} filters An optional object containing filters to apply to the URL.
+ *
+ * @returns {Promise} a promise to be fulfilled with the new or updated threads, or error from
+ *   the cache subsystem or from the server.
+ */
+INNamespace.prototype.threads = function(existingArrayOrFilters, filters) {
+  return this.fetchCollection(INThread, existingArrayOrFilters, filters);
+};
+
+
+/**
+ * @function
  * @name INNamespace#thread
  *
  * @description
@@ -182,72 +204,6 @@ INNamespace.prototype.thread = function(threadId) {
   });
 };
 
-
-/**
- * @function
- * @name INNamespace#threads
- *
- * @description
- * A method which fetches threads from the server, optionally updating an array of threads, and
- * optionally filtered. If either filters or optional threads are provided, the system will not
- * use the cache and go directly to the server.
- *
- * @param {Array<INThread>|object=} optionalThreadsOrFilters Optionally, either an Array of
- *   INThread objects to be updated with the response, or an object containing filters to apply
- *   to the URL.
- * @param {object=} filters An optional object containing filters to apply to the URL.
- *
- * @returns {Promise} a promise to be fulfilled with the new or updated threads, or error from
- *   the cache subsystem or from the server.
- */
-INNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
-  var self = this;
-  var inbox = this.inbox();
-  var cache = inbox._.cache;
-  var updateThreads = null;
-
-  if (optionalThreadsOrFilters && typeof optionalThreadsOrFilters === 'object') {
-    if (isArray(optionalThreadsOrFilters)) {
-      updateThreads = optionalThreadsOrFilters;
-    } else if (!filters) {
-      filters = optionalThreadsOrFilters;
-    }
-  }
-  if (filters && typeof filters !== 'object') {
-    filters = null;
-  }
-
-  return this.promise(function(resolve, reject) {
-    if (updateThreads || filters) {
-      return apiRequest(inbox, 'get', formatUrl('%@/threads%@',
-        self.resourceUrl(), applyFilters(filters)), threadsReady);
-    }
-
-    cache.getByType('namespace', function(err, set) {
-      if (err) return reject(err);
-      if (set && set.length) return threadsReady(null, set);
-      apiRequest(inbox, 'get', formatUrl('%@/threads',
-        self.resourceUrl()), threadsReady);
-    });
-
-    function threadsReady(err, set) {
-      if (err) return reject(err);
-
-      var constructor = function(item) {
-        cache.persist(item.id, item, noop);
-        return new INThread(self, item);
-      };
-
-      if (updateThreads) {
-        return resolve(mergeModelArray(updateThreads, set, constructor));
-      } else {
-        return resolve(map(set, constructor));
-      }
-    }
-  });
-};
-
-
 /**
  * @function
  * @name INNamespace#contacts
@@ -257,7 +213,7 @@ INNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
  * optionally filtered. If either filters or optional contacts are provided, the system will not
  * use the cache and go directly to the server.
  *
- * @param {Array<INContact>|object=} optionalContactsOrFilters Optionally, either an Array of
+ * @param {Array<INContact>|object=} existingArrayOrFilters Optionally, either an Array of
  *   INContact objects to be updated with the response, or an object containing filters to apply
  *   to the URL.
  * @param {object=} filters An optional object containing filters to apply to the URL.
@@ -265,52 +221,8 @@ INNamespace.prototype.threads = function(optionalThreadsOrFilters, filters) {
  * @returns {Promise} a promise to be fulfilled with the new or updated threads, or error from
  *   the cache subsystem or from the server.
  */
-INNamespace.prototype.contacts = function(optionalContactsOrFilters, filters) {
-  var self = this;
-  var inbox = this.inbox();
-  var cache = inbox._.cache;
-  var updateContacts = null;
-
-  if (optionalContactsOrFilters && typeof optionalContactsOrFilters === 'object') {
-    if (isArray(optionalContactsOrFilters)) {
-      updateContacts = optionalContactsOrFilters;
-    } else if (!filters) {
-      filters = optionalContactsOrFilters;
-    }
-  }
-  if (filters && typeof filters !== 'object') {
-    filters = null;
-  }
-
-  return this.promise(function(resolve, reject) {
-    if (updateContacts || filters) {
-      return apiRequest(inbox, 'get', formatUrl('%@/contacts%@',
-        self.resourceUrl(), applyFilters(filters)), contactsReady);
-    }
-
-    cache.getByType('namespace', function(err, set) {
-      if (err) return reject(err);
-      if (set && set.length) return contactsReady(null, set);
-      apiRequest(inbox, 'get', formatUrl('%@/contacts',
-        self.resourceUrl()), contactsReady);
-    });
-
-    function contactsReady(err, set) {
-      if (err) return reject(err);
-
-      if (updateContacts) {
-        return resolve(mergeArray(updateContacts, set, 'id', function(data) {
-          cache.persist(data.id, data, noop);
-          return new INContact(self, data);
-        }, INContact));
-      }
-
-      resolve(map(set, function(item) {
-        cache.persist(item.id, item, noop);
-        return new INContact(self, item);
-      }));
-    }
-  });
+INNamespace.prototype.contacts = function(existingArrayOrFilters, filters) {
+  return this.fetchCollection(INContact, existingArrayOrFilters, filters);
 };
 
 
@@ -323,7 +235,7 @@ INNamespace.prototype.contacts = function(optionalContactsOrFilters, filters) {
  * optionally filtered. If either filters or optional tags are provided, the system will not
  * use the cache and go directly to the server.
  *
- * @param {Array<INTag>|object=} optionalTagsOrFilters Optionally, either an Array of
+ * @param {Array<INTag>|object=} existingArrayOrFilters Optionally, either an Array of
  *   INTag objects to be updated with the response, or an object containing filters to apply
  *   to the URL.
  * @param {object=} filters An optional object containing filters to apply to the URL.
@@ -331,17 +243,113 @@ INNamespace.prototype.contacts = function(optionalContactsOrFilters, filters) {
  * @returns {Promise} a promise to be fulfilled with the new or updated tags, or error from
  *   the cache subsystem or from the server.
  */
-INNamespace.prototype.tags = function(optionalTagsOrFilters, filters) {
+INNamespace.prototype.tags = function(existingArrayOrFilters, filters) {
+  return this.fetchCollection(INTag, existingArrayOrFilters, filters);
+};
+
+
+/**
+ * @function
+ * @name INNamespace#drafts
+ *
+ * @description
+ * A method which fetches drafts from the server, optionally updating an array of drafts, and
+ * optionally filtered. If either filters or optional drafts are provided, the system will not
+ * use the cache and go directly to the server.
+ *
+ * @param {Array<INDraft>|object=} existingArrayOrFilters Optionally, either an Array of
+ *   INTag objects to be updated with the response, or an object containing filters to apply
+ *   to the URL.
+ * @param {object=} filters An optional object containing filters to apply to the URL.
+ *
+ * @returns {Promise} a promise to be fulfilled with the new or updated drafts, or error from
+ *   the cache subsystem or from the server.
+ */
+INNamespace.prototype.drafts = function(existingArrayOrFilters, filters) {
+  return this.fetchCollection(INDraft, existingArrayOrFilters, filters);
+};
+
+
+/**
+ * @function
+ * @name INNamespace#draft
+ *
+ * @description
+ * Returns a new {INDraft} object, enabling the caller to create a new message to send. This is the
+ * primary API for sending messages with Inbox.js.
+ *
+ * @returns {INDraft} the newly constructed INDraft object.
+ */
+INNamespace.prototype.draft = function() {
+  return new INDraft(this, null);
+};
+
+
+/**
+ * @function
+ * @name INNamespace#files
+ *
+ * @description
+ * A method which fetches files from the server, optionally updating an array of drafts, and
+ * optionally filtered. If either filters or optional drafts are provided, the system will not
+ * use the cache and go directly to the server.
+ *
+ * @param {Array<INFile>|object=} existingArrayOrFilters Optionally, either an Array of
+ *   INTag objects to be updated with the response, or an object containing filters to apply
+ *   to the URL.
+ * @param {object=} filters An optional object containing filters to apply to the URL.
+ *
+ * @returns {Promise} a promise to be fulfilled with the new or updated drafts, or error from
+ *   the cache subsystem or from the server.
+ */
+INNamespace.prototype.files = function(existingArrayOrFilters, filters) {
+  return this.fetchCollection(INFile, existingArrayOrFilters, filters);
+};
+
+
+/**
+ * @function
+ * @name INNamespace#messages
+ *
+ * @description
+ * A method which fetches messages from the server, optionally updating an array of drafts, and
+ * optionally filtered. If either filters or optional drafts are provided, the system will not
+ * use the cache and go directly to the server.
+ *
+ * @param {Array<INMessage>|object=} existingArrayOrFilters Optionally, either an Array of
+ *   INTag objects to be updated with the response, or an object containing filters to apply
+ *   to the URL.
+ * @param {object=} filters An optional object containing filters to apply to the URL.
+ *
+ * @returns {Promise} a promise to be fulfilled with the new or updated drafts, or error from
+ *   the cache subsystem or from the server.
+ */
+INNamespace.prototype.messages = function(existingArrayOrFilters, filters) {
+  return this.fetchCollection(INMessage, existingArrayOrFilters, filters);
+};
+
+
+/**
+ * @function
+ * @name INNamespace#fetchCollection
+ *
+ * @description
+ * A method which fetches a collection of items from the server, optionally updating an existing array and
+ * optionally filtered. If either filters or optional existing array are provided, the system will not
+ * use the cache and go directly to the server.
+ *
+*/
+INNamespace.prototype.fetchCollection = function(klass, existingArrayOrFilters, filters) {
   var self = this;
   var inbox = this.inbox();
   var cache = inbox._.cache;
-  var updateTags = null;
+  var existingArray = null;
 
-  if (optionalTagsOrFilters && typeof optionalTagsOrFilters === 'object') {
-    if (isArray(optionalTagsOrFilters)) {
-      updateTags = optionalTagsOrFilters;
+  if (existingArrayOrFilters && typeof existingArrayOrFilters === 'object') {
+    if (isArray(existingArrayOrFilters)) {
+      existingArray = existingArrayOrFilters;
     } else if (!filters) {
-      filters = optionalTagsOrFilters;
+      filters = existingArrayOrFilters;
     }
   }
   if (filters && typeof filters !== 'object') {
@@ -349,30 +357,31 @@ INNamespace.prototype.tags = function(optionalTagsOrFilters, filters) {
   }
 
   return this.promise(function(resolve, reject) {
-    if (updateTags || filters) {
-      return apiRequest(inbox, 'get', formatUrl('%@/tags%@',
-        self.resourceUrl(), applyFilters(filters)), tagsReady);
+    // note: we don't currently support caching when there are filters
+    if (existingArray || filters) {
+      var url = formatUrl('%@/%@%@', self.resourceUrl(), klass.resourceName(), applyFilters(filters))
+      return apiRequest(inbox, 'get', url, responseReady);
+    } else {
+      cache.getByType('namespace', function(err, returnedArray) {
+        if (err) return reject(err);
+        if (returnedArray && returnedArray.length) return responseReady(null, returnedArray);
+        var url = formatUrl('%@/%@', self.resourceUrl(), klass.resourceName());
+        apiRequest(inbox, 'get', url, responseReady);
+      });
     }
 
-    cache.getByType('namespace', function(err, set) {
-      if (err) return reject(err);
-      if (set && set.length) return tagsReady(null, set);
-      apiRequest(inbox, 'get', formatUrl('%@/tags',
-        self.resourceUrl()), tagsReady);
-    });
-
-    function tagsReady(err, set) {
+    function responseReady(err, returnedArray) {
       if (err) return reject(err);
 
       var constructor = function(item) {
         cache.persist(item.id, item, noop);
-        return new INTag(self, item);
+        return new klass(self, item);
       };
 
-      if (updateTags) {
-        return resolve(mergeModelArray(updateTags, set, constructor));
+      if (existingArray) {
+        return resolve(mergeModelArray(existingArray, returnedArray, 'id', constructor));
       } else {
-        return resolve(map(set, constructor));
+        return resolve(map(returnedArray, constructor));
       }
     }
   });
@@ -411,21 +420,6 @@ INNamespace.prototype.uploadFile = function(fileNameOrFile, blobForFileName) {
       return resolve(response);
     });
   });
-};
-
-
-/**
- * @function
- * @name INNamespace#draft
- *
- * @description
- * Returns a new {INDraft} object, enabling the caller to create a new message to send. This is the
- * primary API for sending messages with Inbox.js.
- *
- * @returns {INDraft} the newly constructed INDraft object.
- */
-INNamespace.prototype.draft = function() {
-  return new INDraft(this, null);
 };
 
 

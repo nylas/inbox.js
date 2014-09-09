@@ -23,7 +23,7 @@ inherits(INMessage, INModelObject);
  *
  * @returns {string} the resource path of the file.
  */
-INMessage.prototype.resourceName = function() {
+INMessage.resourceName = INMessage.prototype.resourceName = function() {
   return 'messages';
 };
 
@@ -129,7 +129,7 @@ INMessage.prototype.getAttachments = function(optionalFilesOrFilters, filters) {
       if (err) return reject(err);
       var inbox = self.inbox();
       if (updateFiles) {
-        return resolve(mergeArray(updateFiles, response, 'id', function(data) {
+        return resolve(mergeModelArray(updateFiles, response, 'id', function(data) {
           persistModel(data = new INFile(inbox, data));
           return data;
         }, INFile));

@@ -353,8 +353,6 @@ describe('INModelObject', function() {
       });
       var obj1 = new INTestObject(inbox, {});
       obj1.birthday = new Date(1398229259000);
-      console.log(obj1.birthday.getTime());
-      console.log(obj1.raw().birthday);
       expect(obj1.raw().birthday).toBe(1398229259);
     });
 

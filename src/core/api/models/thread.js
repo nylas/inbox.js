@@ -22,7 +22,7 @@ inherits(INThread, INModelObject);
  *
  * @returns {string} the resource path of the file.
  */
-INThread.prototype.resourceName = function() {
+INThread.resourceName = INThread.prototype.resourceName = function() {
   return 'threads';
 };
 
@@ -309,7 +309,7 @@ function threadRequestHelper(thread, Ctor, endpoint, optionalItemsOrFilters, fil
     apiRequest(thread.inbox(), 'get', url, function(err, response) {
       if (err) return reject(err);
       if (updateItems) {
-        return resolve(mergeArray(updateItems, response, 'id', function(data) {
+        return resolve(mergeModelArray(updateItems, response, 'id', function(data) {
           persistModel(data = new Ctor(thread.inbox(), data));
           return data;
         }, Ctor));

@@ -22,7 +22,7 @@ inherits(INTag, INModelObject);
  *
  * @returns {string} the resource path of the file.
  */
-INTag.prototype.resourceName = function() {
+INTag.resourceName = INTag.prototype.resourceName = function() {
   return 'tags';
 };
 

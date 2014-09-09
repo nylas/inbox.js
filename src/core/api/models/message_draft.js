@@ -25,7 +25,7 @@ inherits(INDraft, INMessage);
  *
  * @returns {string} the resource path of the file.
  */
-INDraft.prototype.resourceName = function() {
+INDraft.resourceName = INDraft.prototype.resourceName = function() {
   return 'drafts';
 };
 
@@ -52,7 +52,7 @@ INDraft.prototype.addRecipients = function(participants) {
   for (i = 0; i < ii; ++i) {
     item = arguments[i];
     if (isArray(item)) {
-      mergeArray(to, item, 'email');
+      mergeModelArray(to, item, 'email');
     }
   }
   return this;

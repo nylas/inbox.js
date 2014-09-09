@@ -77,83 +77,26 @@ function merge(dest, src, resource) {
   return dest;
 }
 
-// Combine oldArray and newArray, by removing items from oldArray (identified by 'id') which are not
-// in the newArray --- The arrays are expected to be arrays of Objects.
+
 /**
  * @function
- * @name mergeArray
+ * @name mergeModelArray
  * @private
  *
  * @description
- * Simple method for combining two arrays, deleting items from the old array which are not present
- * in the new array. This is optimized for merging arrays of Inbox resource objects
- * ({INModelObject}s) and expects the array to be an array of objects with an ID field.
+ * Combine oldArray and newArray, placing the results in oldArray. Objects that already exist in
+ * oldArray are not re-created. Items in newArray that need to be added to oldArray are passed through
+ * the optional constructor function parameter to allow them to be transformed as necessary.
  *
  * @param {Array} oldArray the original Array, to extend with new items.
  * @param {Array} newArray the new array containing new data from the server.
  * @param {string} id the property name by which objects are identified. This is typically 'id'.
- * @param {function=} newCallback a callback which modifies a new value in some way, typically by
- *   constructing a new INModelObject with it.
- * @param {INModelObject=} resource the constructor for the resource type of which the arrays
- *   should hold. Optional, but useful for ensuring properties are copied with regard for the
- *   resource mapping.
+ * @param {function=} constructor A function that is called whenever an item from newArray will be placed
+   in oldArray. Can be used to transform items as necessary or inflate them into INModelObjects.
  *
  * @returns {Array} the oldArray.
  */
-function mergeArray(oldArray, newArray, id, newCallback, resource) {
-  var objects = {};
-  var seen = {};
-  var numOld = 0;
-  var numSeen = 0;
-  var numNew = 0;
-  var toRemove;
-  var callback = typeof newCallback === 'function' && newCallback;
-  var i, ii, obj, oldObj;
-  var oldLength = oldArray.length;
-
-  for (i = 0, ii = oldLength; i < ii; ++i) {
-    obj = oldArray[i];
-    if (typeof obj === 'object' && id in obj) {
-      ++numOld;
-      objects[obj[id]] = obj;
-    }
-  }
-
-  for (i = 0, ii = newArray.length; i < ii; ++i) {
-    obj = newArray[i];
-
-    if (resource && resource.resourceMapping) {
-      convertFromRaw(obj, resource);
-    }
-
-    if (typeof obj === 'object' && id in obj) {
-      ++numNew;
-      if ((oldObj = objects[obj[id]])) {
-        ++numSeen;
-        merge(oldObj, obj, resource);
-        seen[obj[id]] = true;
-      } else {
-        if (callback) obj = callback(obj);
-        objects[obj[id]] = obj;
-        oldArray.push(obj);
-        seen[obj[id]] = true;
-      }
-    }
-  }
-
-  if (numSeen < numOld) {
-    // Go through and remove unseen indexes.
-    for (i = oldLength; i--;) {
-      obj = oldArray[i];
-      if (typeof obj === 'object' && id in obj && !seen[obj[id]]) {
-        oldArray.splice(i, 1);
-      }
-    }
-  }
-  return oldArray;
-}
-
-function mergeModelArray(oldArray, newArray, constructor) {
+function mergeModelArray(oldArray, newArray, idKey, constructor) {
   var oldItems = [];
   oldItems.concat(oldArray);
   oldArray.length = 0;
@@ -161,11 +104,14 @@ function mergeModelArray(oldArray, newArray, constructor) {
   for (var i = 0, ii = newArray.length; i < ii; ++i) {
     var item = null;
     for (var j = 0, jj = oldItems.length; j < jj; ++j) {
-      if (oldItems[j].id == item.id)
+      if (oldItems[j][idKey] == item[idKey])
         item = oldItems[j];
     }
     if (!item) {
-      item = constructor(newArray[i]);
+      if (constructor)
+        item = constructor(newArray[i]);
+      else
+        item = newArray[i];
     }
     oldArray.push(item);
   }

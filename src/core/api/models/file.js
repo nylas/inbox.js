@@ -23,7 +23,7 @@ inherits(INFile, INModelObject);
  *
  * @returns {string} the resource path of the file.
  */
-INFile.prototype.resourceName = function() {
+INFile.resourceName = INFile.prototype.resourceName = function() {
   return 'files';
 };
 

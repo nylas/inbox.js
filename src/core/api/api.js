@@ -365,7 +365,7 @@ InboxAPI.prototype.namespaces = function(optionalNamespaces) {
       if (err) return reject(err);
 
       if (updateNamespaces) {
-        return resolve(mergeArray(updateNamespaces, set, 'id', function(data) {
+        return resolve(mergeModelArray(updateNamespaces, set, 'id', function(data) {
           cache.persist(data.id, data, noop);
           return new INNamespace(self, data);
         }));

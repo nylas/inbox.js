@@ -321,7 +321,6 @@ describe('INThread', function() {
 
       var fulfilled = jasmine.createSpy('load').andCallFake(function(threads) {
         expect(threads.length).toBe(2);
-        console.log(threads);
         expect(threads).toBe(oldThreads);
         expect(threads[0]).toBe(oldThreads[0]);
         expect(threads[1] instanceof INThread).toBe(true);
