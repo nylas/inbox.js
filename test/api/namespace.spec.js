@@ -90,6 +90,17 @@ describe('INNamespace', function() {
   });
 
 
+  it('should have correct IDs', function() {
+    var namespace = new INNamespace(inbox, 'fake_id');
+    expect(namespace.id).toBe('fake_id');
+    expect(namespace.namespaceId()).toBe('fake_id');
+
+    var namespace = new INNamespace(inbox, {'namespace_id': 'fake_id', 'id': 'fake_id'});
+    expect(namespace.id).toBe('fake_id');
+    expect(namespace.namespaceId()).toBe('fake_id');
+  });
+
+
   describe('resourceUrl()', function() {
     it ('should be null if the model is unsynced', function() {
       expect ((new INNamespace(inbox)).resourceUrl()).toBe(null);

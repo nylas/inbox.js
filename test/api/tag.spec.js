@@ -8,7 +8,7 @@ describe('INTag', function() {
     'account': 'fake_account_id',
     'email_address': 'fake.email@inboxapp.co',
     'id': 'fake_namespace_id',
-    'namespace': 'fake_namespace_id',
+    'namespace_id': 'fake_namespace_id',
     'object': 'namespace',
     'provider': 'FakeProvider'
   };

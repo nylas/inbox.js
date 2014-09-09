@@ -139,7 +139,7 @@ describe('INModelObject', function() {
       expect(obj.namespaceId()).toBe('fake_namespace_id');
 
       obj = new INModelObject(inbox, mockObject);
-      expect(obj.namespaceId()).toBe(mockObject.namespace);
+      expect(obj.namespaceId()).toBe(mockObject.namespace_id);
     });
   });
 
@@ -283,6 +283,15 @@ describe('INModelObject', function() {
 
       obj1.update({ 'alive': null });
       expect(obj1.alive).toBe(false);
+    });
+
+    it ('should correctly inherit mappings from INModelObject', function() {
+      var INTestObject = INTestObjectWithMapping({
+      });
+      var obj1 = new INTestObject(inbox, {
+        'namespace_id': 'abcd'
+      });
+      expect(obj1.namespaceID).toBe('abcd');
     });
   });
 
