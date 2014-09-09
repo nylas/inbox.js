@@ -226,7 +226,8 @@ INDraft.prototype.send = function() {
   } else {
     // Send using the saved ID
     data = toJSON({
-      'draft_id': this.id
+      'draft_id': this.id,
+      'version': this.version
     });
   }
 
@@ -283,5 +284,6 @@ INDraft.prototype.dispose = function() {
  */
 defineResourceMapping(INDraft, {
   'state': 'state',
+  'version': 'version',
   'object': 'const:draft'
 }, INMessage);
