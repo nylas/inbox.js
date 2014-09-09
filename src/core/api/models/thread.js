@@ -65,7 +65,7 @@ INThread.prototype.reply = function() {
  *   the server.
  */
 INThread.prototype.messages = function(optionalMessagesOrFilters, filters) {
-  return threadRequestHelper(this, INMessage, 'messages', optionalMessagesOrFilters, filters);
+  return this.namespace().fetchCollection(INMessage, {threadId: this.id});
 };
 
 
@@ -89,7 +89,7 @@ INThread.prototype.messages = function(optionalMessagesOrFilters, filters) {
  *   the server.
  */
 INThread.prototype.drafts = function(optionalDraftsOrFilters, filters) {
-  return threadRequestHelper(this, INDraft, 'drafts', optionalDraftsOrFilters, filters);
+  return this.namespace().fetchCollection(INDraft, {threadId: this.id});
 };
 
 
@@ -273,51 +273,3 @@ defineResourceMapping(INThread, {
   'snippet': 'snippet',
   'object': 'const:thread'
 });
-
-
-/**
- * @function
- * @name threadEndpointRequest
- * @private
- *
- * @description
- * This routine is used for common API requests of the form `/n/<namespace_id>/<endpoint_name`,
- * shared by a number of methods of INThread.
- *
- * @returns {Promise} this method always returns a promise
- */
-function threadRequestHelper(thread, Ctor, endpoint, optionalItemsOrFilters, filters) {
-  var updateItems = null;
-
-  if (optionalItemsOrFilters && typeof optionalItemsOrFilters === 'object') {
-    if (isArray(optionalItemsOrFilters)) {
-      updateItems = optionalItemsOrFilters;
-    } else {
-      filters = optionalItemsOrFilters;
-    }
-  }
-
-  if (!filters || typeof filters !== 'object') {
-    filters = {};
-  }
-
-  filters.thread_id = thread.id;
-
-  return thread.promise(function(resolve, reject) {
-    var url = formatUrl('%@/%@%@', thread.namespaceUrl(), endpoint, applyFilters(filters));
-
-    apiRequest(thread.inbox(), 'get', url, function(err, response) {
-      if (err) return reject(err);
-      if (updateItems) {
-        return resolve(mergeModelArray(updateItems, response, 'id', function(data) {
-          persistModel(data = new Ctor(thread.inbox(), data));
-          return data;
-        }, Ctor));
-      }
-      return resolve(map(response, function(data) {
-        persistModel(data = new Ctor(thread.inbox(), data));
-        return data;
-      }));
-    });
-  });
-}
