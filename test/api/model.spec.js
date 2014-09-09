@@ -62,6 +62,14 @@ describe('INModelObject', function() {
       }).toThrow();
     });
 
+    it ('should accept (namespace, json data) and not override the provided namespace ID when it\'s not present in the JSON', function() {
+      var obj = new INModelObject(namespace, {
+        'id': 'fake_object_id',
+        'bla': 'true'
+      });
+      expect(obj.namespaceId).toBe(namespace.id);
+    });
+
     it ('should accept (namespace, object id)', function() {
       check(new INModelObject(namespace, 'fake_object_id'));
     });
