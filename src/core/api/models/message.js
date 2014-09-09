@@ -41,11 +41,11 @@ INMessage.resourceName = INMessage.prototype.resourceName = function() {
  * @returns {INThread} the thread to which this message is associated.
  */
 INMessage.prototype.thread = function() {
-  if (!this.threadID) {
+  if (!this.threadId) {
     return null;
   }
 
-  return new INThread(this.inbox(), this.threadID, this.namespaceId());
+  return new INThread(this.inbox(), this.threadId, this.namespaceId);
 };
 
 
@@ -82,7 +82,7 @@ INMessage.prototype.reply = function() {
  */
 INMessage.prototype.attachments = function() {
   var inbox = this.inbox();
-  var namespace = this.namespaceId();
+  var namespace = this.namespaceId;
   return map(this.attachmentData, function(data) {
     return new INFile(inbox, data, namespace);
   });
@@ -184,7 +184,7 @@ INMessage.prototype.attachment = function(indexOrId) {
     return null;
   }
 
-  return new INFile(this.inbox(), data, this.namespaceId());
+  return new INFile(this.inbox(), data, this.namespaceId);
 };
 
 
@@ -233,9 +233,9 @@ INMessage.prototype.markAsRead = function() {
 
 /**
  * @property
- * @name INMessage#threadID
+ * @name INMessage#threadId
  *
- * The threadID to which this message belongs.
+ * The threadId to which this message belongs.
  */
 
 
@@ -292,7 +292,7 @@ INMessage.prototype.markAsRead = function() {
 defineResourceMapping(INMessage, {
   'subject': 'subject',
   'body': 'body',
-  'threadID': 'thread_id',
+  'threadId': 'thread_id',
   'date': 'date:date',
   'from': 'array:from',
   'to': 'array:to',

@@ -73,7 +73,7 @@ describe('INDraft', function() {
       'cc': [],
       'bcc': [],
       'date': new Date(1370084645000),
-      'threadID': '5vryyrki4fqt7am31uso27t3f',
+      'threadId': '5vryyrki4fqt7am31uso27t3f',
       'attachmentData': [
         {
           'content_type': 'image/jpeg',

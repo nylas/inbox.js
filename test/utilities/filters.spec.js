@@ -74,7 +74,7 @@ describe('applyFilters', function() {
   }
 
 
-  var stringFilters = ['email', 'from', 'to', 'cc', 'bcc', 'thread_id', 'tag', 'filename'];
+  var stringFilters = ['email', 'from', 'to', 'cc', 'bcc', 'threadId', 'tag', 'filename'];
   for (i=0, ii=stringFilters.length; i < ii; ++i) {
     (function(name) {
       describe(name, function() {

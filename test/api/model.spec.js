@@ -38,7 +38,7 @@ describe('INModelObject', function() {
 
   describe('constructor()', function() {
     var check = function(obj) {
-      expect(obj.namespaceID).toBe(namespace.id);
+      expect(obj.namespaceId).toBe(namespace.id);
       expect(obj.namespace().id).toBe(namespace.id);
       expect(obj.inbox()).toBe(inbox);
       expect(obj.id).toBe(mockObject.id);
@@ -128,18 +128,18 @@ describe('INModelObject', function() {
   });
 
 
-  describe('namespaceId()', function() {
-    it ('should return the namespace ID regardless of how the namespace was provided', function () {
+  describe('namespaceId', function() {
+    it ('should be the namespace ID regardless of how the namespace was provided', function () {
       var obj;
 
       obj = new INModelObject(inbox, 'fake_object_id', 'fake_namespace_id');
-      expect(obj.namespaceId()).toBe('fake_namespace_id');
+      expect(obj.namespaceId).toBe('fake_namespace_id');
 
       obj = new INModelObject(namespace, 'fake_object_id');
-      expect(obj.namespaceId()).toBe('fake_namespace_id');
+      expect(obj.namespaceId).toBe('fake_namespace_id');
 
       obj = new INModelObject(inbox, mockObject);
-      expect(obj.namespaceId()).toBe(mockObject.namespace_id);
+      expect(obj.namespaceId).toBe(mockObject.namespace_id);
     });
   });
 
@@ -291,7 +291,7 @@ describe('INModelObject', function() {
       var obj1 = new INTestObject(inbox, {
         'namespace_id': 'abcd'
       });
-      expect(obj1.namespaceID).toBe('abcd');
+      expect(obj1.namespaceId).toBe('abcd');
     });
   });
 

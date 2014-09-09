@@ -88,8 +88,8 @@ var FILTER_NAMES_OPTS = {
   'to': true,
   'cc': true,
   'bcc': true,
-  'thread_id': true,
-  'message_id': true,
+  'threadId': 'thread_id',
+  'messageId': 'message_id',
   'tag': true,
   'filename': true,
   'lastMessageBefore': 'last_message_before',
@@ -161,7 +161,7 @@ var INT_REGEXP = /^((0x[0-9a-f]+)|([0-9]+))$/i;
  *   - bcc
  *       Return messages or threads in which this participant has been BCC'd
  *
- *   - thread
+ *   - threadId
  *       Return messages, files or drafts attached to this thread.
  *
  *   - tag

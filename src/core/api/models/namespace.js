@@ -10,7 +10,7 @@
 function INNamespace(inbox, id) {
   INModelObject.call(this, inbox, id);
   this._.namespace = this;
-  this.namespaceID = this.id;
+  this.namespaceId = this.id;
 }
 
 inherits(INNamespace, INModelObject);

@@ -14,7 +14,7 @@ function INModelObject(inbox, id, namespaceId) {
     if (typeof namespaceId === 'object') {
       if (namespaceId instanceof INNamespace) {
         namespace = namespaceId;
-        namespaceId = namespace.namespaceId();
+        namespaceId = namespace.namespaceId;
       } else {
         namespace = new INNamespace(inbox, namespaceId, namespaceId);
       }
@@ -43,7 +43,7 @@ function INModelObject(inbox, id, namespaceId) {
     this.id = '-selfdefined';
   }
 
-  this.namespaceID = namespaceId;
+  this.namespaceId = namespaceId;
 
   defineProperty(this, '_', INVISIBLE, null, null, {
     inbox: inbox,
@@ -73,8 +73,8 @@ function INModelObject(inbox, id, namespaceId) {
 INModelObject.prototype.namespace = function() {
   if (this._.namespace) {
     return this._.namespace;
-  } else if (this.namespaceId()) {
-    return (this._.namespace = getNamespace(this.inbox(), this.namespaceId()));
+  } else if (this.namespaceId) {
+    return (this._.namespace = getNamespace(this.inbox(), this.namespaceId));
   }
   return null;
 };
@@ -105,24 +105,9 @@ INModelObject.prototype.baseUrl = function() {
  * @returns {string} The namespace URL for this model object, relative to the base URL.
  */
 INModelObject.prototype.namespaceUrl = function() {
-  if (!this.namespaceId())
+  if (!this.namespaceId)
     throw new TypeError('INModelObject namespaceUrl() is undefined because the model has no namespace ID');
-  return formatUrl('%@/n/%@', this._.inbox.baseUrl(), this.namespaceId());
-};
-
-
-/**
- * @function
- * @name INModelObject#namespaceId
- *
- * @description
- * Returns the namespace ID of the associated model object. This comes directly from the
- * model instance, and does not defer to an attached namespace object.
- *
- * @returns {string} the namespace ID to which this model object belongs.
- */
-INModelObject.prototype.namespaceId = function() {
-  return this.namespaceID;
+  return formatUrl('%@/n/%@', this._.inbox.baseUrl(), this.namespaceId);
 };
 
 
@@ -574,7 +559,7 @@ function convertFromRaw(object, resource) {
 
 /**
  * @property
- * @name INModelObject#namespaceID
+ * @name INModelObject#namespaceId
  *
  * The ID of the associated namespace for this model object, should be treated as read-only.
  */
@@ -596,7 +581,7 @@ function convertFromRaw(object, resource) {
  */
 defineResourceMapping(INModelObject, {
   'id': 'id',
-  'namespaceID': 'namespace_id',
+  'namespaceId': 'namespace_id',
   'createdAt': 'date:created_at',
   'updatedAt': 'date:updated_at'
 }, null);

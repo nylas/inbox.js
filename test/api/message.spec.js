@@ -96,7 +96,7 @@ describe('INMessage', function() {
 
   var mappedMsg1 = {
     'id': '84umizq7c4jtrew491brpa6iu',
-    'namespaceID': 'fake_namespace_id',
+    'namespaceId': 'fake_namespace_id',
     'object': 'message',
     'subject': 'Re: Dinner on Friday?',
     'from': [
@@ -114,7 +114,7 @@ describe('INMessage', function() {
     'cc': [],
     'bcc': [],
     'date': new Date(1370084645000),
-    'threadID': '5vryyrki4fqt7am31uso27t3f',
+    'threadId': '5vryyrki4fqt7am31uso27t3f',
     'attachmentData': [
       {
         'content_type': 'image/jpeg',

@@ -82,7 +82,7 @@ describe('INThread', function() {
     mappedThread1 = {
       'id': 'fake_thread_id1',
       'object': 'thread',
-      'namespaceID': 'fake_namespace_id',
+      'namespaceId': 'fake_namespace_id',
       'subject': 'Mock Thread 1',
       'lastMessageDate': new Date(1398229259000),
       'participants': [
@@ -221,7 +221,7 @@ describe('INThread', function() {
     mappedThread2 = {
       'id': 'fake_thread_id2',
       'object': 'thread',
-      'namespaceID': 'fake_namespace_id',
+      'namespaceId': 'fake_namespace_id',
       'subject': 'Mock Thread 2',
       'lastMessageDate': new Date(1399238467000),
       'participants': [

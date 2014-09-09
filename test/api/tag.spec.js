@@ -23,7 +23,7 @@ describe('INTag', function() {
   var mappedTag1 = {
     'id': '84umizq7c4jtrew491brpa6iu',
     'tagName': 'sports',
-    'namespaceID': 'fake_namespace_id',
+    'namespaceId': 'fake_namespace_id',
     'object': 'tag'
   };
 
@@ -37,7 +37,7 @@ describe('INTag', function() {
   var mappedTag2 = {
     'id': 'unread',
     'tagName': 'unread',
-    'namespaceID': 'fake_namespace_id',
+    'namespaceId': 'fake_namespace_id',
     'object': 'tag'
   };
 

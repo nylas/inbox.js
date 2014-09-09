@@ -100,7 +100,7 @@ INFile.prototype.download = function() {
 
 /**
  * @property
- * @name INFile#messageID
+ * @name INFile#messageId
  *
  * The message ID for which this file is attached.
  */
@@ -132,7 +132,7 @@ defineResourceMapping(INFile, {
   'filename': 'filename',
   'contentType': 'content_type',
   'size': 'int:size',
-  'messageID': 'message_id',
+  'messageId': 'message_id',
   'isEmbedded': 'bool:is_embedded',
   'object': 'const:file'
 });

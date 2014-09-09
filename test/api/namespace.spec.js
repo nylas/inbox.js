@@ -16,7 +16,7 @@ describe('INNamespace', function() {
     'account': 'fake_account_id',
     'emailAddress': 'fake.email@inboxapp.co',
     'id': 'fake_namespace_id',
-    'namespaceID': 'fake_namespace_id',
+    'namespaceId': 'fake_namespace_id',
     'object': 'namespace',
     'provider': 'FakeProvider'
   };
@@ -34,7 +34,7 @@ describe('INNamespace', function() {
     'account': 'fake_account_id_2',
     'emailAddress': 'fake.email_2@inboxapp.co',
     'id': 'fake_namespace_id_2',
-    'namespaceID': 'fake_namespace_id_2',
+    'namespaceId': 'fake_namespace_id_2',
     'object': 'namespace',
     'provider': 'FakeProvider'
   };
@@ -55,7 +55,7 @@ describe('INNamespace', function() {
   var mappedFile = [{
     'contentType': 'text/plain',
     'id': '3f7d6reg1k7hc2umqkz8gcfmo',
-    'namespaceID': 'fake_namespace_id',
+    'namespaceId': 'fake_namespace_id',
     'object': 'file',
     'size': 9
   }];
@@ -93,11 +93,11 @@ describe('INNamespace', function() {
   it('should have correct IDs', function() {
     var namespace = new INNamespace(inbox, 'fake_id');
     expect(namespace.id).toBe('fake_id');
-    expect(namespace.namespaceId()).toBe('fake_id');
+    expect(namespace.namespaceId).toBe('fake_id');
 
     var namespace = new INNamespace(inbox, {'namespace_id': 'fake_id', 'id': 'fake_id'});
     expect(namespace.id).toBe('fake_id');
-    expect(namespace.namespaceId()).toBe('fake_id');
+    expect(namespace.namespaceId).toBe('fake_id');
   });
 
 
