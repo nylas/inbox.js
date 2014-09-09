@@ -41,7 +41,7 @@ describe('INDraft', function() {
       'cc': [],
       'bcc': [],
       'date': 1370084645,
-      'thread': '5vryyrki4fqt7am31uso27t3f',
+      'thread_id': '5vryyrki4fqt7am31uso27t3f',
       'files': [
         {
           'content_type': 'image/jpeg',

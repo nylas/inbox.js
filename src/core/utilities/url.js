@@ -88,7 +88,8 @@ var FILTER_NAMES_OPTS = {
   'to': true,
   'cc': true,
   'bcc': true,
-  'thread': true,
+  'thread_id': true,
+  'message_id': true,
   'tag': true,
   'filename': true,
   'lastMessageBefore': 'last_message_before',
@@ -118,7 +119,8 @@ var FILTER_STRINGS = {
   'to': true,
   'cc': true,
   'bcc': true,
-  'thread': true,
+  'thread_id': true,
+  'message_id': true,
   'tag': true,
   'filename': true
 };
