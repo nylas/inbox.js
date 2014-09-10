@@ -359,7 +359,7 @@ INNamespace.prototype.fetchCollection = function(klass, existingArrayOrFilters, 
   return this.promise(function(resolve, reject) {
     // note: we don't currently support caching when there are filters
     if (existingArray || filters) {
-      var url = formatUrl('%@/%@%@', self.resourceUrl(), klass.resourceName(), applyFilters(filters))
+      var url = formatUrl('%@/%@%@', self.resourceUrl(), klass.resourceName(), applyFilters(filters));
       return apiRequest(inbox, 'get', url, responseReady);
     } else {
       cache.getByType('namespace', function(err, returnedArray) {
