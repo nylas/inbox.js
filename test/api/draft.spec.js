@@ -111,6 +111,42 @@ describe('INDraft', function() {
     });
   });
 
+  describe('dispose()', function() {
+    it ('should locally delete the model', function() {
+      var draft = new INDraft(namespace, mockDraft1);
+      spyOn(window, 'deleteModel');
+      var promise = draft.dispose();
+      mockPromises.executeForPromise(promise);
+      expect(window.deleteModel).toHaveBeenCalled();
+    });
+
+    it ('should make a deletion API request if the model is synced', function() {
+      var draft = new INDraft(namespace, mockDraft1);
+      spyOn(window, 'apiRequest');
+      var promise = draft.dispose();
+      mockPromises.executeForPromise(promise);
+      expect(window.apiRequest).toHaveBeenCalled();
+    });
+
+    it ('should NOT make a deletion API request if the model is NOT synced', function() {
+      var draft = new INDraft(namespace, null);
+      spyOn(window, 'apiRequest');
+      var promise = draft.dispose();
+      mockPromises.executeForPromise(promise);
+      expect(window.apiRequest).not.toHaveBeenCalled();
+    });
+
+    it ('should return a promise that resolves with the draft object', function() {
+      var draft = new INDraft(namespace, mockDraft1);
+      var fulfilled = jasmine.createSpy('deleted').andCallFake(function(obj) {
+        expect(obj instanceof INDraft).toBe(true);
+      });
+      var promise = draft.dispose().then(fulfilled);
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify({'success': true})]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
+  });
 
   describe ('save()', function() {
     // Messages should be immutable, so this should never matter in practice, but it's theoretically

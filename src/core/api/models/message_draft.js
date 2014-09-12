@@ -258,7 +258,7 @@ INDraft.prototype.dispose = function() {
       // Cached copy is already deleted --- just resolve.
       resolve(self);
     } else {
-      apiRequest(self.inbox(), 'delete', this.resourceUrl(),
+      apiRequest(self.inbox(), 'delete', self.resourceUrl(),
       function(err, response) {
         if (err) return reject(err);
         resolve(self);
