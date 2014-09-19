@@ -36,6 +36,21 @@ describe('INModelObject', function() {
     namespace = new INNamespace(inbox, mockNamespace);
   });
 
+  describe('toJSON()', function() {
+    it ('should return an object that can be serialized', function(){
+      var INTestObject = INTestObjectWithMapping({
+        'type': 'object-type'
+      });
+
+      obj1 = new INTestObject(inbox, {});
+      obj1.update({
+        'object-type': 'evil-object'
+      });
+      expect(typeof obj1.toJSON()).toBe('object')
+      expect(obj1.toJSON()['object-type']).toBe('evil-object')
+    });
+  });
+
   describe('constructor()', function() {
     var check = function(obj) {
       expect(obj.namespaceId).toBe(namespace.id);

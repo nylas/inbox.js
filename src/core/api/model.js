@@ -294,7 +294,7 @@ INModelObject.prototype.raw = function() {
  * @returns {string} the JSON-stringified raw resource value.
  */
 INModelObject.prototype.toJSON = function() {
-  return toJSON(this.raw());
+  return this.raw();
 };
 
 
