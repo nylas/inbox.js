@@ -42,6 +42,15 @@ angular.module('inbox', []).
       return this;
     };
 
+    this.InboxAPI = InboxAPI;
+    InboxAPI.INContact = INContact;
+    InboxAPI.INDraft = INDraft;
+    InboxAPI.INFile = INFile;
+    InboxAPI.INMessage = INMessage;
+    InboxAPI.INNamespace = INNamespace;
+    InboxAPI.INTag = INTag;
+    InboxAPI.INThread = INThread;
+
     this.$get = ['$q', function($q) {
       var tempConfig;
       var Promise = function(resolver) {
