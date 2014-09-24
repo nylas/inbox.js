@@ -115,7 +115,7 @@ describe('INMessage', function() {
     'bcc': [],
     'date': new Date(1370084645000),
     'threadId': '5vryyrki4fqt7am31uso27t3f',
-    'attachmentData': [
+    'fileData': [
       {
         'content_type': 'image/jpeg',
         'filename': 'walter.jpg',
@@ -143,7 +143,7 @@ describe('INMessage', function() {
       var oldMsgs = [new INMessage(inbox, mockMsg1)];
       var fulfilled = jasmine.createSpy('load').andCallFake(function(msg) {
         expect(msg[0]).toContainObject(mappedMsg1Updated);
-        expect(msg[0].attachmentData.length).toBe(1);
+        expect(msg[0].fileData.length).toBe(1);
         expect(msg[0].files).toBeUndefined();
       });
       var promise = thread.messages(oldMsgs).then(fulfilled);
@@ -163,4 +163,44 @@ describe('INMessage', function() {
     });
   });
 
+  describe('thread()', function() {
+    it('should return an INThread instance with the correct namespace and ID', function(){
+      var msg = new INMessage(inbox, mockMsg1);
+      var thread = msg.thread();
+      expect(thread instanceof INThread).toBe(true);
+      expect(thread.id).toBe(msg.threadId);
+      expect(thread.namespaceId).toBe(msg.namespaceId);
+    })
+  });
+
+  describe('attachments()', function() {
+    it('should return an array of populated INFiles', function() {
+      var msg = new INMessage(inbox, mockMsg1);
+      expect(msg.attachments().length).toBe(1);
+      expect(msg.attachments()[0] instanceof INFile).toBe(true);
+      expect(msg.attachments()[0].id).toBe(mockMsg1.files[0].id);
+    });
+  });
+
+  describe('attachment()', function() {
+    it ('should accept an index', function () {
+      var msg = new INMessage(inbox, mockMsg1);
+      var a = msg.attachment(0);
+      expect(a instanceof INFile).toBe(true);
+      expect(a.id).toBe(mockMsg1.files[0].id);
+    });
+
+    it ('should accept an ID', function () {
+      var msg = new INMessage(inbox, mockMsg1);
+      var a = msg.attachment(mockMsg1.files[0].id);
+      expect(a instanceof INFile).toBe(true);
+      expect(a.id).toBe(mockMsg1.files[0].id);
+    });
+
+    it ('should return null if the ID DNE or index is out of bounds', function () {
+      var msg = new INMessage(inbox, mockMsg1);
+      expect(msg.attachment('lololol')).toBe(null);
+      expect(msg.attachment(12)).toBe(null);
+    });
+  })
 });

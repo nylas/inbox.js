@@ -74,7 +74,7 @@ describe('INDraft', function() {
       'bcc': [],
       'date': new Date(1370084645000),
       'threadId': '5vryyrki4fqt7am31uso27t3f',
-      'attachmentData': [
+      'fileData': [
         {
           'content_type': 'image/jpeg',
           'filename': 'walter.jpg',

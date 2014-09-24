@@ -73,7 +73,7 @@ INMessage.prototype.reply = function() {
  * @name INMessage#attachments
  *
  * @description
- * Returns an array of INFile objects constructed from the attachmentData on the message.
+ * Returns an array of INFile objects constructed from the fileData on the message.
  *
  * TODO(caitp): don't construct an unsynced INFile if we can possibly avoid it --- the caching
  * strategy should handle this properly.
@@ -83,7 +83,7 @@ INMessage.prototype.reply = function() {
 INMessage.prototype.attachments = function() {
   var inbox = this.inbox();
   var namespace = this.namespaceId;
-  return map(this.attachmentData, function(data) {
+  return map(this.fileData, function(data) {
     return new INFile(inbox, data, namespace);
   });
 };
@@ -162,9 +162,9 @@ INMessage.prototype.attachment = function(indexOrId) {
     index = indexOrId >>> 0;
   } else if (typeof indexOrId === 'string') {
     var i;
-    var ii = this.attachmentData.length;
+    var ii = this.fileData.length;
     for (i = 0; i < ii; ++i) {
-      if (indexOrId === this.attachmentData[i].id) {
+      if (indexOrId === this.fileData[i].id) {
         index = i;
         break;
       }
@@ -178,7 +178,7 @@ INMessage.prototype.attachment = function(indexOrId) {
     return null;
   }
 
-  var data = this.attachmentData[index];
+  var data = this.fileData[index];
 
   if (typeof data === 'undefined') {
     return null;
@@ -276,7 +276,7 @@ INMessage.prototype.markAsRead = function() {
 
 /**
  * @property
- * @name INMessage#attachmentData
+ * @name INMessage#fileData
  *
  * An array of the raw attachment JSON blocks, representing the files attached to this message.
  * See the attachments() method for INFile objects instead.
@@ -299,6 +299,6 @@ defineResourceMapping(INMessage, {
   'cc': 'array:cc',
   'bcc': 'array:bcc',
   'unread': 'bool:unread',
-  'attachmentData': 'array:files',
+  'fileData': 'array:files',
   'object': 'const:message'
 });
