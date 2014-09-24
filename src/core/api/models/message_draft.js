@@ -163,6 +163,22 @@ INDraft.prototype.removeAttachment = function(file) {
   return this;
 };
 
+/**
+ * @function
+ * @name INDraft#addAttachment
+ *
+ * @description
+ * Adds an attachment which has already been uploaded to the server.
+ *
+ * @param {response} the response object returned by the API
+ */
+INDraft.prototype.addAttachment = function(file) {
+  if (!file || typeof file !== 'object' || !file.id) {
+    throw new TypeError(
+      'Cannot invoke `addAttachment` on INDraft: file must be an object with an ID');
+  }
+  this.fileData.push(file);
+};
 
 /**
  * Shadow INMessage#markAsRead method with 'null', because it is meaningless for draft messages.
