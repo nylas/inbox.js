@@ -30,6 +30,39 @@ INDraft.resourceName = INDraft.prototype.resourceName = function() {
 };
 
 
+INDraft.prototype.raw = function() {
+  // check the formatting of our participants fields. They must be either undefined or be
+  // arrays, and must contain objects that have an email key
+  var keys = ['from', 'to', 'cc', 'bcc'];
+  for (var i = 0, ii = keys.length; i < ii; ++i) {
+    var list = this[keys[i]];
+    var valid = false;
+
+    if (isArray(list)) {
+      valid = true;
+      for (var j = 0, jj = list.length; j < jj; ++j) {
+        if ((typeof list[j] !== 'object') || (!list[j].hasOwnProperty('email'))) {
+          valid = false;
+          break;
+        }
+      }
+    } else if (list === undefined) {
+      valid = true;
+    }
+
+    if (!valid) {
+      throw new TypeError(
+      'INDraft.save(): To, From, CC, BCC must be arrays of objects with emails and optional names.');
+    }
+  }
+
+  var out = INMessage.prototype.raw.call(this);
+  out.file_ids = map(this.fileData, function(data) {
+    return data.id;
+  });
+
+  return out;
+};
 /**
  * @function
  * @name INDraft#addRecipients
@@ -93,7 +126,7 @@ INDraft.prototype.uploadAttachment = function(fileNameOrFile, blobForFileName) {
         }
         return reject(err);
       }
-      self.attachmentData.push(response);
+      self.fileData.push(response);
       return resolve(response);
     });
   });
@@ -119,11 +152,11 @@ INDraft.prototype.removeAttachment = function(file) {
   }
   var id = typeof file === 'string' ? file : file.id;
   var i;
-  var ii = this.attachmentData.length;
+  var ii = this.fileData.length;
 
   for (i = 0; i < ii; ++i) {
-    if (this.attachmentData[i].id === id) {
-      this.attachmentData.splice(i, 1);
+    if (this.fileData[i].id === id) {
+      this.fileData.splice(i, 1);
       break;
     }
   }
@@ -151,42 +184,11 @@ INDraft.prototype.save = function() {
   var pattern = this.isUnsynced() ? '%@/drafts' : '%@/drafts/%@';
   var url = formatUrl(pattern, this.namespaceUrl(), this.id);
   var inbox = this.inbox();
+  var json = toJSON(this.raw());
   var self = this;
-  var rawJson = this.raw();
-
-  // check the formatting of our participants fields. They must be either undefined or be
-  // arrays, and must contain objects that have an email key
-  var keys = ['from', 'to', 'cc', 'bcc'];
-  for (var i = 0, ii = keys.length; i < ii; ++i) {
-    var list = self[keys[i]];
-    var valid = false;
-
-    if (isArray(list)) {
-      valid = true;
-      for (var j = 0, jj = list.length; j < jj; ++j) {
-        if ((typeof list[j] !== 'object') || (!list[j].hasOwnProperty('email'))) {
-          valid = false;
-          break;
-        }
-      }
-    } else if (list === undefined) {
-      valid = true;
-    }
-
-    if (!valid) {
-      throw new TypeError(
-      'INDraft.save(): To, From, CC, BCC must be arrays of objects with emails and optional names.');
-    }
-  }
-
-  rawJson.files = map(this.attachmentData, function(data) {
-    return data.id;
-  });
-
-  rawJson = toJSON(rawJson);
 
   return this.promise(function(resolve, reject) {
-    apiRequest(inbox, 'post', url, rawJson, function(err, response) {
+    apiRequest(inbox, 'post', url, json, function(err, response) {
       if (err) return reject(err);
       // Should delete the cached version, if any
       self.update(response);
@@ -215,24 +217,21 @@ INDraft.prototype.send = function() {
   var url = formatUrl('%@/send', this.namespaceUrl());
 
   if (this.isUnsynced()) {
-    // Just send a message
+    // Send the message object in the request
     data = this.raw();
     delete data.id;
     delete data.object;
-    data.files = map(this.attachmentData, function(data) {
-      return data.id;
-    });
-    data = toJSON(data);
+
   } else {
-    // Send using the saved ID
-    data = toJSON({
+    // Send the message ID in the request
+    data = {
       'draft_id': this.id,
       'version': this.version
-    });
+    };
   }
 
   return this.promise(function(resolve, reject) {
-    apiRequest(inbox, 'post', url, data, function(err, response) {
+    apiRequest(inbox, 'post', url, toJSON(data), function(err, response) {
       // TODO: update a 'state' flag indicating that the value has been saved
       if (err) return reject(err);
       resolve(response);
