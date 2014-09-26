@@ -204,7 +204,7 @@ INDraft.prototype.save = function() {
   var self = this;
 
   return this.promise(function(resolve, reject) {
-    apiRequest(inbox, 'post', url, json, function(err, response) {
+    apiRequest(inbox, self.isUnsynced() ? 'post' : 'put', url, json, function(err, response) {
       if (err) return reject(err);
       // Should delete the cached version, if any
       self.update(response);
@@ -273,7 +273,7 @@ INDraft.prototype.dispose = function() {
       // Cached copy is already deleted --- just resolve.
       resolve(self);
     } else {
-      apiRequest(self.inbox(), 'delete', self.resourceUrl(),
+      apiRequest(self.inbox(), 'delete', self.resourceUrl(), toJSON({version: self.version}),
       function(err, response) {
         if (err) return reject(err);
         resolve(self);
