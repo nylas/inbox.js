@@ -110,6 +110,11 @@ describe('INModelObject', function() {
       expect(obj.id).toBe('-selfdefined');
     })
 
+    it('should accept (namespace, object) and use a self-assigned ID for the model if none is provided', function () {
+      var obj = new INModelObject(inbox, {})
+      expect(obj.id).toBe('-selfdefined');
+    })
+
   });
 
 
@@ -169,6 +174,8 @@ describe('INModelObject', function() {
   describe('isUnsynced()', function() {
     it ('should return true if the object has a self-defined ID', function() {
       obj = new INModelObject(inbox);
+      expect(obj.isUnsynced()).toBe(true);
+      obj = new INModelObject(inbox, {});
       expect(obj.isUnsynced()).toBe(true);
     });
 
@@ -319,11 +326,12 @@ describe('INModelObject', function() {
   });
 
   describe('raw()', function() {
-    it ('should return an empty hash for an object with no mapped properties', function() {
+    it ('should return an empty hash (except id) for an object with no mapped properties', function() {
       var INTestObject = INTestObjectWithMapping({});
       var obj1 = new INTestObject(inbox, {});
       obj1.randomProperty = '123';
-      expect(Object.keys(obj1.raw()).length).toBe(0);
+      expect(Object.keys(obj1.raw()).length).toBe(1);
+      expect(obj1.id).toEqual('-selfdefined');
     });
 
     it ('should use the resource mapping to output JSON property names', function() {

@@ -31,7 +31,7 @@ function INModelObject(inbox, id, namespaceId) {
 
   if (id && typeof id === 'object') {
     data = id;
-    this.id = data.id;
+    this.id = data.id || '-selfdefined';
     if (data.namespace_id) {
       if (namespaceId && (namespaceId != data.namespace_id))
         throw new TypeError('You cannot instantiate an INModelObject with JSON from one namespace'+
