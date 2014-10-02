@@ -38,7 +38,7 @@ function INModelObject(inbox, id, namespaceId) {
                             'into another namespace.');
       namespaceId = data.namespace_id;
     }
-
+    
   } else if (id) {
     this.id = id;
   } else {

@@ -95,7 +95,7 @@ describe('INModelObject', function() {
         new INModelObject(namespace, 'fake_object_id', 'bogus_namespace_id');
       }).toThrow();
     });
-
+    
     it ('should accept (inbox, object id, namespace id)', function() {
       check(new INModelObject(inbox, 'fake_object_id', namespace.id));
     });
@@ -253,7 +253,7 @@ describe('INModelObject', function() {
         'list': ['a']
       });
       expect(obj1.list.length).toBe(1);
-
+ 
       obj1.update({
         'list': ['a', 'b', 'c']
       });
@@ -270,12 +270,12 @@ describe('INModelObject', function() {
         'timestamp': 'April 12, 1988'
       });
       expect(obj1.timestamp.getTime()).toBe(new Date('April 12, 1988').getTime());
-
+ 
       obj1 = new INTestObject(inbox, {
         'timestamp': 1398229259
       });
       expect(obj1.timestamp.getTime()).toBe(new Date(1398229259000).getTime());
-
+ 
       var d = new Date();
       obj1.update({
         'timestamp': d
@@ -292,7 +292,7 @@ describe('INModelObject', function() {
       });
       expect(obj1.days).toBe(1);
     });
-
+    
     it ('should correctly apply boolean cast to truthy and falsy values', function() {
       var INTestObject = INTestObjectWithMapping({
         'alive': 'bool:alive'
@@ -301,7 +301,7 @@ describe('INModelObject', function() {
       obj1 = new INTestObject(inbox, {});
       obj1.update({ 'alive': 0 });
       expect(obj1.alive).toBe(false);
-
+ 
       obj1.update({ 'alive': 1 });
       expect(obj1.alive).toBe(true);
 
@@ -360,7 +360,7 @@ describe('INModelObject', function() {
       obj1.list = ['1', '2', '3'];
       expect(obj1.raw().list.length).toBe(3);
     });
-
+    
     it ('should correctly apply the bool cast', function() {
       var INTestObject = INTestObjectWithMapping({
         'alive': 'bool:alive'
@@ -377,7 +377,7 @@ describe('INModelObject', function() {
       obj1.alive = 0;
       expect(obj1.raw().alive).toBe(false);
     });
-
+    
     it ('should correctly apply the date cast', function() {
       var INTestObject = INTestObjectWithMapping({
         'birthday': 'date:birthday'
@@ -395,7 +395,7 @@ describe('INModelObject', function() {
       obj1.days = 1.34;
       expect(obj1.raw().days).toBe(1);
     });
-
+    
   });
 
 });
