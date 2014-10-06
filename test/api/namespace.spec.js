@@ -65,6 +65,39 @@ describe('INNamespace', function() {
     'type': 'invalid_request_error'
   };
 
+  var mockDraft = {
+    'id': '84umizq7c4jtrew491brpa6iu',
+    'namespace_id': 'fake_namespace_id',
+    'object': 'message',
+    'subject': 'Re: Dinner on Friday?',
+    'from': [
+      {
+        'name': 'Ben Bitdiddle',
+        'email': 'ben.bitdiddle@gmail.com'
+      }
+    ],
+    'to': [
+      {
+        'name': 'Bill Rogers',
+        'email': 'wbrogers@mit.edu'
+      }
+    ],
+    'cc': [],
+    'bcc': [],
+    'date': 1370084645,
+    'thread_id': '5vryyrki4fqt7am31uso27t3f',
+    'files': [
+      {
+        'content_type': 'image/jpeg',
+        'filename': 'walter.jpg',
+        'id': '7jm8bplrg5tx0c7pon56tx30r',
+        'size': 38633
+      }
+    ],
+    'body': '<html><body>....</body></html>',
+    'unread': true
+  };
+
   beforeEach(function() {
     window.Promise = mockPromises.getMockPromise(window.Promise);
     server = sinon.fakeServer.create();
@@ -232,5 +265,46 @@ describe('INNamespace', function() {
       mockPromises.executeForPromise(promise);
       expect(fulfilled).toHaveBeenCalled();
     });
+  });
+
+  describe('draft()', function () {
+    it('should return an empty draft by default', function (){
+      var draft = new INNamespace(inbox, mockNamespace).draft();
+      expect(draft instanceof INDraft).toBe(true);
+    });
+
+    it('should return a promise if called with an ID argument', function () {
+      var draft = new INNamespace(inbox, mockNamespace).draft("some_id");
+      expect(typeof(draft)).toBe('object');
+      expect(draft.then).toBeDefined();
+    });
+
+    it('should throw if passed a non-string argument', function () {
+      var f = function () {
+        new INNamespace(inbox, mockNamespace).draft({})
+      }
+      expect(f).toThrow();
+    });
+
+    it('should return an INDraft object if one is found', function () {
+      var draft;
+      var fulfilled = jasmine.createSpy('load').andCallFake(function (draft) {
+        expect(draft).toBeDefined();
+        expect(draft.id).toEqual(mockDraft.id);
+        expect(draft instanceof INDraft);
+      });
+      var promise = new INNamespace(inbox, mockNamespace).draft(mockDraft.id).then(fulfilled)
+      server.respond([200, { 'Content-Type': 'application/json' }, JSON.stringify(mockDraft)]);
+      mockPromises.executeForPromise(promise);
+      expect(fulfilled).toHaveBeenCalled();
+    });
+
+    it('should return an error if none is found', function () {
+      var errored = jasmine.createSpy('error').andCallFake(function (error) {});
+      var promise = new INNamespace(inbox, mockNamespace).draft(mockDraft.id).then(function() {}, errored);
+      server.respond([404, { 'Content-Type': 'application/json' }, JSON.stringify("arbitrary error data")]);
+      mockPromises.executeForPromise(promise);
+      expect(errored).toHaveBeenCalled();
+    })
   });
 });

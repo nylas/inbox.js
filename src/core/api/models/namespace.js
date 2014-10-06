@@ -277,11 +277,29 @@ INNamespace.prototype.drafts = function(existingArrayOrFilters, filters) {
  * @description
  * Returns a new {INDraft} object, enabling the caller to create a new message to send. This is the
  * primary API for sending messages with Inbox.js.
+ * With an argument, retrieves an existing {INDraft} object.
  *
- * @returns {INDraft} the newly constructed INDraft object.
+ * @param {string} Optionally, an ID of a draft to retrieve.
+ *
+ * @returns {INDraft} the newly constructed INDraft object, or a promise containing either the fetched
+ *   draft from the server or an error message.
  */
-INNamespace.prototype.draft = function() {
-  return new INDraft(this, null);
+INNamespace.prototype.draft = function(draft_id) {
+  if (draft_id === void 0)
+    return new INDraft(this, null);
+
+  if (typeof(draft_id) !== "string") {
+    throw new Error('expected string|undefined in INNamespace.draft()');
+  }
+
+  var self = this;
+  return this.promise(function (resolve, reject) {
+    var url = formatUrl('%@/%@/%@', self.resourceUrl(), INDraft.resourceName(), draft_id);
+    apiRequest(self.inbox(), 'get', url, function (err, result) {
+      if (err) return reject(err);
+      return resolve(new INDraft(self, result));
+    });
+  });
 };
 
 
