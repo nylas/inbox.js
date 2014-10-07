@@ -285,7 +285,7 @@ INNamespace.prototype.drafts = function(existingArrayOrFilters, filters) {
  *   draft from the server or an error message.
  */
 INNamespace.prototype.draft = function(draft_id) {
-  if (draft_id === undefined)
+  if (draft_id === void 0)
     return new INDraft(this, null);
 
   if (typeof(draft_id) !== "string") {
