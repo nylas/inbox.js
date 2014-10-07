@@ -280,10 +280,10 @@ describe('INNamespace', function() {
     });
 
     it('should throw if passed a non-string argument', function () {
-      var errored = jasmine.createSpy('error').andCallFake(function (error) {});
-      var promise = new INNamespace(inbox, mockNamespace).draft({}).then(null, errored);
-      mockPromises.executeForPromise(promise);
-      expect(errored).toHaveBeenCalled();
+      var f = function () {
+        new INNamespace(inbox, mockNamespace).draft({})
+      }
+      expect(f).toThrow();
     });
 
     it('should return an INDraft object if one is found', function () {

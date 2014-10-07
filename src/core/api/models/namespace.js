@@ -288,11 +288,12 @@ INNamespace.prototype.draft = function(draft_id) {
   if (draft_id === undefined)
     return new INDraft(this, null);
 
+  if (typeof(draft_id) !== "string") {
+    throw new Error('expected string|undefined in INNamespace.draft()');
+  }
+
   var self = this;
   return this.promise(function (resolve, reject) {
-    if (typeof(draft_id) !== "string") {
-      reject(new Error('expected string|undefined in INNamespace.draft()'));
-    }
     var url = formatUrl('%@/%@/%@', self.resourceUrl(), INDraft.resourceName(), draft_id);
     apiRequest(self.inbox(), 'get', url, function (err, result) {
       if (err) return reject(err);
