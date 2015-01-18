@@ -3,6 +3,8 @@ inbox.js [![Build Status](https://travis-ci.org/inboxapp/inbox.js.svg?branch=mas
 
 Client-side SDK for communicating with the InboxApp API.
 
+## **NOTE**: This SDK is currently not actively maintained, and may need some TLC. Please feel free to use it and send us a pull request if you fix anything or add a feature, though. :)
+
 ##Building Inbox.js
 
 To begin with, it's necessary to set up a development environment:
