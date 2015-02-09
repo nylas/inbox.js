@@ -64,8 +64,7 @@ To get started, we need to first create our global service for communicating wit
 
 To begin with, lets configure the Inbox service to talk to the default API server hosted in the vagrant VM from port 5555. If you’re hosting the Inbox server from a specific host or port, you can change the base URL accordingly:
 
-```
-:::javascript
+```javascript
 angular.module('inboxExampleApp', ['inbox', 'ngSanitize']).
   config(function($inboxProvider) {
     $inboxProvider.
@@ -76,8 +75,7 @@ angular.module('inboxExampleApp', ['inbox', 'ngSanitize']).
 
 In VanillaJS, we can do this instead:
 
-```
-:::javascript
+```javascript
 window.$inbox = InboxAPI({
   baseUrl: 'http://localhost:5555',
   appId: 'test',
@@ -89,8 +87,7 @@ Now that we’re all set, we’re going to want to get a handle on the accounts 
 
 To query for all namespaces accessible, you can do this:
 
-```
-:::javascript
+```javascript
 function namespacesController($scope, $inbox) {
   function update() {
     $inbox.namespaces($scope.namespaces).
@@ -109,8 +106,7 @@ It’s not necessary to pass an array to $inbox.namespaces(), however this will 
 
 For Vanilla JS, this is very similar:
 
-```
-:::javascript
+```javascript
 window.$inboxNamespacesList = window.$inboxNamespacesList || [];
 // We previously created an InboxAPI object named window.$inbox
 $inbox.namespaces($inboxNamespacesList).
@@ -127,8 +123,7 @@ Now that we’ve got our namespaces, likely the next thing we’ll want to look 
 
 In this example, lets say we want to get a list of threads where the last message was newer than last night. While it is often desirable to perform this filtering on the client-side, in this case we’ll use the web service’s own filtering capabilities to do this for us.
 
-```
-:::javascript
+```javascript
 namespace.threads({
   lastMessageAfter: moment().subtract('days', 1).toDate()
 }).
@@ -142,8 +137,7 @@ namespace.threads({
 So, we’ve got our set of threads, but we probably want to also look at the messages from those threads. There are a few options, but the simplest method for getting a collection of messages for a single thread is the following:
 
 
-```
-:::javascript
+```javascript
 thread.getMessages({
   lastMessageAfter: moment().subtract('days', 1).toDate()
 }).
@@ -158,8 +152,7 @@ This looks very similar to the previous query for threads, because it essentiall
 
 Using AngularJS, it’s very easy to make an attractive list of thread messages visible here. The markup might look something like this (using Bootstrap CSS, and angular-sanitize):
 
-```
-:::html
+```html
 <div class="panel panel-default" ng-repeat="msg in threadMessages">
   <div class="panel-heading">
     <p>{{msg.subject}}</p>
