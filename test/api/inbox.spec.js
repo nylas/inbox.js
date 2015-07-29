@@ -40,7 +40,7 @@ describe('InboxAPI', function() {
     it('should return InboxAPI instance when called with `new`', function() {
       expect(new InboxAPI({
         appId: '',
-        baseUrl: 'api.inboxapp.com',
+        baseUrl: 'api.nylas.com',
         promise: function() {}
       }) instanceof InboxAPI).toBe(true);
     });
@@ -49,7 +49,7 @@ describe('InboxAPI', function() {
     it('should return InboxAPI instance when called without `new`', function() {
       expect(InboxAPI({
         appId: '',
-        baseUrl: 'api.inboxapp.com',
+        baseUrl: 'api.nylas.com',
         promise: function() {}
       }) instanceof InboxAPI).toBe(true);
     });
@@ -59,7 +59,7 @@ describe('InboxAPI', function() {
       mockPromise();
       var inbox = new InboxAPI({
         appId: '',
-        baseUrl: 'api.inboxapp.com'
+        baseUrl: 'api.nylas.com'
       });
       expect(typeof inbox._.promise).toBe('function');
       inbox._.promise(function() {});
@@ -69,12 +69,12 @@ describe('InboxAPI', function() {
 
     it('should use default baseUrl if baseUrl parameter is not supplied', function() {
       mockPromise();
-      expect(InboxAPI('', null)._.baseUrl).toBe('http://api.inboxapp.com/');
+      expect(InboxAPI('', null)._.baseUrl).toBe('https://api.nylas.com/');
     });
 
 
     it('should use default baseUrl if options.baseUrl is not present', function() {
-      expect(InboxAPI({ appId: '' })._.baseUrl).toBe('http://api.inboxapp.com/');
+      expect(InboxAPI({ appId: '' })._.baseUrl).toBe('https://api.nylas.com/');
     });
 
 
@@ -148,7 +148,7 @@ describe('InboxAPI', function() {
       it('should be thrown when options.promise is not present and not available on window', function() {
         mockNoPromise();
         expect(function() {
-          new InboxAPI({ appId: '', baseUrl: 'api.inboxapp.com' });
+          new InboxAPI({ appId: '', baseUrl: 'api.nylas.com' });
         }).toThrow('Unable to construct `InboxAPI`: missing option `promise`, or no native ' +
                    'Promise available');
       });
@@ -156,7 +156,7 @@ describe('InboxAPI', function() {
 
       it('should be thrown when options.promise is specified and not a function', function() {
         expect(function() {
-          new InboxAPI({ appId: '', baseUrl: 'api.inboxapp.com', promise: 999 });
+          new InboxAPI({ appId: '', baseUrl: 'api.nylas.com', promise: 999 });
         }).toThrow('Unable to construct `InboxAPI`: option `promise` must be a function which ' +
                    'returns an ECMAScript6-compatible Promise');
       });

@@ -24,7 +24,7 @@ describe('INThread', function() {
     server = sinon.fakeServer.create();
     inbox = new InboxAPI({
       appId: '',
-      baseUrl: 'http://api.inboxapp.co/'
+      baseUrl: 'http://api.nylas.com/'
     });
     namespace = new INNamespace(inbox, mockNamespace);
 
@@ -35,7 +35,7 @@ describe('INThread', function() {
 
     mockNamespace = {
       'account': 'fake_account_id',
-      'email_address': 'fake.email@inboxapp.co',
+      'email_address': 'fake.email@nylas.com',
       'id': 'fake_namespace_id',
       'namespace_id': 'fake_namespace_id',
       'object': 'namespace',
@@ -276,7 +276,7 @@ describe('INThread', function() {
     });
 
     it('should have resourceUrl() like <baseUrl>/n/<namespaceId>/threads/<threadId>', function() {
-      expect ((new INThread(namespace, mockThread1)).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_namespace_id/threads/fake_thread_id1');
+      expect ((new INThread(namespace, mockThread1)).resourceUrl()).toBe('http://api.nylas.com/n/fake_namespace_id/threads/fake_thread_id1');
     });
   });
 

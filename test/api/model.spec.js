@@ -4,7 +4,7 @@ describe('INModelObject', function() {
 
   var mockNamespace = {
     'account': 'fake_account_id',
-    'email_address': 'fake.email@inboxapp.co',
+    'email_address': 'fake.email@nylas.com',
     'id': 'fake_namespace_id',
     'namespace_id': 'fake_namespace_id',
     'object': 'namespace',
@@ -31,7 +31,7 @@ describe('INModelObject', function() {
   beforeEach(function() {
     inbox = new InboxAPI({
       appId: '',
-      baseUrl: 'http://api.inboxapp.co/'
+      baseUrl: 'http://api.nylas.com/'
     });
     namespace = new INNamespace(inbox, mockNamespace);
   });
@@ -146,7 +146,7 @@ describe('INModelObject', function() {
   describe('namespaceUrl()', function() {
     it ('should return the baseUrl with the namespace appended', function(){
       var obj = new INModelObject(inbox, 'fake_object_id', 'my_great_namespace_id');
-      expect(obj.namespaceUrl()).toBe('http://api.inboxapp.co/n/my_great_namespace_id');
+      expect(obj.namespaceUrl()).toBe('http://api.nylas.com/n/my_great_namespace_id');
     });
 
     it ('should throw an exception if the model does not have a namespace ID', function() {

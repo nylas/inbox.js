@@ -1,7 +1,7 @@
 {
   "name": "inboxjs",
   "version": "0.0.0",
-  "description": "Client support SDK for http://inboxapp.co/",
+  "description": "Client support SDK for https://nylas.com/",
   "main": "index.js",
   "scripts": {
     "test": "gulp test"
