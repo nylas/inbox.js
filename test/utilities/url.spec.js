@@ -10,13 +10,13 @@ describe('formatUrl', function() {
 
 
   it('should remove leading forward slashes from parameters', function() {
-    expect(formatUrl('%@/%@', 'http://api.inboxapp.co/', '//fakeNamespaceId')).
-      toBe('http://api.inboxapp.co/fakeNamespaceId');
+    expect(formatUrl('%@/%@', 'http://api.nylas.com/', '//fakeNamespaceId')).
+      toBe('http://api.nylas.com/fakeNamespaceId');
   });
 
 
   it('should remove trailing forward slashes from parameters', function() {
-    expect(formatUrl('%@/%@/%@', 'http://api.inboxapp.co/', 'fakeNamespaceId/', 'foo//')).
-      toBe('http://api.inboxapp.co/fakeNamespaceId/foo');
+    expect(formatUrl('%@/%@/%@', 'http://api.nylas.com/', 'fakeNamespaceId/', 'foo//')).
+      toBe('http://api.nylas.com/fakeNamespaceId/foo');
   });
 });

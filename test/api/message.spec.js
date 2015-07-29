@@ -9,7 +9,7 @@ describe('INMessage', function() {
     server = sinon.fakeServer.create();
     inbox = new InboxAPI({
       appId: '',
-      baseUrl: 'http://api.inboxapp.co/'
+      baseUrl: 'http://api.nylas.com/'
     });
     thread = new INThread(inbox, {
       'id': 'fake_thread_id1',
@@ -159,7 +159,7 @@ describe('INMessage', function() {
     });
 
     it('should have resourceUrl() like <baseUrl>/n/<namespaceId>/messages/<messageId>', function() {
-      expect ((new INMessage(namespace, mockMsg1)).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_namespace_id/messages/84umizq7c4jtrew491brpa6iu');
+      expect ((new INMessage(namespace, mockMsg1)).resourceUrl()).toBe('http://api.nylas.com/n/fake_namespace_id/messages/84umizq7c4jtrew491brpa6iu');
     });
   });
 

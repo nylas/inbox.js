@@ -5,7 +5,7 @@ describe('INNamespace', function() {
 
   var mockNamespace = {
     'account': 'fake_account_id',
-    'email_address': 'fake.email@inboxapp.co',
+    'email_address': 'fake.email@nylas.com',
     'id': 'fake_namespace_id',
     'namespace_id': 'fake_namespace_id',
     'object': 'namespace',
@@ -14,7 +14,7 @@ describe('INNamespace', function() {
 
   var mappedNamespace = {
     'account': 'fake_account_id',
-    'emailAddress': 'fake.email@inboxapp.co',
+    'emailAddress': 'fake.email@nylas.com',
     'id': 'fake_namespace_id',
     'namespaceId': 'fake_namespace_id',
     'object': 'namespace',
@@ -23,7 +23,7 @@ describe('INNamespace', function() {
 
   var mockNamespace2 = {
     'account': 'fake_account_id_2',
-    'email_address': 'fake.email_2@inboxapp.co',
+    'email_address': 'fake.email_2@nylas.com',
     'id': 'fake_namespace_id_2',
     'namespace_id': 'fake_namespace_id_2',
     'object': 'namespace',
@@ -32,7 +32,7 @@ describe('INNamespace', function() {
 
   var mappedNamespace2 = {
     'account': 'fake_account_id_2',
-    'emailAddress': 'fake.email_2@inboxapp.co',
+    'emailAddress': 'fake.email_2@nylas.com',
     'id': 'fake_namespace_id_2',
     'namespaceId': 'fake_namespace_id_2',
     'object': 'namespace',
@@ -103,7 +103,7 @@ describe('INNamespace', function() {
     server = sinon.fakeServer.create();
     inbox = new InboxAPI({
       appId: '',
-      baseUrl: 'http://api.inboxapp.co/'
+      baseUrl: 'http://api.nylas.com/'
     });
   });
 
@@ -140,7 +140,7 @@ describe('INNamespace', function() {
     });
 
     it('should have resourceUrl() like <baseUrl>/n/<namespaceId>', function() {
-      expect ((new INNamespace(inbox, 'fake_id')).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_id');
+      expect ((new INNamespace(inbox, 'fake_id')).resourceUrl()).toBe('http://api.nylas.com/n/fake_id');
     });
   });
 

@@ -91,6 +91,7 @@ var FILTER_NAMES_OPTS = {
   'threadId': 'thread_id',
   'messageId': 'message_id',
   'tag': true,
+  'in': true,
   'filename': true,
   'lastMessageBefore': 'last_message_before',
   'lastMessageAfter': 'last_message_after',
@@ -122,6 +123,7 @@ var FILTER_STRINGS = {
   'thread_id': true,
   'message_id': true,
   'tag': true,
+  'in': true,
   'filename': true
 };
 

@@ -250,6 +250,14 @@ INThread.prototype.hasTag = function(tagName) {
 
 /**
  * @property
+ * @name INThread#labelData
+ *
+ * An array of Label objects (not INLabel resources).
+ */
+
+
+/**
+ * @property
  * @name INThread#snippet
  *
  * A string containing a short snippet of text from the thread, useful for user interfaces.
@@ -270,6 +278,7 @@ defineResourceMapping(INThread, {
   'messageIDs': 'array:message_ids',
   'draftIDs': 'array:draft_ids',
   'tagData': 'array:tags',
+  'labelData': 'array:labels',
   'snippet': 'snippet',
   'object': 'const:thread'
 });
