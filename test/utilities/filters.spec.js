@@ -88,7 +88,7 @@ describe('applyFilters', function() {
 
 
         it('should accept String', function() {
-          expect(str('bitdiddler@inboxapp.com')).toBeQuery('?%@=bitdiddler%40inboxapp.com');
+          expect(str('bitdiddler@nylas.com')).toBeQuery('?%@=bitdiddler%40nylas.com');
         });
 
 
@@ -106,7 +106,7 @@ describe('applyFilters', function() {
 
 
         it('should not serialize RegExp', function() {
-          expect(str(/bitdiddler@inboxapp.com/)).toBeQuery('');
+          expect(str(/bitdiddler@nylas.com/)).toBeQuery('');
         });
 
 

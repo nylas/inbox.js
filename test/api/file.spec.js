@@ -9,7 +9,7 @@ describe('INFile', function() {
     server = sinon.fakeServer.create();
     inbox = new InboxAPI({
       appId: '',
-      baseUrl: 'http://api.inboxapp.co/'
+      baseUrl: 'http://api.nylas.com/'
     });
 
     mockFile1 = {
@@ -19,7 +19,7 @@ describe('INFile', function() {
     };
     inbox = new InboxAPI({
       appId: '',
-      baseUrl: 'http://api.inboxapp.co/'
+      baseUrl: 'http://api.nylas.com/'
     });
   });
 
@@ -38,7 +38,7 @@ describe('INFile', function() {
     });
 
     it('should be <baseUrl>/n/<namespaceId>/files/<filesId>', function() {
-      expect ((new INFile(namespace, mockFile1)).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_namespace_id/files/84umizq7c4jtrew491brpa6iu');
+      expect ((new INFile(namespace, mockFile1)).resourceUrl()).toBe('http://api.nylas.com/n/fake_namespace_id/files/84umizq7c4jtrew491brpa6iu');
     });
   });
 
@@ -49,7 +49,7 @@ describe('INFile', function() {
     });
 
     it('should be <baseUrl>/n/<namespaceId>/files/<filesId>/download', function() {
-      expect ((new INFile(namespace, mockFile1)).downloadUrl()).toBe('http://api.inboxapp.co/n/fake_namespace_id/files/84umizq7c4jtrew491brpa6iu/download');
+      expect ((new INFile(namespace, mockFile1)).downloadUrl()).toBe('http://api.nylas.com/n/fake_namespace_id/files/84umizq7c4jtrew491brpa6iu/download');
     });
   });
 

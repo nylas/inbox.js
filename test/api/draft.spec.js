@@ -9,13 +9,13 @@ describe('INDraft', function() {
     server = sinon.fakeServer.create();
     inbox = new InboxAPI({
       appId: '',
-      baseUrl: 'http://api.inboxapp.co/'
+      baseUrl: 'http://api.nylas.com/'
     });
     namespace = new INNamespace(inbox, mockNamespace);
     
     mockNamespace = {
       'account': 'fake_account_id',
-      'email_address': 'fake.email@inboxapp.co',
+      'email_address': 'fake.email@nylas.com',
       'id': 'fake_namespace_id',
       'object': 'namespace',
       'provider': 'FakeProvider'
@@ -107,7 +107,7 @@ describe('INDraft', function() {
     });
 
     it('should have resourceUrl() like <baseUrl>/n/<namespaceId>/drafts/<threadId>', function() {
-      expect ((new INDraft(namespace, mockDraft1)).resourceUrl()).toBe('http://api.inboxapp.co/n/fake_namespace_id/drafts/84umizq7c4jtrew491brpa6iu');
+      expect ((new INDraft(namespace, mockDraft1)).resourceUrl()).toBe('http://api.nylas.com/n/fake_namespace_id/drafts/84umizq7c4jtrew491brpa6iu');
     });
   });
 
@@ -155,9 +155,9 @@ describe('INDraft', function() {
     it('should throw an exception if the to, cc, or bcc fields are not properly formatted', function() {
       var data = {
         'namespace_id': 'fake_namespace_id',
-        'to': [{'name': 'Ben', 'email':'ben@inboxapp.com'}],
-        'cc': [{'name': 'Michael', 'email':'mg@inboxapp.com'}],
-        'bcc': [{'name': 'Spang', 'email':'spang@inboxapp.com'}],
+        'to': [{'name': 'Ben', 'email':'ben@nylas.com'}],
+        'cc': [{'name': 'Michael', 'email':'mg@nylas.com'}],
+        'bcc': [{'name': 'Spang', 'email':'spang@nylas.com'}],
         'subject': 'My New Draft'
       };
 
@@ -172,7 +172,7 @@ describe('INDraft', function() {
         }).not.toThrow();
 
         // not an array
-        draft[key] = 'not-an-array@inboxapp.com';
+        draft[key] = 'not-an-array@nylas.com';
         expect(function() {
           draft.save();
         }).toThrow();

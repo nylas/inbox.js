@@ -250,6 +250,33 @@ INNamespace.prototype.tags = function(existingArrayOrFilters, filters) {
 
 /**
  * @function
+ * @name INNamespace#tag
+ *
+ * @description
+ * Returns a {INTag} object, with details about an existing tag.
+ *
+ * @param {string} Optionally, an ID of a tag to retrieve.
+ *
+ * @returns {INTag} the newly constructed INTag object, or a promise containing either the fetched
+ *   tag from the server or an error message.
+ */
+INNamespace.prototype.tag = function(tag_id) {
+  if (tag_id === void 0)
+    return new INTag(this, null);
+
+  var self = this;
+  return this.promise(function (resolve, reject) {
+    var url = formatUrl('%@/%@/%@', self.resourceUrl(), INTag.resourceName(), tag_id);
+    apiRequest(self.inbox(), 'get', url, function (err, result) {
+      if (err) return reject(err);
+      return resolve(new INTag(self, result));
+    });
+  });
+};
+
+
+/**
+ * @function
  * @name INNamespace#drafts
  *
  * @description

@@ -115,5 +115,7 @@ INTag.prototype.threads = function(optionalThreadsOrFilters, filters) {
  */
 defineResourceMapping(INTag, {
   'tagName': 'name',
+  'threadCount': 'int:thread_count',
+  'unreadCount': 'int:unread_count',
   'object': 'const:tag'
 });
