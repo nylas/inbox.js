@@ -19,7 +19,7 @@ function NativePromiseWrapper(resolve, reject) {
  *
  * @param {string=} optionalBaseUrl A string containing the base URL for the Inbox web service. If
  *   the optionsOrAppId parameter is an object, then this field is not necessary. If not specified,
- *   the baseUrl will be 'http://api.inboxapp.co/'
+ *   the baseUrl will be 'https://api.nylas.com/'
  *
  * @param {function=} optionalPromiseConstructor A function which, when called, returns an instance
  *   of an ES6-compatible Promise. If unspecified, window.Promise is used. Note that the Promise
@@ -54,7 +54,7 @@ function InboxAPI(optionsOrAppId, optionalBaseUrl, optionalPromiseConstructor) {
   }
 
   if (options.baseUrl == null) {
-    options.baseUrl = 'http://api.inboxapp.com/';
+    options.baseUrl = 'https://api.nylas.com/';
   } else if (typeof options.baseUrl !== 'string') {
     throw new TypeError('Unable to construct `InboxAPI`: option `baseUrl` must be a string.');
   }
